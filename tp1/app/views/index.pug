@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .w3-card-4 
+    header.w3-container-w3-teal
+      h1 Inquirições
+    .w3-container
+      table.w3-table-all
+        tr
+          th ID 
+          th _ID
+          th
+        each i in is
+          tr
+            td=i.ID 
+            td=i._id
+            td
+              a(href="/"+i._id) Inquirição
