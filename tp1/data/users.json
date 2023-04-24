@@ -1,0 +1,10 @@
+[
+    {
+        "id" : "u1",
+        "username" : "jcr",
+        "password" : "123",
+        "name" : "José Carlos Ramalho",
+        "level" : "admin",
+        "dataCreated" : "2023-04-24"
+    }
+]
