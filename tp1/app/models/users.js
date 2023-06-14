@@ -4,7 +4,6 @@ var mongoose = require('mongoose'),
 
 var usersSchema = new mongoose.Schema({
     id : String,
-    password : String,
     name : String,
     level : String,
     dataCreated : String
@@ -12,4 +11,4 @@ var usersSchema = new mongoose.Schema({
 
 usersSchema.plugin(passportLocalMongoose)
 
-module.exports.usersModel = mongoose.model('user',usersSchema)
+module.exports.userModel = mongoose.model('user',usersSchema)

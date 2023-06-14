@@ -38,50 +38,21 @@ app.set('view engine', 'pug');
 app.use(session({
   genid : res => {
     console.log('Dentro do middleware da sessão...')
-    console.log('Id da sessoa: ' + res.sessionID)
+    console.log('Id da sessao: ' + res.sessionID)
     return uuidv4()
   },
   store : new fileStore(),
-  secret : 'O meu segredo',
+  secret : 'inquiricoesSecret',
   resave : false,
   saveUninitialized : true
 }))
 
 var User = require('./models/users')
 
-passport.use(new localStrategy(
-  {usernameField: 'username'},(username,password,done) => {
-    User.usersModel.findOne({"username" : username})
-      .then(user => {
-        if(!user){
-          console.log("Error: utilizador inexistente.")
-          return done(null,false,{message:"Utilizador inexistente!"})
-        }
-        else if(password != user.password){
-          console.log("Error: password inválida.")
-          return done(null,false,{message:"Password Inválida"})
-        }
-        
-        return done(null,user)
-      })
-      .catch(error => {
-        console.log("Error: " + error)
-        return done(null,null)
-      })
-  }
-))
+passport.use(new localStrategy(User.userModel.authenticate()))
 
-passport.serializeUser((user,done) => {
-  console.log("Vou serializar o user na sessao" + JSON.stringify(user))
-  done(null,user.id)
-})
-
-passport.deserializeUser((uid,done)=> {
-  console.log("Vou desserializar o user" + uid)
-  User.usersModel.findOne({"id" : uid})
-    .then(user => done(null,user))
-    .catch(erro => done(erro,false))
-})
+passport.serializeUser(User.userModel.serializeUser())
+passport.deserializeUser(User.userModel.deserializeUser())
 
 
 app.use(logger('dev'));
