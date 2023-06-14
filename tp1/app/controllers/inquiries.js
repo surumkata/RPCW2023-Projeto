@@ -1,4 +1,5 @@
 var Inquiry = require('../models/inquiries')
+var mongoose = require('mongoose');
 
 // Inquirição list
 module.exports.list = function(page) {
@@ -25,4 +26,25 @@ module.exports.getInquiry = id => {
             return error
         }
         )
+}
+
+
+module.exports.addPost = (id,user,post) =>{
+    console.log('Post by user: ' + user)
+    data = new Date().getTime().toString()
+    newPost = {
+        author: user,
+        text: post,
+        dataCreated : data,
+        postResponses: []
+    }
+    return Inquiry.inquiriesModel
+    .updateOne({'_id':id},
+    {"$push":{"comments": newPost}},
+    { "new": true, "upsert": true },
+    function (err, res) {
+        if (err) throw err;
+        console.log(res);
+    }
+    )
 }

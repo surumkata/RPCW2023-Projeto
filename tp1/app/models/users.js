@@ -3,10 +3,11 @@ var mongoose = require('mongoose'),
     passportLocalMongoose = require('passport-local-mongoose')
 
 var usersSchema = new mongoose.Schema({
-    id : String,
+    _id : String,
     name : String,
     level : String,
-    dataCreated : String
+    dataCreated : String,
+    posts: [String]
 },{collection: 'users'})
 
 usersSchema.plugin(passportLocalMongoose)

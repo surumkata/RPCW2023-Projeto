@@ -23,7 +23,7 @@ router.get('/login', function(req, res, next) {
 router.post('/login', passport.authenticate('local'), function(req, res, next) {
     console.log('Na cb do POST login...')
     console.log('Auth: ' + JSON.stringify(req.user))
-    jwt.sign({ 
+    jwt.sign({
       username: req.user.username,
       level: req.user.level}, 
       consts.sessionSecret,
@@ -51,7 +51,7 @@ router.get('/register', function(req, res, next) {
 router.post('/register', function(req, res, next) {
   console.log('Na cb do POST register...')
   console.log('Password: '+ req.body.password)
-  var data = new Date().toISOString().substring(0,16)
+  var data = new Date().getTime().toString()
   User.userModel.register(
     new User.userModel({ 
       username: req.body.username, 

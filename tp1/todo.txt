@@ -19,3 +19,7 @@
     * dataUltimoAcesso
     * password
     * ...
+
+
+# melhorar views
+# rotina para apagar sessions

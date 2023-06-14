@@ -1,8 +1,19 @@
 //import de mongoose module
 var mongoose = require('mongoose')
 
-var relations_idSchema = new mongoose.Schema({
-    String : String
+var relationsIdSchema = new mongoose.Schema({
+    relation: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Inquiricoe'
+      }
+})
+
+
+var commentsSchema = new mongoose.Schema({
+    author: String,
+    text : String,
+    dataCreated : String, 
+    postResponses: [this]
 })
 
 var inquiriesSchema = new mongoose.Schema({
@@ -33,7 +44,8 @@ var inquiriesSchema = new mongoose.Schema({
     birthplace : String,
     current_concelho : String,
     current_district : String,
-    relations_id : [relations_idSchema]
+    relations_id : [relationsIdSchema],
+    comments: [commentsSchema]
 },{collection:'inquiricoes'})
 
 module.exports.inquiriesModel = mongoose.model('inquiricoe',inquiriesSchema)
