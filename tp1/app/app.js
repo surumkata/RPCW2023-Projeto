@@ -1,7 +1,9 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var consts = require('./utils/const')
 
 //import de mongoose module
 var mongoose = require('mongoose')
@@ -42,7 +44,7 @@ app.use(session({
     return uuidv4()
   },
   store : new fileStore(),
-  secret : 'inquiricoesSecret',
+  secret : consts.sessionSecret,
   resave : false,
   saveUninitialized : true
 }))
@@ -58,6 +60,7 @@ passport.deserializeUser(User.userModel.deserializeUser())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(passport.initialize())

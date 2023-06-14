@@ -1,9 +1,11 @@
 var User = require('../models/users')
 
 // Users list
-module.exports.list = () => {
+module.exports.list = function(page) {
     return User.userModel
     .find()
+    .skip(page*100)
+    .limit(100)
         .sort({ID:1})
         .then(docs => {
             return docs

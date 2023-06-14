@@ -1,9 +1,11 @@
 var Inquiry = require('../models/inquiries')
 
 // Inquirição list
-module.exports.list = () => {
+module.exports.list = function(page) {
     return Inquiry.inquiriesModel
     .find()
+    .skip(page*100)
+    .limit(100)
         .sort({ID:1})
         .then(docs => {
             return docs

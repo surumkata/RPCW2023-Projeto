@@ -2,8 +2,8 @@ var express = require('express');
 const passport = require('passport');
 var router = express.Router();
 var jwt = require('jsonwebtoken')
-var userController = require('../controllers/users')
 var User = require('../models/users')
+var consts = require('../utils/const')
 
 
 /* GET users listing. */
@@ -23,7 +23,18 @@ router.get('/login', function(req, res, next) {
 router.post('/login', passport.authenticate('local'), function(req, res, next) {
     console.log('Na cb do POST login...')
     console.log('Auth: ' + JSON.stringify(req.user))
-    res.redirect('/protegida')
+    jwt.sign({ 
+      username: req.user.username,
+      level: req.user.level}, 
+      consts.sessionSecret,
+      {expiresIn: 3600},
+      function(e, token) {
+        if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
+        else{
+          res.cookie('user_token',token)
+          res.redirect('/')
+        }
+      });
   });
 
 
@@ -71,7 +82,10 @@ router.get('/logout', function(req, res, next) {
         if(err)
             res.render('error',{error:err})
         else
-            res.redirect('/')
+        {
+          res.clearCookie('user_token')
+          res.redirect('/')
+        }
     })
   });
 
