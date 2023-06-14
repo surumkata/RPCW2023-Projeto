@@ -1,0 +1,21 @@
+# criar pagina inicial (decidir se colocar todos os registos ou colocar links de grupos destes)
+# adicionar novos registos ou registo
+# opcao de pesquisa - nome, lugar e data
+# editar informacao de registo, inclusive novas relacoes
+    * provavelmente apenas administradores podem fazer isto, ou se o registo tiver sido criado pela propria pessoa
+    * admins talvez tenham uma area com updates requisitados
+# fazer posts sobre registos
+# comentarios nos posts
+# etc...
+
+# autenticacao
+# niveis de acesso: pelo menos admin + consumidor (consulta, posts, sugerir alteracoes)
+# utilizadores
+    * nome
+    * email
+    * filiacao
+    * nivel
+    * dataRegisto
+    * dataUltimoAcesso
+    * password
+    * ...

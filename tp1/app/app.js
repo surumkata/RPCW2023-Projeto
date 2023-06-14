@@ -38,7 +38,7 @@ app.set('view engine', 'pug');
 app.use(session({
   genid : res => {
     console.log('Dentro do middleware da sessão...')
-    console.log(res.sessionID)
+    console.log('Id da sessoa: ' + res.sessionID)
     return uuidv4()
   },
   store : new fileStore(),
@@ -53,14 +53,20 @@ passport.use(new localStrategy(
   {usernameField: 'username'},(username,password,done) => {
     User.usersModel.findOne({"username" : username})
       .then(user => {
-        if(!user)
-          return done(null,flase,{message:"Utilizador inexistente!"})
-        if(password != user.password)
+        if(!user){
+          console.log("Error: utilizador inexistente.")
+          return done(null,false,{message:"Utilizador inexistente!"})
+        }
+        else if(password != user.password){
+          console.log("Error: password inválida.")
           return done(null,false,{message:"Password Inválida"})
-        done(null,user)
+        }
+        
+        return done(null,user)
       })
       .catch(error => {
-        
+        console.log("Error: " + error)
+        return done(null,null)
       })
   }
 ))

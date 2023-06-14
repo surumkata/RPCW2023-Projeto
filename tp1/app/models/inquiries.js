@@ -34,6 +34,6 @@ var inquiriesSchema = new mongoose.Schema({
     current_concelho : String,
     current_district : String,
     relations_id : [relations_idSchema]
-})
+},{collection:'inquiricoes'})
 
-module.exports.inquiriesModel = mongoose.model('inquir_gen',inquiriesSchema)
+module.exports.inquiriesModel = mongoose.model('inquiricoe',inquiriesSchema)

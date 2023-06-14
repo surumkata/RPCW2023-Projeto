@@ -17,7 +17,7 @@ module.exports.getUser = id => {
     return User.userModel
     .findOne({'_id':id})
         .then(user => {
-            
+            return user
         })
         .catch( error => {
             return error
