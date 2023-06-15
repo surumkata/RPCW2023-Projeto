@@ -16,13 +16,26 @@ router.get('/login', function(req, res, next) {
     var data = new Date().toISOString().substring(0, 16)
     console.log('Na cb do GET login')
     console.log(req.sessionID)
-    res.render('login',{d:data})
+    loginError = req.cookies['loginError'] == 'true'
+    res.clearCookie('loginError')
+    console.log('Login error: '+ loginError)
+    res.render('login',{d:data,error:loginError})
   });
 
 /* POST users login. */
-router.post('/login', passport.authenticate('local'), function(req, res, next) {
+router.post('/login', function(req, res, next) {
     console.log('Na cb do POST login...')
     console.log('Auth: ' + JSON.stringify(req.user))
+    passport.authenticate('local', function(err, user, info) {
+      if (err) { return next(err); }
+      if (!user) { 
+        res.cookie('loginError','true')
+        return res.redirect('login'); }
+      return res.redirect('userToken');
+    })(req,res,next)
+  });
+
+  router.post('/userToken', function(req, res){
     jwt.sign({
       username: req.user.username,
       level: req.user.level}, 
@@ -35,7 +48,7 @@ router.post('/login', passport.authenticate('local'), function(req, res, next) {
           res.redirect('/')
         }
       });
-  });
+  })
 
 
 

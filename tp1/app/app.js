@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var consts = require('./utils/const')
+var User = require('./models/users')
 
 //import de mongoose module
 var mongoose = require('mongoose')
@@ -51,7 +52,7 @@ app.use(session({
 
 var User = require('./models/users')
 
-passport.use(new localStrategy(User.userModel.authenticate()))
+passport.use(User.userModel.createStrategy())
 
 passport.serializeUser(User.userModel.serializeUser())
 passport.deserializeUser(User.userModel.deserializeUser())

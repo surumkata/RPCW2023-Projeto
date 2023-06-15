@@ -59,7 +59,16 @@ router.get('/',verifyAuthentication, function(req, res, next) {
   logged = false
   if(req.body.logged)
     logged = req.body.logged
-  Inquiry.list(page=1)
+
+  // paginacao das inquiricoes
+  page = req.query.page
+  if(!page){
+    page = 0
+  }else{
+    page = parseInt(page)
+  }
+  
+  Inquiry.list(page)
     .then(inquiries => {
       res.render('index', {is : inquiries, d : data,logged : logged})
     })

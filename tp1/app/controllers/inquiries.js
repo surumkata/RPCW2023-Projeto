@@ -2,7 +2,7 @@ var Inquiry = require('../models/inquiries')
 var mongoose = require('mongoose');
 
 // Inquirição list
-module.exports.list = function(page) {
+module.exports.list = page => {
     return Inquiry.inquiriesModel
     .find()
     .skip(page*100)

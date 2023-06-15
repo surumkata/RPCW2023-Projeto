@@ -23,3 +23,5 @@
 
 # melhorar views
 # rotina para apagar sessions
+# notificacoes do usuario (post,modificacoes aceites)
+    # admin deve ter notificacoes de alteraçoes pedidas
