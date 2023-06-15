@@ -5,9 +5,9 @@ var mongoose = require('mongoose');
 module.exports.list = page => {
     return Inquiry.inquiriesModel
     .find()
+    .sort({UnitId:1})
     .skip(page*100)
     .limit(100)
-        .sort({ID:1})
         .then(docs => {
             return docs
         })

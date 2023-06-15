@@ -1,16 +1,37 @@
+--------        Requisitos base
+
+
 # criar pagina inicial (decidir se colocar todos os registos ou colocar links de grupos destes)
 # adicionar novos registos ou registo
 # opcao de pesquisa - nome, lugar e data
 # editar informacao de registo, inclusive novas relacoes
     * provavelmente apenas administradores podem fazer isto, ou se o registo tiver sido criado pela propria pessoa
     * admins talvez tenham uma area com updates requisitados
-# fazer posts sobre registos
-# comentarios nos posts
 # etc...
 
+
+
+------          TODO
+
+
 # autenticacao
-    # registo : verificar passe e confirmar passe sao iguais
+    # registo
+        * verificar passe e confirmar passe sao iguais
+        * usernames unicos
+
 # niveis de acesso: pelo menos admin + consumidor (consulta, posts, sugerir alteracoes)
+
+# inquiricoes
+    * editar
+    * ligacoes para outras inquiricoes
+
+# melhorar views
+# rotina para apagar sessions
+# notificacoes do usuario (post,modificacoes aceites)
+    # admin deve ter notificacoes de alteraçoes pedidas
+
+# pagina de usuario
+    * visualizar e editar
 # utilizadores
     * nome
     * email
@@ -21,8 +42,5 @@
     * password
     * ...
 
-
-# melhorar views
-# rotina para apagar sessions
-# notificacoes do usuario (post,modificacoes aceites)
-    # admin deve ter notificacoes de alteraçoes pedidas
+# posts e respostas
+    * feedback?

@@ -93,7 +93,9 @@ for i in df.index:
             if groups:
                 j = 0
                 while j < len(groups):
-                    rel.append({groups[j][1]:groups[j][0]})
+                    rel_id = int(groups[j][1])
+                    person = df.iloc[rel_id]
+                    rel.append({rel_id:groups[j][0],'id':person['ID']})
                     j += 1
                 count+=1
         relations_id.append(rel)
@@ -127,7 +129,9 @@ for i in df.index:
             if rel:
                 j = 0
                 while j < len(rel):
-                    relations_id[i].append({rel[j][1]:rel[j][0]})
+                    rel_id = int(rel[j][1])
+                    person = df.iloc[rel_id]
+                    relations_id[i].append({rel_id:rel[j][0],'id':person['ID']})
                     j += 1
                 count+=1
         if note != 'null':
@@ -135,7 +139,9 @@ for i in df.index:
             if rel:
                 j = 0
                 while j < len(rel):
-                    relations_id[i].append({rel[j][1]:rel[j][0]})
+                    rel_id = int(rel[j][1])
+                    person = df.iloc[rel_id]
+                    relations_id[i].append({rel_id:rel[j][0],'id':person['ID']})
                     j += 1
                 count+=1
         
@@ -160,7 +166,7 @@ print('count',count)
 
 df['relations_id'] = relations_id
 
-
+df.rename({'ID':'_id'},axis=1,inplace=True)
 
 out = open(f'{path}/data/dataset.json','w')
 

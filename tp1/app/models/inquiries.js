@@ -17,8 +17,8 @@ var commentsSchema = new mongoose.Schema({
 })
 
 var inquiriesSchema = new mongoose.Schema({
-    ID : Number,
-    UnitID: Number,
+    _id: Number,
+    UnitId: Number,
     UnitTitle : [String],
     UnitDateInitial : String,
     UnitDateFinal : String,

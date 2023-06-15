@@ -30,14 +30,12 @@ block content
     .w3-container
       table.w3-table-all
         tr
-          th ID 
-          th _ID
+          th ID
           th Pessoa
           th
         each i in is
           tr
-            td=i.ID 
-            td=i._id
+            td=i.UnitId
             td
               each person in i.UnitTitle
                 p=person
