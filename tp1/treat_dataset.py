@@ -23,7 +23,7 @@ def get_info_scopecontent(fields):
         cur_concelho = fields[3]
     cur_district = 'null'  
     if fields[4]:
-        cur_district = fields[4]
+        cur_district = fields[6]
     other = fields[7]
     return [fil, birth, cur_concelho,cur_district,other]
     

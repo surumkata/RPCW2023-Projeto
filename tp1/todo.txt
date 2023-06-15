@@ -9,6 +9,7 @@
 # etc...
 
 # autenticacao
+    # registo : verificar passe e confirmar passe sao iguais
 # niveis de acesso: pelo menos admin + consumidor (consulta, posts, sugerir alteracoes)
 # utilizadores
     * nome

@@ -26,29 +26,30 @@ router.get('/login', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     console.log('Na cb do POST login...')
     console.log('Auth: ' + JSON.stringify(req.user))
+    // verificar utilizador
     passport.authenticate('local', function(err, user, info) {
-      if (err) { return next(err); }
+      if (err) { 
+        return next(err); 
+      }
       if (!user) { 
         res.cookie('loginError','true')
-        return res.redirect('login'); }
-      return res.redirect('userToken');
+        return res.redirect('login'); 
+      }
+      jwt.sign({
+        username: user.username,
+        level: user.level}, 
+        consts.sessionSecret,
+        {expiresIn: 3600},
+        function(e, token) {
+          if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
+          else{
+            res.cookie('user_token',token)
+            res.redirect('/')
+          }
+        });
     })(req,res,next)
   });
 
-  router.post('/userToken', function(req, res){
-    jwt.sign({
-      username: req.user.username,
-      level: req.user.level}, 
-      consts.sessionSecret,
-      {expiresIn: 3600},
-      function(e, token) {
-        if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
-        else{
-          res.cookie('user_token',token)
-          res.redirect('/')
-        }
-      });
-  })
 
 
 
@@ -60,7 +61,7 @@ router.get('/register', function(req, res, next) {
   res.render('register',{d:data})
 });
 
-/* POST users reguster. */
+/* POST users register. */
 router.post('/register', function(req, res, next) {
   console.log('Na cb do POST register...')
   console.log('Password: '+ req.body.password)

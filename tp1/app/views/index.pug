@@ -12,8 +12,9 @@ block content
           if logged === true
             li 
               a(href="/users/logout") Logout
-          li
-            a(href="/users/register") Register
+          if logged === false
+            li
+              a(href="/users/register") Register
           li
             a(href="/protegida") Only for authorized users
     .w3-container
@@ -42,7 +43,7 @@ block content
                 p=person
             td
               a(href="/inquiry/"+i._id) Inquirição
-              
+
       .w3-container
         table
           th

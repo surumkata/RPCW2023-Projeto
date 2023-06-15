@@ -48,3 +48,24 @@ module.exports.addPost = (id,user,post) =>{
     }
     )
 }
+
+
+module.exports.addPostResponse = (inquiryId,user,postId,response) => {
+    console.log('Response by user: ' + user)
+    data = new Date().getTime().toString()
+    newResponse = {
+        author: user,
+        text: response,
+        dataCreated : data,
+        postResponses: []
+    }
+    return Inquiry.inquiriesModel
+    .updateOne({'_id':inquiryId,'comments._id':postId},
+    {"$push":{"comments.$.postResponses": newResponse}},
+    { "new": true, "upsert": true },
+    function (err, res) {
+        if (err) throw err;
+        console.log(res);
+    }
+    )
+}

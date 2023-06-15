@@ -52,10 +52,19 @@ app.use(session({
 
 var User = require('./models/users')
 
-passport.use(User.userModel.createStrategy())
+passport.use(new localStrategy(User.userModel.authenticate()))
+passport.serializeUser((user,done) => {
+  console.log("Vou serializar o user na sessao" + JSON.stringify(user))
+  done(null,user.id)
+})
+passport.deserializeUser((uid,done)=> {
+  console.log("Vou desserializar o user " + uid)
+  User.userModel.findOne({"id" : uid})
+    .then(user => done(null,user))
+    .catch(erro => done(erro,false))
+})
 
-passport.serializeUser(User.userModel.serializeUser())
-passport.deserializeUser(User.userModel.deserializeUser())
+
 
 
 app.use(logger('dev'));

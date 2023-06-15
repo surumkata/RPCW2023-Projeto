@@ -9,7 +9,8 @@ var consts = require('../utils/const')
 function verifyAuthentication(req, res, next){
   req.body.logged = false
   req.body.level = 0
-  if('user_token' in req.cookies){
+  console.log('Cookies: ' +req.cookies)
+  if(req.cookies && 'user_token' in req.cookies){
     var token = req.cookies['user_token']
     console.log('Token: ' + token)
     if(token){
@@ -21,6 +22,9 @@ function verifyAuthentication(req, res, next){
           req.body.username = payload.username
           req.body.level = payload.level
         }
+        else{
+          console.log('Error: ' + e)
+        }
       })
     }
   }
@@ -30,7 +34,7 @@ function verifyAuthentication(req, res, next){
 
 function requireAuthentication(req,res,next){
   console.log('User (verif,): '+JSON.stringify(req.user))
-  if(req.isAuthenticated()){
+  if(req.cookies && 'user_token' in req.cookies){
     var token = req.cookies['user_token']
     console.log('Token: ' + token)
     if(token){
@@ -57,8 +61,11 @@ function requireAuthentication(req,res,next){
 router.get('/',verifyAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = false
-  if(req.body.logged)
+  user = null
+  if(req.body.logged){
     logged = req.body.logged
+    user = req.body.username
+  }
 
   // paginacao das inquiricoes
   page = req.query.page
@@ -67,10 +74,10 @@ router.get('/',verifyAuthentication, function(req, res, next) {
   }else{
     page = parseInt(page)
   }
-  
+
   Inquiry.list(page)
     .then(inquiries => {
-      res.render('index', {is : inquiries, d : data,logged : logged})
+      res.render('index', {user:user, is : inquiries, d : data,logged : logged})
     })
     .catch(erro => {
       res.render('error', {error : erro, message : "Erro na obtenção da lista de inquisições"})
@@ -114,7 +121,31 @@ router.post('/inquiry/post/:id',requireAuthentication, function(req, res, next) 
   .catch(erro => {
     res.render('error', {error: erro, message: "Erro na criação do post"})
   })
-  
+});
+
+/** Post de um novo post numa inquiricao */
+router.post('/inquiry/response/:id',requireAuthentication, function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  console.log('Novo post')
+  console.log('Id: '+ req.params.id)
+  inquiryId = req.params.id
+  user = req.body.username
+  response = req.body.response
+  postId = req.query.post
+
+  Inquiry.addPostResponse(inquiryId,user,postId,response)
+  .then(result => {
+    User.addPostedInquiry(user,inquiryId)
+    .then(result => {
+      res.redirect('../'+inquiryId);
+    })
+    .catch(erro => {
+      res.render('error', {error: erro, message: "Erro na criação da response"})
+    })
+  })
+  .catch(erro => {
+    res.render('error', {error: erro, message: "Erro na criação da response"})
+  })
 });
 
 

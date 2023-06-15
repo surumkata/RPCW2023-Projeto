@@ -3,7 +3,6 @@ var mongoose = require('mongoose'),
     passportLocalMongoose = require('passport-local-mongoose')
 
 var usersSchema = new mongoose.Schema({
-    _id : String,
     name : String,
     level : String,
     dataCreated : String,
