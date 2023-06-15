@@ -2,7 +2,8 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/w3.css')
+    block scripts
+      link(rel='stylesheet', href='/stylesheets/w3.css')
   body
     if user
       .w3-card-4
