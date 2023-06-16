@@ -7,10 +7,52 @@ var userController = require('../controllers/users')
 var consts = require('../utils/const')
 
 
+function requireAuthentication(req,res,next){
+  console.log('User (verif,): '+JSON.stringify(req.user))
+  if(req.cookies && 'user_token' in req.cookies){
+    var token = req.cookies['user_token']
+    console.log('Token: ' + token)
+    if(token){
+      jwt.verify(token, consts.sessionSecret, function(e, payload){
+        if(!e){
+          console.log('Logged in.')
+          console.log('Payload: ' + JSON.stringify(payload))
+          req.body.logged = true
+          req.body.username = payload.username
+          req.body.level = payload.level
+        }
+      })
+    }
+    //return true if user is authenticated
+    next()
+  }
+  else{
+    res.redirect('/users/login')
+  }
+}
+
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
+
+
+/* GET users profile page. */
+router.get('/profile', requireAuthentication,function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  username = req.body.username
+  console.log('Profile page de user: ' + username)
+  userController.getUserByUsername(username)
+  .then(user => {
+    res.render('userProfile',{d:data,user:user})
+  })
+  .catch(err => {
+    console.log(err)
+    res.json({error: err})
+  })
+});
+
 
 /* GET users login. */
 router.get('/login', function(req, res, next) {

@@ -1,4 +1,4 @@
-extends layout
+extends header
 
 block content
   .w3-card-4 
@@ -6,15 +6,6 @@ block content
       h1 Inquirições
       p Podes fazer as seguintes operações:
         ul.w3-ul
-          if logged === false
-            li 
-              a(href="/users/login") Login
-          if logged === true
-            li 
-              a(href="/users/logout") Logout
-          if logged === false
-            li
-              a(href="/users/register") Register
           li
             a(href="/protegida") Only for authorized users
     .w3-container

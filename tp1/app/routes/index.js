@@ -61,10 +61,10 @@ function requireAuthentication(req,res,next){
 router.get('/',verifyAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = false
-  user = null
+  username = null
   if(req.body.logged){
     logged = req.body.logged
-    user = req.body.username
+    username = req.body.username
   }
 
   // paginacao das inquiricoes
@@ -77,7 +77,7 @@ router.get('/',verifyAuthentication, function(req, res, next) {
 
   Inquiry.list(page)
     .then(inquiries => {
-      res.render('index', {user:user, is : inquiries, d : data,logged : logged})
+      res.render('index', {username:username, is : inquiries, d : data,logged : logged})
     })
     .catch(erro => {
       res.render('error', {error : erro, message : "Erro na obtenção da lista de inquisições"})
@@ -85,15 +85,21 @@ router.get('/',verifyAuthentication, function(req, res, next) {
 });
 
 /* GET Pessoa page. */
-router.get('/inquiry/:id', function(req, res, next) {
+router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
+  logged = false
+  username = null
+  if(req.body.logged){
+    logged = req.body.logged
+    username = req.body.username
+  }
   console.log(req.params.id)
   id = req.params.id
   Inquiry.getInquiry(req.params.id)
     .then(inquiry => {
       console.log(inquiry)
       posts = inquiry.comments
-      res.render('inquiry', { id:id,i: inquiry,posts:posts, d: data });
+      res.render('inquiry', {username:username,logged : logged, id:id,i: inquiry,posts:posts, d: data });
     })
     .catch(erro => {
       res.render('error', {error: erro, message: "Erro na obtenção do registo de Pessoa"})

@@ -28,6 +28,8 @@ module.exports.getUser = id => {
         )
 }
 
+
+
 module.exports.getUserByUsername = username => {
     return User.userModel
     .findOne({'username':username})

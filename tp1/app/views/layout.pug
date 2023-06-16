@@ -4,10 +4,8 @@ html
     title= title
     block scripts
       link(rel='stylesheet', href='/stylesheets/w3.css')
-  body
-    if user
-      .w3-card-4
-        header.w3-container.w3-teal
-          h1 User: #{user}
+      
+    body
 
+    block head
     block content
