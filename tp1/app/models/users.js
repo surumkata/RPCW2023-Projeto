@@ -2,13 +2,24 @@
 var mongoose = require('mongoose'),
     passportLocalMongoose = require('passport-local-mongoose')
 
+var notificationsSchema = new mongoose.Schema({
+    dateCreated : String,
+    message: String,
+    url: String,
+    seen: {
+        type:Boolean,
+        default: false
+    }
+})
+
 var usersSchema = new mongoose.Schema({
     name : String,
     level : String,
     dateCreated : String,
     email:String,
     filiation:String,
-    posts: [String]
+    posts: [String],
+    notifications: [notificationsSchema]
 },{collection: 'users'})
 
 usersSchema.plugin(passportLocalMongoose)

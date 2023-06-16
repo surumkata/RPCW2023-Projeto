@@ -7,6 +7,33 @@ var userController = require('../controllers/users')
 var consts = require('../utils/const')
 
 
+function verifyAuthentication(req, res, next){
+  req.body.logged = false
+  req.body.level = 0
+  console.log('Cookies: ' +req.cookies)
+  if(req.cookies && 'user_token' in req.cookies){
+    var token = req.cookies['user_token']
+    console.log('Token: ' + token)
+    if(token){
+      jwt.verify(token, consts.sessionSecret, function(e, payload){
+        if(!e){
+          console.log('Logged in.')
+          console.log('Payload: ' + JSON.stringify(payload))
+          req.body.logged = true
+          req.body.username = payload.username
+          req.body.level = payload.level
+        }
+        else{
+          console.log('Error: ' + e)
+        }
+      })
+    }
+  }
+  next()
+}
+
+
+
 function requireAuthentication(req,res,next){
   console.log('User (verif,): '+JSON.stringify(req.user))
   if(req.cookies && 'user_token' in req.cookies){
@@ -20,11 +47,14 @@ function requireAuthentication(req,res,next){
           req.body.logged = true
           req.body.username = payload.username
           req.body.level = payload.level
+        }else{
+          return res.redirect('/users/login')
         }
       })
     }
     //return true if user is authenticated
     next()
+    
   }
   else{
     res.redirect('/users/login')
@@ -111,6 +141,7 @@ router.get('/login', function(req, res, next) {
     res.render('login',{d:data,error:loginError})
   });
 
+
 /* POST users login. */
 router.post('/login', function(req, res, next) {
     console.log('Na cb do POST login...')
@@ -128,11 +159,11 @@ router.post('/login', function(req, res, next) {
         username: user.username,
         level: user.level}, 
         consts.sessionSecret,
-        {expiresIn: 3600},
+        {expiresIn: '1h'},
         function(e, token) {
           if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
           else{
-            res.cookie('user_token',token)
+            res.cookie('user_token',token,{httpOnly: true})
             res.redirect('/')
           }
         });
@@ -195,18 +226,37 @@ router.post('/register', function(req, res, next) {
 
 
 /* GET users logout. */
-router.get('/logout', function(req, res, next) {
+router.get('/logout', requireAuthentication,function(req, res, next) {
     console.log('Na cb do GET logout...')
     console.log(req.sessionID)
-    req.logout(function(err){
-        if(err)
-            res.render('error',{error:err})
-        else
-        {
-          res.clearCookie('user_token')
-          res.redirect('/')
-        }
-    })
+    res.clearCookie('user_token')
+    res.redirect('/')
+    // req.logout(function(err){
+    //     if(err)
+    //         res.render('error',{error:err})
+    //     else
+    //     {
+    //       res.clearCookie('user_token')
+    //       res.redirect('/')
+    //     }
+    // })
   });
+
+
+
+/* GET users login. */
+router.get('/api/notifications', verifyAuthentication,function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  logged = false
+  username = null
+  if(req.body.logged){
+    logged = req.body.logged
+    username = req.body.username
+    userController.getUserByUsername(username)
+    .then(user => {
+      res.json({notifications:user.notifications})
+    })
+  }
+});
 
 module.exports = router;

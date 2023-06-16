@@ -7,9 +7,7 @@ block content
     .w3-container
         fieldset
             legend Metadata
-            label #[b ID: ] #{i.ID}
-            br
-            label #[b _id: ] #{i._id}
+            label #[b id: ] #{i._id}
             br
             label #[b UnitId: ] #{i.UnitId}
             br
@@ -65,10 +63,11 @@ block content
             br
             label #[b relations_id: ] #{i.relations_id}
             br
+    a.w3-btn.w3-blue(href="/inquiry/"+i._id+"/edit") Editar
     .w3-container
       h1 Posts
 
-      form.w3-container(action="/inquiry/post/"+id method="POST")
+      form.w3-container(action="/inquiry/post/"+i._id method="POST")
         legend Novo post.
         textarea.w3-texarea(name="post", cols="30", rows="10" required) 
         br
@@ -78,17 +77,17 @@ block content
         .w3-container
           h2 Post #{post.id}
           h3 User: #{post.author}
-          h4 Data: #{post.dataCreated}
+          h4 Data: #{post.dateCreated}
           p= post.text
 
           .w3-container
             each response in post.postResponses
               h3 Response #{response.id}
               h3 User: #{response.author}
-              h5 Data: #{response.dataCreated}
+              h5 Data: #{response.dateCreated}
               p= response.text 
             
-            form.w3-container(action="/inquiry/response/"+id+"?post="+post.id method="POST")
+            form.w3-container(action="/inquiry/response/"+i._id+"?post="+post.id method="POST")
               legend Nova resposta.
               textarea.w3-texarea(name="response", cols="30", rows="10" required) 
               br

@@ -46,9 +46,11 @@ module.exports.updateUserByUsername = (username,u) => {
     return User.userModel
     .updateOne({'username':username},u)
         .then(user => {
+            console.log('Updated user: ' + JSON.stringify(user))
             return user
         })
         .catch( error => {
+            console.log(error)
             return error
         }
         )
@@ -59,10 +61,32 @@ module.exports.addPostedInquiry = (username,inquiryId) => {
     return User.userModel
     .updateOne({'username':username},
     {"$addToSet":{"posts": inquiryId}},
-    { "new": true, "upsert": true },
-    function (err, res) {
-        if (err) throw err;
-        console.log(res);
+    { "new": true, "upsert": true })
+    .then(result => {
+        console.log('Updated user: ' + JSON.stringify(result))
+        return result
+    })
+    .catch( error => {
+        console.log(error)
+        return error
+    }
+    )
+}
+
+
+module.exports.addUserNotificationByUsername = (username,notification) => {
+    console.log('Adding notification for user ' + username + ': ' + notification)
+    return User.userModel
+    .updateOne({'username':username},
+    {"$push":{"notifications": notification}},
+    { "new": true, "upsert": true })
+    .then(result => {
+        console.log('Updated user: ' + JSON.stringify(result))
+        return result
+    })
+    .catch( error => {
+        console.log(error)
+        return error
     }
     )
 }

@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var consts = require('./utils/const')
 var User = require('./models/users')
+var Post = require('./models/posts')
 
 //import de mongoose module
 var mongoose = require('mongoose')
@@ -38,17 +39,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 
-app.use(session({
-  genid : res => {
-    console.log('Dentro do middleware da sessão...')
-    console.log('Id da sessao: ' + res.sessionID)
-    return uuidv4()
-  },
-  store : new fileStore(),
-  secret : consts.sessionSecret,
-  resave : false,
-  saveUninitialized : true
-}))
+// app.use(session({
+//   genid : res => {
+//     console.log('Dentro do middleware da sessão...')
+//     console.log('Id da sessao: ' + res.sessionID)
+//     return uuidv4()
+//   },
+//   store : new fileStore(),
+//   secret : consts.sessionSecret,
+//   resave : false,
+//   saveUninitialized : true
+// }))
 
 var User = require('./models/users')
 
@@ -74,7 +75,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(passport.initialize())
-app.use(passport.session())
+// app.use(passport.session())
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

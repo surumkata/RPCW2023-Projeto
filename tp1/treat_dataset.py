@@ -76,7 +76,8 @@ pd.set_option('display.max_columns', None)
 df['UnitTitle'] = df['UnitTitle'].str.replace(r'.*de genere de\s+((\w+\b\s*)+)',r'\1', regex=True)
 df['UnitTitle'] = df['UnitTitle'].map(lambda x: x.split(' e '),na_action='ignore')
 
-
+# Change id from numeric to string
+df['ID'] = df['ID'].astype(str)
 
 # Make new field to directly link relations if possible
 relations_id = []

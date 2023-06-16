@@ -1,5 +1,4 @@
 var Inquiry = require('../models/inquiries')
-var mongoose = require('mongoose');
 
 // Inquirição list
 module.exports.list = page => {
@@ -30,23 +29,23 @@ module.exports.getInquiry = id => {
 
 
 module.exports.addPost = (id,user,post) =>{
-    console.log('Post by user: ' + user)
+    console.log('Inquiry post by user: ' + user)
     data = new Date().getTime().toString()
     newPost = {
-        author: user,
-        text: post,
-        dataCreated : data,
+        _id: post._id.toHexString(),
         postResponses: []
     }
     return Inquiry.inquiriesModel
     .updateOne({'_id':id},
     {"$push":{"comments": newPost}},
-    { "new": true, "upsert": true },
-    function (err, res) {
-        if (err) throw err;
-        console.log(res);
-    }
-    )
+    { "new": true, "upsert": true })
+    .then(inquiry => {
+        return inquiry
+    })
+    .catch( error => {
+        return error
+    })
+
 }
 
 
@@ -54,18 +53,19 @@ module.exports.addPostResponse = (inquiryId,user,postId,response) => {
     console.log('Response by user: ' + user)
     data = new Date().getTime().toString()
     newResponse = {
-        author: user,
-        text: response,
-        dataCreated : data,
+        _id: response._id.toHexString(),
         postResponses: []
     }
     return Inquiry.inquiriesModel
     .updateOne({'_id':inquiryId,'comments._id':postId},
     {"$push":{"comments.$.postResponses": newResponse}},
-    { "new": true, "upsert": true },
-    function (err, res) {
-        if (err) throw err;
-        console.log(res);
-    }
-    )
+    { "new": true, "upsert": true })
+    .then(inquiry => {
+        console.log('Inquiry',inquiry)
+        return inquiry
+    })
+    .catch( error => {
+        console.log(error)
+        return error
+    })
 }

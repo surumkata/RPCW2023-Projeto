@@ -1,4 +1,7 @@
 extends layout
+        
+append styles
+    link(rel='stylesheet', href='/stylesheets/basics.css')
 
 block head
     body
@@ -20,3 +23,62 @@ block head
                 if (logged === false || !logged)
                     .w3-col
                         a(href="/users/register") Register
+                if logged === true
+                    .w3-col 
+                        a.notification.collapsible(onclick="notifications")
+                            span Notificações
+                            span.badge(id="nNotifications" style="display:none") 0
+                        .content.w3-blue(id='notificationsContent')
+
+    script.
+        fetch('/users/api/notifications',{
+            method: 'GET'
+        })
+        .then(response => {
+            if(response.ok){
+                response.json().then(
+                    data =>{
+                        var notifications = data.notifications
+                        var notification_content = document.getElementById('notificationsContent')
+                        var n_notifications = document.getElementById('nNotifications')
+                        var n_notifications_count = 0
+                        for(i in notifications){
+                            notification = notifications[i]
+                            node = document.createElement('div')
+                            innerHtml = `<p>${notification.message}</p>`
+                            if(notification.seen == false){
+                                n_notifications_count += 1
+                                node.style.backgroundColor = "grey"
+                            }
+                            if(notification.url){
+                                innerHtml = `<a href="${notification.url}">${innerHtml}</a>`
+                            }
+                            
+                            node.innerHTML = innerHtml
+                            notification_content.appendChild(node)
+                        }
+                        n_notifications.textContent = n_notifications_count
+                        if(n_notifications_count > 0)
+                            n_notifications.style.display='block'
+                    }
+                )
+            }
+        })
+
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+            content.style.display = "none";
+            } else {
+            content.style.display = "block";
+            }
+        });
+        }
+
+
+

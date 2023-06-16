@@ -10,14 +10,12 @@ var relationsIdSchema = new mongoose.Schema({
 
 
 var commentsSchema = new mongoose.Schema({
-    author: String,
-    text : String,
-    dataCreated : String, 
+    _id : String,
     postResponses: [this]
 })
 
 var inquiriesSchema = new mongoose.Schema({
-    _id: Number,
+    _id: String,
     UnitId: Number,
     UnitTitle : [String],
     UnitDateInitial : String,

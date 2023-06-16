@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken')
 var router = express.Router();
 var Inquiry = require('../controllers/inquiries')
 var User = require('../controllers/users')
+var Post = require('../controllers/posts')
 var consts = require('../utils/const')
 
 
@@ -31,7 +32,6 @@ function verifyAuthentication(req, res, next){
   next()
 }
 
-
 function requireAuthentication(req,res,next){
   console.log('User (verif,): '+JSON.stringify(req.user))
   if(req.cookies && 'user_token' in req.cookies){
@@ -45,11 +45,14 @@ function requireAuthentication(req,res,next){
           req.body.logged = true
           req.body.username = payload.username
           req.body.level = payload.level
+        }else{
+          return res.redirect('/users/login')
         }
       })
     }
     //return true if user is authenticated
     next()
+    
   }
   else{
     res.redirect('/users/login')
@@ -84,8 +87,42 @@ router.get('/',verifyAuthentication, function(req, res, next) {
     })
 });
 
-/* GET Pessoa page. */
+/* GET inquiry page. */
 router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  logged = false
+  username = null
+  if(req.body.logged){
+    logged = req.body.logged
+    username = req.body.username
+  }
+  console.log(req.params.id)
+  id = req.params.id
+  Inquiry.getInquiry(id)
+    .then(inquiry => {
+      comments = inquiry.comments
+      if(comments){
+        Post.getOriginComments(id)
+        .then(posts=>{
+          posts = Post.processPosts(posts)
+          comments = Post.processComments(posts,comments)
+          res.render('inquiry', {username:username,logged : logged,i: inquiry,posts:comments, d: data })
+        })
+        .catch(erro => {
+          res.render('error', {error: erro, message: "Erro na obtenção dos posts"})
+        })
+      }else{
+        res.render('inquiry', {username:username,logged : logged,i: inquiry,posts:[], d: data });
+      }
+    })
+    .catch(erro => {
+      res.render('error', {error: erro, message: "Erro na obtenção da pagina de inquiricao"})
+    })
+});
+
+
+/* GET inquiry edit page. */
+router.get('/inquiry/:id/edit',verifyAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = false
   username = null
@@ -97,14 +134,14 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
   id = req.params.id
   Inquiry.getInquiry(req.params.id)
     .then(inquiry => {
-      console.log(inquiry)
-      posts = inquiry.comments
-      res.render('inquiry', {username:username,logged : logged, id:id,i: inquiry,posts:posts, d: data });
+      res.render('editInquiry', {username:username,logged : logged, id:id,i: inquiry, d: data });
     })
     .catch(erro => {
       res.render('error', {error: erro, message: "Erro na obtenção do registo de Pessoa"})
     })
 });
+
+
 
 /** Post de um novo post numa inquiricao */
 router.post('/inquiry/post/:id',requireAuthentication, function(req, res, next) {
@@ -114,19 +151,26 @@ router.post('/inquiry/post/:id',requireAuthentication, function(req, res, next) 
   id = req.params.id
   user = req.body.username
   post = req.body.post
-  Inquiry.addPost(id,user,post)
-  .then(result => {
-    User.addPostedInquiry(user,id)
+  Post.addPost(id,user,post,null)
+  .then(post => {
+    Inquiry.addPost(id,user,post)
     .then(result => {
-      res.redirect('../'+id);
+      User.addPostedInquiry(user,id)
+      .then(result => {
+        res.redirect('../'+id);
+      })
+      .catch(erro => {
+        res.render('error', {error: erro, message: "Erro na adicao do inquerito nos posts do user"})
+      })
     })
     .catch(erro => {
-      res.render('error', {error: erro, message: "Erro na criação do post"})
+      res.render('error', {error: erro, message: "Erro na adicao do post na inquiricao"})
     })
-  })
+    })
   .catch(erro => {
     res.render('error', {error: erro, message: "Erro na criação do post"})
   })
+  
 });
 
 /** Post de um novo post numa inquiricao */
@@ -139,19 +183,26 @@ router.post('/inquiry/response/:id',requireAuthentication, function(req, res, ne
   response = req.body.response
   postId = req.query.post
 
-  Inquiry.addPostResponse(inquiryId,user,postId,response)
-  .then(result => {
-    User.addPostedInquiry(user,inquiryId)
-    .then(result => {
-      res.redirect('../'+inquiryId);
-    })
-    .catch(erro => {
-      res.render('error', {error: erro, message: "Erro na criação da response"})
-    })
+  Post.addPost(inquiryId,user,response,postId)
+  .then(response => {
+      Inquiry.addPostResponse(inquiryId,user,postId,response)
+      .then(result => {
+        User.addPostedInquiry(user,inquiryId)
+        .then(result => {
+          res.redirect('../'+inquiryId);
+        })
+        .catch(erro => {
+          res.render('error', {error: erro, message: "Erro na criação da response"})
+        })
+      })
+      .catch(erro => {
+        res.render('error', {error: erro, message: "Erro na criação da response"})
+      })
   })
   .catch(erro => {
     res.render('error', {error: erro, message: "Erro na criação da response"})
   })
+  
 });
 
 

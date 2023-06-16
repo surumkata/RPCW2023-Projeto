@@ -44,3 +44,6 @@
 
 # posts e respostas
     * feedback?
+
+
+# jwt renovar manualmente quando for utilizado
