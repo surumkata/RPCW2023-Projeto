@@ -246,17 +246,32 @@ router.get('/logout', requireAuthentication,function(req, res, next) {
 
 /* GET users login. */
 router.get('/api/notifications', verifyAuthentication,function(req, res, next) {
-  var data = new Date().toISOString().substring(0, 16)
-  logged = false
-  username = null
   if(req.body.logged){
-    logged = req.body.logged
     username = req.body.username
     userController.getUserByUsername(username)
     .then(user => {
       res.json({notifications:user.notifications})
     })
   }
+});
+
+
+router.post('/api/notifications/seen/:id', requireAuthentication,function(req, res, next) {
+  notificationId = req.params.id
+  username = req.body.username
+  userController.seeNotification(username,notificationId)
+  .then(user => {
+    res.json({})
+  })
+});
+
+router.post('/api/notifications/remove/:id', requireAuthentication,function(req, res, next) {
+  notificationId = req.params.id
+  username = req.body.username
+  userController.removeNotification(username,notificationId)
+  .then(user => {
+    res.json({})
+  })
 });
 
 module.exports = router;

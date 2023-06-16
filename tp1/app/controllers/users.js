@@ -90,3 +90,36 @@ module.exports.addUserNotificationByUsername = (username,notification) => {
     }
     )
 }
+
+module.exports.seeNotification = (username,notificationId) => {
+    console.log('Seeing notification for user ' + username + ': ' + notificationId)
+    return User.userModel
+    .updateOne({'username':username,'notifications._id':notificationId},
+    {"$set":{"notifications.$.seen": true}})
+    .then(result => {
+        console.log('Updated user notification to seen: ' + JSON.stringify(result))
+        return result
+    })
+    .catch( error => {
+        console.log(error)
+        return error
+    }
+    )
+}
+
+module.exports.removeNotification = (username,notificationId) => {
+    console.log('Seeing notification for user ' + username + ': ' + notificationId)
+    return User.userModel
+    .updateOne({'username':username},
+    {"$pull":{ notifications: {_id : notificationId}}})
+    .then(result => {
+        console.log('Updated user notification to seen: ' + JSON.stringify(result))
+        return result
+    })
+    .catch( error => {
+        console.log(error)
+        return error
+    }
+    )
+}
+
