@@ -32,26 +32,72 @@ function requireAuthentication(req,res,next){
 }
 
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
 
 
 /* GET users profile page. */
 router.get('/profile', requireAuthentication,function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
+  logged = false
+  username = null
+  if(req.body.logged){
+    logged = req.body.logged
+    username = req.body.username
+  }
   username = req.body.username
   console.log('Profile page de user: ' + username)
   userController.getUserByUsername(username)
   .then(user => {
-    res.render('userProfile',{d:data,user:user})
+    res.render('userProfile',{username:username,logged : logged,d:data,user:user})
   })
   .catch(err => {
     console.log(err)
     res.json({error: err})
   })
 });
+
+/* GET users profile edit page. */
+router.get('/editProfile', requireAuthentication,function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  logged = false
+  username = null
+  if(req.body.logged){
+    logged = req.body.logged
+    username = req.body.username
+  }
+  username = req.body.username
+  console.log('Edit profile page de user: ' + username)
+  userController.getUserByUsername(username)
+  .then(user => {
+    res.render('editUserProfile',{username:username,logged : logged,d:data,user:user})
+  })
+  .catch(err => {
+    console.log(err)
+    res.json({error: err})
+  })
+});
+
+/* POST users profile page. */
+router.post('/editProfile', requireAuthentication,function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  username = req.body.username
+  console.log('Edit profile page de user: ' + username)
+  u = {}
+  if(req.body.email){
+    u['email'] = req.body.email
+  }
+  if(req.body.filiation){
+    u['filiation'] = req.body.filiation
+  }
+  userController.updateUserByUsername(username,u)
+  .then(user => {
+    res.redirect('profile')
+  })
+  .catch(err => {
+    console.log(err)
+    res.json({error: err})
+  })
+});
+
 
 
 /* GET users login. */

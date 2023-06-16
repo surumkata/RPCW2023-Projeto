@@ -5,7 +5,9 @@ var mongoose = require('mongoose'),
 var usersSchema = new mongoose.Schema({
     name : String,
     level : String,
-    dataCreated : String,
+    dateCreated : String,
+    email:String,
+    filiation:String,
     posts: [String]
 },{collection: 'users'})
 

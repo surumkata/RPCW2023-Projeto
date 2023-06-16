@@ -42,6 +42,18 @@ module.exports.getUserByUsername = username => {
         )
 }
 
+module.exports.updateUserByUsername = (username,u) => {
+    return User.userModel
+    .updateOne({'username':username},u)
+        .then(user => {
+            return user
+        })
+        .catch( error => {
+            return error
+        }
+        )
+}
+
 
 module.exports.addPostedInquiry = (username,inquiryId) => {
     return User.userModel
