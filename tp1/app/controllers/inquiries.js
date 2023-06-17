@@ -12,6 +12,7 @@ module.exports.list = page => {
             return docs
         })
         .catch(error => {
+            console.log('Error:',error)
             return error
         })
 }
@@ -23,10 +24,39 @@ module.exports.getInquiry = id => {
             return inquiry
         })
         .catch( error => {
+            console.log('Error:',error)
             return error
         }
         )
 }
+
+module.exports.updateInquiry = (id,uInquiry) => {
+    console.log('Update inquiry',id)
+    return Inquiry.inquiriesModel
+    .updateOne({'_id':id},uInquiry)
+        .then(result => {
+            return result
+        })
+        .catch( error => {
+            console.log('Update error:',error)
+            return error
+        }
+        )
+}
+
+module.exports.removeEditedInquiry = id => {
+    return Inquiry.editedInquiriesModel
+    .findOneAndRemove({'_id':id})
+        .then(result => {
+            return result
+        })
+        .catch( error => {
+            console.log('Error:',error)
+            return error
+        }
+        )
+}
+
 
 module.exports.getEditedInquiry = id => {
     return Inquiry.editedInquiriesModel
@@ -35,10 +65,47 @@ module.exports.getEditedInquiry = id => {
             return inquiry
         })
         .catch( error => {
+            console.log('Error:',error)
             return error
         }
         )
 }
+
+module.exports.acceptEditedInquiry = id => {
+    console.log('Accepting edited inquiry',id)
+    return Inquiry.editedInquiriesModel
+    .findOne({'_id':id},{_id:0})
+    .then(inquiry => {
+        if(inquiry){
+            editor = inquiry.editor
+            originalId = inquiry.originalId
+            dateEdited = inquiry.dateEdited
+            this.updateInquiry(originalId,inquiry)
+            this.removeEditedInquiry(id)
+        }
+        return inquiry
+    })
+    .catch( error => {
+        console.log('Error:',error)
+        return error
+    }
+    )
+}
+
+module.exports.removeEditedInquiry = id => {
+    console.log('Removing edited inquiry',id)
+    return Inquiry.editedInquiriesModel
+    .findOneAndRemove({'_id':id})
+        .then(result => {
+            return result
+        })
+        .catch( error => {
+            console.log('Error:',error)
+            return error
+        }
+        )
+}
+
 
 
 module.exports.addPost = (id,user,post) =>{
@@ -56,6 +123,7 @@ module.exports.addPost = (id,user,post) =>{
         return inquiry
     })
     .catch( error => {
+        console.log('Error:',error)
         return error
     })
 
@@ -78,7 +146,7 @@ module.exports.addPostResponse = (inquiryId,user,postId,response) => {
         return inquiry
     })
     .catch( error => {
-        console.log(error)
+        console.log('Error:',error)
         return error
     })
 }
@@ -90,18 +158,19 @@ module.exports.addEditedInquiry = (originalId,editedInquiry,username,userLevel) 
     return this.getInquiry(originalId)
     .then(inquiry => {
         if(inquiry){
+            inquiry._id = undefined
             return Inquiry.editedInquiriesModel
                 .create(inquiry.toJSON())
-                .then(result => {
-                    if(result){
+                .then(newInquiry => {
+                    if(newInquiry){
                         return Inquiry.editedInquiriesModel
-                            .updateOne({_id:originalId},editedInquiry)
+                            .updateOne({_id:newInquiry._id},editedInquiry)
                             .then(result => {
                                 console.log('Added edited inquiry')
                                 notification = {
                                     dateCreated : data,
                                     message: `${username} requested an edition of an inquiry`,
-                                    url: `/editedInquiry/${inquiry._id}`
+                                    url: `/editedInquiry/${newInquiry._id}`
                                 }
                                 userController.addUserNotificationByLevel(1,notification)
                                 return result

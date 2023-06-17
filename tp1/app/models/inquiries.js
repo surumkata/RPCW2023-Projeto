@@ -17,6 +17,8 @@ var inquiriesSchema = new mongoose.Schema({
     _id: String,
     UnitId: Number,
     UnitTitle : [String],
+    dateEdited:String,
+    editor:String,
     UnitDateInitial : String,
     UnitDateFinal : String,
     UnitDateInitialCertainty : Boolean,
@@ -50,7 +52,8 @@ module.exports.inquiriesModel = mongoose.model('inquiricoe',inquiriesSchema)
 
 var editedInquiriesSchema = new mongoose.Schema({
     editor: String,
-    _id: String,
+    originalId: String,
+    dateEdited:String,
     UnitId: Number,
     UnitTitle : [String],
     UnitDateInitial : String,

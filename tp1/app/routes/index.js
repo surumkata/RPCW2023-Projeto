@@ -7,10 +7,11 @@ var Post = require('../controllers/posts')
 var consts = require('../utils/const')
 
 
+/** Verifica estado de autenticacao */
 function verifyAuthentication(req, res, next){
+  console.log('Verify authentication')
   req.body.logged = false
   req.body.level = 0
-  console.log('Cookies: ' +req.cookies)
   if(req.cookies && 'user_token' in req.cookies){
     var token = req.cookies['user_token']
     console.log('Token: ' + token)
@@ -32,7 +33,9 @@ function verifyAuthentication(req, res, next){
   next()
 }
 
+/** Verifica autenticacao e redireciona para pagina de login se utilizador nao estiver logged */
 function requireAuthentication(req,res,next){
+  console.log('Require authentication')
   console.log('User (verif,): '+JSON.stringify(req.user))
   if(req.cookies && 'user_token' in req.cookies){
     var token = req.cookies['user_token']
@@ -45,17 +48,54 @@ function requireAuthentication(req,res,next){
           req.body.logged = true
           req.body.username = payload.username
           req.body.level = payload.level
+          return next()
         }else{
           return res.redirect('/users/login')
         }
       })
     }
-    //return true if user is authenticated
-    next()
-    
+    else{
+      return res.redirect('/users/login')
+    }
   }
   else{
-    res.redirect('/users/login')
+    return res.redirect('/users/login')
+  }
+}
+
+
+/** Verifica autenticacao de nivel admin */
+function requireAdmin(req,res,next){
+  console.log('Require Admin')
+  console.log('User (verif,): '+JSON.stringify(req.user))
+  if(req.cookies && 'user_token' in req.cookies){
+    var token = req.cookies['user_token']
+    console.log('Token: ' + token)
+    if(token){
+      jwt.verify(token, consts.sessionSecret, function(e, payload){
+        if(!e){
+          console.log('Logged in.')
+          console.log('Payload: ' + JSON.stringify(payload))
+
+          if(payload.level != 1){
+            return res.json({error: 'Unauthorized access.'})
+          }
+
+          req.body.logged = true
+          req.body.username = payload.username
+          req.body.level = payload.level
+
+          return next()
+        }else{
+          return res.redirect('/users/login')
+        }
+      })
+    }else{
+      return res.redirect('/users/login')
+    }
+  }
+  else{
+    return res.redirect('/users/login')
   }
 }
 
@@ -127,31 +167,46 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
 
 
 /* GET edited inquiry page. */
-router.get('/editedInquiry/:id',requireAuthentication, function(req, res, next) {
+router.get('/editedInquiry/:id',requireAdmin, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = req.body.logged
   username = req.body.username
   console.log(req.params.id)
   id = req.params.id
-  Inquiry.getEditedInquiry(req.params.id)
+  Inquiry.getEditedInquiry(id)
     .then(inquiry => {
-      res.render('editedInquiry', {username:username,logged : logged,i: inquiry, d: data} );
+      if(inquiry){
+        res.render('editedInquiry', {username:username,logged : logged,i: inquiry, d: data} );
+      }else{
+        res.json({message: 'Task already dealt with.'})
+      }
     })
     .catch(erro => {
       res.render('error', {error: erro, message: "Erro na obtenção do registo de Inquirição"})
     })
 });
 
+/** POST de aceitação de uma sugestao de edicao de inquerito */
+router.post('/editedInquiry/accept/:id',requireAdmin, function(req, res) {
+  var data = new Date().toISOString().substring(0, 16)
+  var id = req.params.id
+  Inquiry.acceptEditedInquiry(id)
+  res.redirect('/')
+})
+
+router.post('/editedInquiry/reject/:id',requireAdmin, function(req, res) {
+  var data = new Date().toISOString().substring(0, 16)
+  var id = req.params.id
+  Inquiry.removeEditedInquiry(id)
+  res.redirect('/')
+})
+
 
 /* GET inquiry edit page. */
-router.get('/inquiry/:id/edit',verifyAuthentication, function(req, res, next) {
+router.get('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = false
-  username = null
-  if(req.body.logged){
-    logged = req.body.logged
-    username = req.body.username
-  }
+  logged = req.body.logged
+  username = req.body.username
   console.log(req.params.id)
   id = req.params.id
   Inquiry.getInquiry(req.params.id)
@@ -163,33 +218,44 @@ router.get('/inquiry/:id/edit',verifyAuthentication, function(req, res, next) {
     })
 });
 
+
+/** POST de sugestao de edicao de um inquerito */
 router.post('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = req.body.logged
   username = req.body.username
   userLevel = req.body.level
-  console.log(req.params.id)
   id = req.params.id
+  console.log('Body:' , JSON.stringify(req.body))
   var editedInquiry = {
+    originalId: id,
     editor: username,
+    dateEdited : data,
     relations_id : []
   }
-  if(Array.isArray(req.body.relationName)){
-    for(i in req.body.relationName){
+  if(req.body.relationName){
+    if(Array.isArray(req.body.relationName)){
+      for(i in req.body.relationName){
+        new_relation = {}
+        new_relation['type'] = req.body.relationType[i]
+        new_relation['name'] = req.body.relationName[i]
+        new_relation['id'] = req.body.relationId[i]
+        editedInquiry.relations_id.push(new_relation)
+      }
+    }else{
       new_relation = {}
-      new_relation['type'] = req.body.relationType[i]
-      new_relation['name'] = req.body.relationName[i]
-      new_relation['id'] = req.body.relationId[i]
+      new_relation['type'] = req.body.relationType
+      new_relation['name'] = req.body.relationName
+      new_relation['id'] = req.body.relationId
       editedInquiry.relations_id.push(new_relation)
     }
-  }else{
-    new_relation = {}
-    new_relation['type'] = req.body.relationType
-    new_relation['name'] = req.body.relationName
-    new_relation['id'] = req.body.relationId
-    editedInquiry.relations_id.push(new_relation)
   }
-  Inquiry.addEditedInquiry(id,editedInquiry,username,userLevel)
+  console.log('New relation:' , JSON.stringify(editedInquiry))
+  if(userLevel == 1){
+    Inquiry.updateInquiry(id,editedInquiry)
+  }else{
+    Inquiry.addEditedInquiry(id,editedInquiry,username)
+  }
   res.redirect(`/inquiry/${id}`);
 });
 
@@ -225,7 +291,7 @@ router.post('/inquiry/post/:id',requireAuthentication, function(req, res, next) 
   
 });
 
-/** Post de um novo post numa inquiricao */
+/** Post de uma nova resposta numa inquiricao */
 router.post('/inquiry/response/:id',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   console.log('Novo post')
@@ -257,12 +323,6 @@ router.post('/inquiry/response/:id',requireAuthentication, function(req, res, ne
   
 });
 
-
-
-router.get('/protegida',verifyAuthentication,(req,res) => {
-  var data = new Date().toISOString().substring(0, 16)
-  res.render('protected',{d:data, u:req.user})
-})
 
 
 module.exports = router;

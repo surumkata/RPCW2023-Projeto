@@ -91,7 +91,7 @@ function addRelationForm() {
     if(relations.length == 0){
         var node = document.createElement('div')
         node.classList.add('w3-container')
-        node.innerHTML = baseRelation.replace(new RegExp('\$replace','g'),relations.length.toString())
+        node.innerHTML = baseRelation.replace(new RegExp('\\$replace','g'),relations.length.toString())
         relationsContainer.appendChild(node)
         relationsContainer.append(addRelationBtn)
     }else{
@@ -107,7 +107,7 @@ function addRelationForm() {
         if(filled){
             var node = document.createElement('div')
             node.classList.add('w3-container')
-            node.innerHTML = baseRelation.replace(new RegExp('\$replace','g'),relations.length.toString())
+            node.innerHTML = baseRelation.replace(new RegExp('\\$replace','g'),relations.length.toString())
             relationsContainer.appendChild(node)
             relationsContainer.append(addRelationBtn)
         }

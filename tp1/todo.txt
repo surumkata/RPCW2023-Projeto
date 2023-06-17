@@ -14,24 +14,16 @@
 ------          TODO
 
 
-# autenticacao
-    # registo
-        * verificar passe e confirmar passe sao iguais
-        * usernames unicos
-
-# niveis de acesso: pelo menos admin + consumidor (consulta, posts, sugerir alteracoes)
-
 # inquiricoes
-    * editar
-    * ligacoes para outras inquiricoes
+    * criar
+
+# inquiricao editada
+    * mandar notificacao de resultado para o autor da edicao
 
 # melhorar views
-# rotina para apagar sessions
-# notificacoes do usuario (post,modificacoes aceites)
-    # admin deve ter notificacoes de alteraçoes pedidas
 
-# pagina de usuario
-    * visualizar e editar
+
+
 # utilizadores
     * nome
     * email
@@ -47,3 +39,9 @@
 
 
 # jwt renovar manualmente quando for utilizado
+
+# barra de pesquisa
+    * nome
+    * lugar
+    * data
+

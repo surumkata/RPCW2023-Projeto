@@ -108,6 +108,7 @@ module.exports.addUserNotificationByLevel = (level,notification) => {
     )
 }
 
+
 module.exports.seeNotification = (username,notificationId) => {
     console.log('Seeing notification for user ' + username + ': ' + notificationId)
     return User.userModel
