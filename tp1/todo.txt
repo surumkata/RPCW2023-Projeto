@@ -17,12 +17,8 @@
 # inquiricoes
     * criar
 
-# inquiricao editada
-    * mandar notificacao de resultado para o autor da edicao
 
 # melhorar views
-
-
 
 # utilizadores
     * nome

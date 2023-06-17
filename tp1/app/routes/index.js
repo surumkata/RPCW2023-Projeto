@@ -197,7 +197,7 @@ router.post('/editedInquiry/accept/:id',requireAdmin, function(req, res) {
 router.post('/editedInquiry/reject/:id',requireAdmin, function(req, res) {
   var data = new Date().toISOString().substring(0, 16)
   var id = req.params.id
-  Inquiry.removeEditedInquiry(id)
+  Inquiry.removeEditedInquiry(id,true)
   res.redirect('/')
 })
 

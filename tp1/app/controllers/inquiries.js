@@ -73,6 +73,7 @@ module.exports.getEditedInquiry = id => {
 
 module.exports.acceptEditedInquiry = id => {
     console.log('Accepting edited inquiry',id)
+    data = new Date().getTime().toString()
     return Inquiry.editedInquiriesModel
     .findOne({'_id':id},{_id:0})
     .then(inquiry => {
@@ -80,8 +81,14 @@ module.exports.acceptEditedInquiry = id => {
             editor = inquiry.editor
             originalId = inquiry.originalId
             dateEdited = inquiry.dateEdited
+            notification = {
+                dateCreated : data,
+                message: `A tua edição da inquirição ${originalId} foi aceite`,
+                url: `/inquiry/${originalId}`
+            }
+            userController.addUserNotificationByUsername(editor,notification)
             this.updateInquiry(originalId,inquiry)
-            this.removeEditedInquiry(id)
+            this.removeEditedInquiry(id,false)
         }
         return inquiry
     })
@@ -92,12 +99,23 @@ module.exports.acceptEditedInquiry = id => {
     )
 }
 
-module.exports.removeEditedInquiry = id => {
+module.exports.removeEditedInquiry = (id,sendNotification) => {
     console.log('Removing edited inquiry',id)
+    data = new Date().getTime().toString()
     return Inquiry.editedInquiriesModel
     .findOneAndRemove({'_id':id})
-        .then(result => {
-            return result
+        .then(inquiry => {
+            if(sendNotification){
+                originalId = inquiry.originalId
+                editorId = inquiry.editor
+                notification = {
+                    dateCreated : data,
+                    message: `A tua edição da inquirição ${originalId} foi rejeitada`,
+                    url: `/inquiry/${originalId}`
+                }
+                userController.addUserNotificationByUsername(editorId,notification)
+            }
+            return inquiry
         })
         .catch( error => {
             console.log('Error:',error)

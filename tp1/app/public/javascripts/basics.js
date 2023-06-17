@@ -42,6 +42,7 @@ function getNotifications(){
                     for(i in notifications){
                         notification = notifications[i]
                         node = document.createElement('div')
+                        node.onclick = function(){seenNotification(notification._id)}
                         innerHtml = `<p>${notification.message}</p>`
                         if(notification.url){
                             innerHtml = `<a href="${notification.url}">${innerHtml}</a>`
