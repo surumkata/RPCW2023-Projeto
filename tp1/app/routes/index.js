@@ -126,6 +126,23 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
 });
 
 
+/* GET edited inquiry page. */
+router.get('/editedInquiry/:id',requireAuthentication, function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  logged = req.body.logged
+  username = req.body.username
+  console.log(req.params.id)
+  id = req.params.id
+  Inquiry.getEditedInquiry(req.params.id)
+    .then(inquiry => {
+      res.render('editedInquiry', {username:username,logged : logged,i: inquiry, d: data} );
+    })
+    .catch(erro => {
+      res.render('error', {error: erro, message: "Erro na obtenção do registo de Inquirição"})
+    })
+});
+
+
 /* GET inquiry edit page. */
 router.get('/inquiry/:id/edit',verifyAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
@@ -142,8 +159,38 @@ router.get('/inquiry/:id/edit',verifyAuthentication, function(req, res, next) {
       res.render('editInquiry', {username:username,logged : logged, id:id,i: inquiry, d: data });
     })
     .catch(erro => {
-      res.render('error', {error: erro, message: "Erro na obtenção do registo de Pessoa"})
+      res.render('error', {error: erro, message: "Erro na obtenção do registo de Inquirição"})
     })
+});
+
+router.post('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  logged = req.body.logged
+  username = req.body.username
+  userLevel = req.body.level
+  console.log(req.params.id)
+  id = req.params.id
+  var editedInquiry = {
+    editor: username,
+    relations_id : []
+  }
+  if(Array.isArray(req.body.relationName)){
+    for(i in req.body.relationName){
+      new_relation = {}
+      new_relation['type'] = req.body.relationType[i]
+      new_relation['name'] = req.body.relationName[i]
+      new_relation['id'] = req.body.relationId[i]
+      editedInquiry.relations_id.push(new_relation)
+    }
+  }else{
+    new_relation = {}
+    new_relation['type'] = req.body.relationType
+    new_relation['name'] = req.body.relationName
+    new_relation['id'] = req.body.relationId
+    editedInquiry.relations_id.push(new_relation)
+  }
+  Inquiry.addEditedInquiry(id,editedInquiry,username,userLevel)
+  res.redirect(`/inquiry/${id}`);
 });
 
 

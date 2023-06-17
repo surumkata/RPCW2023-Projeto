@@ -64,3 +64,59 @@ function getNotifications(){
         }
     })
 }
+
+
+
+function addRelationForm() {
+    var relationsContainer = document.getElementById('relationsContainer')
+    var relations = relationsContainer.getElementsByTagName('relation')
+    var addRelationBtn = document.getElementById('addRelationBtn')
+    var baseRelation =`
+            <relation id="relation$replace">
+                <label>
+                    <b>Nome</b> : <input class="w3-input" type="text" name="relationName" value="" required>
+                </label>
+                <br>
+                <label>
+                    <b>Relação</b> :<input class="w3-input" type="text" name="relationType" value="" required>
+                </label>
+                <br>
+                <label>
+                    <b>ID do Processo</b> :<input class="w3-input" type="number" name="relationId" value="" required>
+                </label>
+                <br>
+                <button class="w3-btn w3-blue" type="button" id="removeRelationBtn" onclick="removeRelation('relation$replace')">-</button>
+            </relation>
+        `
+    if(relations.length == 0){
+        var node = document.createElement('div')
+        node.classList.add('w3-container')
+        node.innerHTML = baseRelation.replace(new RegExp('\$replace','g'),relations.length.toString())
+        relationsContainer.appendChild(node)
+        relationsContainer.append(addRelationBtn)
+    }else{
+        var lastRelation = relations[relations.length-1]
+        var lastRelationInputs = lastRelation.getElementsByTagName('input')
+        var filled = false
+        for(i in lastRelationInputs){
+            if(lastRelationInputs[i].value && lastRelationInputs[i].value != ''){
+                filled = true
+                break
+            }
+        }
+        if(filled){
+            var node = document.createElement('div')
+            node.classList.add('w3-container')
+            node.innerHTML = baseRelation.replace(new RegExp('\$replace','g'),relations.length.toString())
+            relationsContainer.appendChild(node)
+            relationsContainer.append(addRelationBtn)
+        }
+    }
+}
+
+function removeRelation(id){
+    var relation = document.getElementById(id)
+    if(relation){
+        relation.remove()
+    }
+}

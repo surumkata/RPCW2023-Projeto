@@ -1,4 +1,5 @@
 var Inquiry = require('../models/inquiries')
+var userController = require('../controllers/users')
 
 // Inquirição list
 module.exports.list = page => {
@@ -17,6 +18,18 @@ module.exports.list = page => {
 
 module.exports.getInquiry = id => {
     return Inquiry.inquiriesModel
+    .findOne({'_id':id})
+        .then(inquiry => {
+            return inquiry
+        })
+        .catch( error => {
+            return error
+        }
+        )
+}
+
+module.exports.getEditedInquiry = id => {
+    return Inquiry.editedInquiriesModel
     .findOne({'_id':id})
         .then(inquiry => {
             return inquiry
@@ -66,6 +79,50 @@ module.exports.addPostResponse = (inquiryId,user,postId,response) => {
     })
     .catch( error => {
         console.log(error)
+        return error
+    })
+}
+
+
+
+module.exports.addEditedInquiry = (originalId,editedInquiry,username,userLevel) => {
+    data = new Date().getTime().toString()
+    return this.getInquiry(originalId)
+    .then(inquiry => {
+        if(inquiry){
+            return Inquiry.editedInquiriesModel
+                .create(inquiry.toJSON())
+                .then(result => {
+                    if(result){
+                        return Inquiry.editedInquiriesModel
+                            .updateOne({_id:originalId},editedInquiry)
+                            .then(result => {
+                                console.log('Added edited inquiry')
+                                notification = {
+                                    dateCreated : data,
+                                    message: `${username} requested an edition of an inquiry`,
+                                    url: `/editedInquiry/${inquiry._id}`
+                                }
+                                userController.addUserNotificationByLevel(1,notification)
+                                return result
+                            })
+                            .catch( error => {
+                                console.log('Erro edited inquiry (updated edited inquiry):',error)
+                                return error
+                            })
+                    }
+                    return result
+                })
+                .catch( error => {
+                    console.log('Erro edited inquiry (creating edited inquiry):',error)
+                    return error
+                })
+        }
+        return inquiry
+        
+    })
+    .catch( error => {
+        console.log('Erro edited inquiry (searching original):',error)
         return error
     })
 }

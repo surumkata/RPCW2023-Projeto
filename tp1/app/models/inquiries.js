@@ -46,3 +46,39 @@ var inquiriesSchema = new mongoose.Schema({
 },{collection:'inquiricoes'})
 
 module.exports.inquiriesModel = mongoose.model('inquiricoe',inquiriesSchema)
+
+
+var editedInquiriesSchema = new mongoose.Schema({
+    editor: String,
+    _id: String,
+    UnitId: Number,
+    UnitTitle : [String],
+    UnitDateInitial : String,
+    UnitDateFinal : String,
+    UnitDateInitialCertainty : Boolean,
+    UnitDateFinalCertainty : Boolean,
+    AllowUnitDatesInference : Boolean,
+    Dimensions : String,
+    AccessRestrict : String,
+    PhysLoc : String,
+    PreviousLoc : String,
+    PhysTech : String,
+    RelatedMaterial : String,
+    Note : String,
+    Revised : Boolean,
+    Published : Boolean,
+    Available : Boolean,
+    Creator : String,
+    Created : String,
+    Username : String,
+    ProcessInfoDate : String,
+    ProcessInfo : String,
+    filiations : [String],
+    birthplace : String,
+    current_concelho : String,
+    current_district : String,
+    relations_id : [relationsIdSchema],
+    comments: [commentsSchema]
+},{collection:'editedInquiricoes'})
+
+module.exports.editedInquiriesModel = mongoose.model('editedInquiricoe',editedInquiriesSchema)

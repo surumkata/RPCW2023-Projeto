@@ -91,6 +91,23 @@ module.exports.addUserNotificationByUsername = (username,notification) => {
     )
 }
 
+module.exports.addUserNotificationByLevel = (level,notification) => {
+    console.log('Adding notification for user level ' + level + ': ' + notification)
+    return User.userModel
+    .updateOne({'level':level},
+    {"$push":{"notifications": notification}},
+    { "new": true, "upsert": true })
+    .then(result => {
+        console.log('Updated user: ' + JSON.stringify(result))
+        return result
+    })
+    .catch( error => {
+        console.log(error)
+        return error
+    }
+    )
+}
+
 module.exports.seeNotification = (username,notificationId) => {
     console.log('Seeing notification for user ' + username + ': ' + notificationId)
     return User.userModel
