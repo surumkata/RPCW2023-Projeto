@@ -61,7 +61,16 @@ block content
             br
             label #[b current_district: ] #{i.current_district}
             br
-            label #[b relations_id: ] #{i.relations_id}
+            label #[b relations_id: ]
+            .w3-container
+              each relation in i.relations_id
+                b #{relation.name}
+                br
+                label #[b Relação] : #{relation.type}
+                br
+                a(href="/inquiry/"+relation.id) link
+                br
+
             br
     a.w3-btn.w3-blue(href="/inquiry/"+i._id+"/edit") Editar
     .w3-container

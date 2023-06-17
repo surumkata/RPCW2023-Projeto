@@ -96,7 +96,7 @@ for i in df.index:
                 while j < len(groups):
                     rel_id = int(groups[j][1])
                     person = df.iloc[rel_id]
-                    rel.append({rel_id:groups[j][0],'id':person['ID']})
+                    rel.append({'type':groups[j][0],'id':person['ID'],'name':person['UnitTitle'][0]})
                     j += 1
                 count+=1
         relations_id.append(rel)

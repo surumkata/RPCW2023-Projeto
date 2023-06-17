@@ -100,19 +100,24 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
   id = req.params.id
   Inquiry.getInquiry(id)
     .then(inquiry => {
-      comments = inquiry.comments
-      if(comments){
-        Post.getOriginComments(id)
-        .then(posts=>{
-          posts = Post.processPosts(posts)
-          comments = Post.processComments(posts,comments)
-          res.render('inquiry', {username:username,logged : logged,i: inquiry,posts:comments, d: data })
-        })
-        .catch(erro => {
-          res.render('error', {error: erro, message: "Erro na obtenção dos posts"})
-        })
+      if(inquiry){
+        console.log('Inquiry: ',JSON.stringify(inquiry))
+        if('comments' in inquiry){
+          comments = inquiry.comments
+          Post.getOriginComments(id)
+          .then(posts=>{
+            posts = Post.processPosts(posts)
+            comments = Post.processComments(posts,comments)
+            res.render('inquiry', {username:username,logged : logged,i: inquiry,posts:comments, d: data })
+          })
+          .catch(erro => {
+            res.render('error', {error: erro, message: "Erro na obtenção dos posts"})
+          })
+        }else{
+          res.render('inquiry', {username:username,logged : logged,i: inquiry,posts:[], d: data });
+        }
       }else{
-        res.render('inquiry', {username:username,logged : logged,i: inquiry,posts:[], d: data });
+        res.redirect('/')
       }
     })
     .catch(erro => {

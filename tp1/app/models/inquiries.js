@@ -2,10 +2,9 @@
 var mongoose = require('mongoose')
 
 var relationsIdSchema = new mongoose.Schema({
-    relation: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Inquiricoe'
-      }
+    type: String,
+    id: String,
+    name:String
 })
 
 
