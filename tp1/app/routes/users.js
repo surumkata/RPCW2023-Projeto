@@ -7,97 +7,11 @@ var userController = require('../controllers/users')
 var consts = require('../utils/const')
 
 
-/** Verifica estado de autenticacao */
-function verifyAuthentication(req, res, next){
-  console.log('Verify authentication')
-  req.body.logged = false
-  req.body.level = 0
-  if(req.cookies && 'user_token' in req.cookies){
-    var token = req.cookies['user_token']
-    console.log('Token: ' + token)
-    if(token){
-      jwt.verify(token, consts.sessionSecret, function(e, payload){
-        if(!e){
-          console.log('Logged in.')
-          console.log('Payload: ' + JSON.stringify(payload))
-          req.body.logged = true
-          req.body.username = payload.username
-          req.body.level = payload.level
-        }
-        else{
-          console.log('Error: ' + e)
-        }
-      })
-    }
-  }
-  next()
-}
-
-/** Verifica autenticacao e redireciona para pagina de login se utilizador nao estiver logged */
-function requireAuthentication(req,res,next){
-  console.log('Require authentication')
-  console.log('User (verif,): '+JSON.stringify(req.user))
-  if(req.cookies && 'user_token' in req.cookies){
-    var token = req.cookies['user_token']
-    console.log('Token: ' + token)
-    if(token){
-      jwt.verify(token, consts.sessionSecret, function(e, payload){
-        if(!e){
-          console.log('Logged in.')
-          console.log('Payload: ' + JSON.stringify(payload))
-          req.body.logged = true
-          req.body.username = payload.username
-          req.body.level = payload.level
-          return next()
-        }else{
-          return res.redirect('/users/login')
-        }
-      })
-    }
-    else{
-      return res.redirect('/users/login')
-    }
-  }
-  else{
-    return res.redirect('/users/login')
-  }
-}
-
-
-/** Verifica autenticacao de nivel admin */
-function requireAdmin(req,res,next){
-  console.log('Require Admin')
-  console.log('User (verif,): '+JSON.stringify(req.user))
-  if(req.cookies && 'user_token' in req.cookies){
-    var token = req.cookies['user_token']
-    console.log('Token: ' + token)
-    if(token){
-      jwt.verify(token, consts.sessionSecret, function(e, payload){
-        if(!e){
-          console.log('Logged in.')
-          console.log('Payload: ' + JSON.stringify(payload))
-
-          if(payload.level != 1){
-            return res.json({error: 'Unauthorized access.'})
-          }
-
-          req.body.logged = true
-          req.body.username = payload.username
-          req.body.level = payload.level
-
-          return next()
-        }else{
-          return res.redirect('/users/login')
-        }
-      })
-    }else{
-      return res.redirect('/users/login')
-    }
-  }
-  else{
-    return res.redirect('/users/login')
-  }
-}
+var verifyAuthentication = consts.verifyAuthentication
+var requireAuthentication = consts.requireAuthentication
+var requireAdmin = consts.requireAdmin
+var createJwtToken = consts.createJwtToken
+var clearJwtToken = consts.clearJwtToken
 
 
 
@@ -194,18 +108,15 @@ router.post('/login', function(req, res, next) {
         return res.redirect('login'); 
       }
       // criar token de autenticacao
-      jwt.sign({
-        username: user.username,
-        level: user.level}, 
-        consts.sessionSecret,
-        {expiresIn: '1h'},
+      createJwtToken(user.username,user.level,
         function(e, token) {
-          if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
-          else{
-            res.cookie('user_token',token,{httpOnly: true})
-            res.redirect('/')
+            if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
+            else{
+              res.cookie('user_token',token,{httpOnly: true})
+              res.redirect('/')
+            }
           }
-        });
+          )
     })(req,res,next)
   });
 
@@ -269,7 +180,7 @@ router.post('/register', function(req, res, next) {
 
 /* GET users logout. */
 router.get('/logout', requireAuthentication,function(req, res, next) {
-    res.clearCookie('user_token')
+    clearJwtToken(res)
     res.redirect('/')
     // req.logout(function(err){
     //     if(err)

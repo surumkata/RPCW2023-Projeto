@@ -6,98 +6,11 @@ var User = require('../controllers/users')
 var Post = require('../controllers/posts')
 var consts = require('../utils/const')
 
-
-/** Verifica estado de autenticacao */
-function verifyAuthentication(req, res, next){
-  console.log('Verify authentication')
-  req.body.logged = false
-  req.body.level = 0
-  if(req.cookies && 'user_token' in req.cookies){
-    var token = req.cookies['user_token']
-    console.log('Token: ' + token)
-    if(token){
-      jwt.verify(token, consts.sessionSecret, function(e, payload){
-        if(!e){
-          console.log('Logged in.')
-          console.log('Payload: ' + JSON.stringify(payload))
-          req.body.logged = true
-          req.body.username = payload.username
-          req.body.level = payload.level
-        }
-        else{
-          console.log('Error: ' + e)
-        }
-      })
-    }
-  }
-  next()
-}
-
-/** Verifica autenticacao e redireciona para pagina de login se utilizador nao estiver logged */
-function requireAuthentication(req,res,next){
-  console.log('Require authentication')
-  console.log('User (verif,): '+JSON.stringify(req.user))
-  if(req.cookies && 'user_token' in req.cookies){
-    var token = req.cookies['user_token']
-    console.log('Token: ' + token)
-    if(token){
-      jwt.verify(token, consts.sessionSecret, function(e, payload){
-        if(!e){
-          console.log('Logged in.')
-          console.log('Payload: ' + JSON.stringify(payload))
-          req.body.logged = true
-          req.body.username = payload.username
-          req.body.level = payload.level
-          return next()
-        }else{
-          return res.redirect('/users/login')
-        }
-      })
-    }
-    else{
-      return res.redirect('/users/login')
-    }
-  }
-  else{
-    return res.redirect('/users/login')
-  }
-}
+var verifyAuthentication = consts.verifyAuthentication
+var requireAuthentication = consts.requireAuthentication
+var requireAdmin = consts.requireAdmin
 
 
-/** Verifica autenticacao de nivel admin */
-function requireAdmin(req,res,next){
-  console.log('Require Admin')
-  console.log('User (verif,): '+JSON.stringify(req.user))
-  if(req.cookies && 'user_token' in req.cookies){
-    var token = req.cookies['user_token']
-    console.log('Token: ' + token)
-    if(token){
-      jwt.verify(token, consts.sessionSecret, function(e, payload){
-        if(!e){
-          console.log('Logged in.')
-          console.log('Payload: ' + JSON.stringify(payload))
-
-          if(payload.level != 1){
-            return res.json({error: 'Unauthorized access.'})
-          }
-
-          req.body.logged = true
-          req.body.username = payload.username
-          req.body.level = payload.level
-
-          return next()
-        }else{
-          return res.redirect('/users/login')
-        }
-      })
-    }else{
-      return res.redirect('/users/login')
-    }
-  }
-  else{
-    return res.redirect('/users/login')
-  }
-}
 
 /** Processa query por filtros de pesquisa */
 function getQueryFilters(req){
