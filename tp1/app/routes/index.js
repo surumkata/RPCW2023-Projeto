@@ -99,6 +99,64 @@ function requireAdmin(req,res,next){
   }
 }
 
+/** Processa query por filtros de pesquisa */
+function getQueryFilters(req){
+  var searchQuery = {}
+  var sortQuery = {UnitId:1}
+  var page = req.query.page
+
+  // paginacao das inquiricoes
+  if(!page){
+    page = 0
+  }else{
+    page = parseInt(page)
+  }
+
+  // procura por nome de pessoa
+  personName = req.query.searchName
+  if(personName){
+    searchQuery['UnitTitle'] = personName
+  }
+
+  // procura por data de inicio
+  timeStart = req.query.searchTimeStart
+  if(timeStart){
+    searchQuery['UnitDateInitial'] = {"$gte":new Date(timeStart)}
+  }
+
+  // procura por data de fim
+  timeEnd = req.query.searchTimeEnd
+  if(timeEnd){
+    searchQuery['UnitDateFinal'] = {"$lte" : new Date(timeEnd)}
+  }
+
+  // sorting por tipo de dado
+  sortType = req.query.sort
+  if(sortType){
+    var type = ''
+    switch (sortType) {
+      case 'id':
+        type = 'UnitId'
+        break;
+      case 'person':
+        type = 'UnitTitle'
+        break;
+      case 'startDate':
+        type = 'UnitDateInitial'
+        break;
+      case 'endDate':
+        type = 'UnitDateFinal'
+        break;
+      default:
+        type = 'UnitId'
+        break;
+    }
+    sortQuery = {}
+    sortQuery[type] = 1
+  }
+  return [page,searchQuery,sortQuery]
+}
+
 
 /* GET home page. */
 router.get('/',verifyAuthentication, function(req, res, next) {
@@ -109,35 +167,12 @@ router.get('/',verifyAuthentication, function(req, res, next) {
     logged = req.body.logged
     username = req.body.username
   }
-  var searchQuery = {}
-  var sortQuery = {UnitId:1}
-  // paginacao das inquiricoes
-  page = req.query.page
-  if(!page){
-    page = 0
-  }else{
-    page = parseInt(page)
-  }
-  // procura por nome de pessoa
-  personName = req.query.searchName
-  if(personName){
-    searchQuery['UnitTitle'] = personName
-  }
-  // procura por data de inicio
-  timeStart = req.query.searchTimeStart
-  if(timeStart){
-    searchQuery['UnitDateInitial'] = {"$gte":new Date(timeStart)}
-  }
-  // procura por data de fim
-  timeEnd = req.query.searchTimeEnd
-  if(timeEnd){
-    searchQuery['UnitDateFinal'] = {"$lte" : new Date(timeEnd)}
-  }
 
-  console.log(searchQuery)
+  var [page,searchQuery,sortQuery] = getQueryFilters(req)
+  console.log(page,searchQuery,sortQuery)
   Inquiry.list(page,searchQuery,sortQuery)
     .then(inquiries => {
-      res.render('index', {username:username,logged : logged,timeStartValue:timeStart,timeEndValue:timeEnd, is : inquiries, d : data})
+      res.render('index', {username:username,logged : logged,timeStartValue:timeStart,timeEndValue:timeEnd, is : inquiries, d : data,page:page})
     })
     .catch(erro => {
       res.render('error', {error : erro, message : "Erro na obtenção da lista de inquisições"})

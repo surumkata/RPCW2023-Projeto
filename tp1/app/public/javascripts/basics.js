@@ -137,11 +137,19 @@ function search(){
     if(query.length > 0){
         console.log('?'+query.join('&'))
         window.location.replace(`/?${query.join('&')}`)
+    }else{
+        window.location.replace('/')
     }
 }
 
 function paginationQuery(pageNumber){
     var urlParams = new URLSearchParams(window.location.search);
-    var page = urlParams.set('page', pageNumber)
+    urlParams.set('page', pageNumber)
+    window.location.search = urlParams.toString()
+}
+
+function sortQuery(sortType){
+    var urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('sort', sortType)
     window.location.search = urlParams.toString()
 }

@@ -11,7 +11,7 @@ block content
     .w3-container
         table
           th
-            if(page > 0)
+            if (page > 0)
               - let previousPage = page-1 
               button.w3-btn.w3-blue(onclick="paginationQuery("+previousPage+")") previous
           th
@@ -22,9 +22,13 @@ block content
       table.w3-table-all
         tr
           th ID
+            button.w3-btn.w3-gray(onclick="sortQuery('id')") V
           th Pessoa
+            button.w3-btn.w3-gray(onclick="sortQuery('person')") V
           th Data Início
+            button.w3-btn.w3-gray(onclick="sortQuery('startDate')") V
           th Data Fim
+            button.w3-btn.w3-gray(onclick="sortQuery('endDate')") V
           th
         each i in is
           tr
