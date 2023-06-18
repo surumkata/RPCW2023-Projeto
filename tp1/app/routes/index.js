@@ -31,6 +31,12 @@ function getQueryFilters(req){
     searchQuery['UnitTitle'] = personName
   }
 
+  // procura por nome de pessoa
+  searchPlace = req.query.searchPlace
+  if(searchPlace){
+    searchQuery['birthplace'] = searchPlace
+  }
+
   // procura por data de inicio
   timeStart = req.query.searchTimeStart
   if(timeStart){
@@ -85,7 +91,6 @@ router.get('/',verifyAuthentication, function(req, res, next) {
   }
   // obter filtros de pesquisa de documentos
   var [page,searchQuery,sortQuery] = getQueryFilters(req)
-  console.log(page,searchQuery,sortQuery)
   Inquiry.list(page,searchQuery,sortQuery,docPerPage)
     .then(inquiries => {
       Inquiry.totalCount(searchQuery)
@@ -142,12 +147,70 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
 });
 
 
+/* GET create inquiry page. */
+router.get('/createInquiry',requireAuthentication, function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  logged = req.body.logged
+  username = req.body.username
+  res.render('createInquiry', {username:username,logged : logged, d: data} );
+});
+
+/* Post create inquiry */
+router.post('/createInquiry',requireAuthentication, function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  logged = req.body.logged
+  username = req.body.username
+  userLevel = req.body.level
+  
+  // processar inquiry
+  var newInquiry = {
+    editor: username,
+    dateEdited : data,
+    relations_id : []
+  }
+  // Verificar modificações nas relaçoes
+  if(req.body.relationName){
+    if(Array.isArray(req.body.relationName)){
+      for(i in req.body.relationName){
+        new_relation = {}
+        new_relation['type'] = req.body.relationType[i]
+        new_relation['name'] = req.body.relationName[i]
+        new_relation['id'] = req.body.relationId[i]
+        newInquiry.relations_id.push(new_relation)
+      }
+    }else{
+      new_relation = {}
+      new_relation['type'] = req.body.relationType
+      new_relation['name'] = req.body.relationName
+      new_relation['id'] = req.body.relationId
+      newInquiry.relations_id.push(new_relation)
+    }
+  }
+  newInquiryId = Inquiry.newId()
+  Inquiry.newUnitId()
+  .then(newUnitId =>{
+    newInquiry['UnitId'] = newUnitId
+    console.log('Adding inquiry',newInquiry)
+    if(userLevel == 1){
+      newInquiry['_id'] = newInquiryId
+      Inquiry.addInquiry(newInquiry)
+    }else{
+      newInquiry['originalId'] = newInquiryId
+      Inquiry.addEditedInquiry(null,newInquiry,username)
+    }
+    res.redirect('/');
+  })
+  .catch(erro => {
+    res.render('error', {error: erro, message: "Erro na obtenção do registo de Inquirição"})
+  })
+});
+
+
 /* GET edited inquiry page. Apenas admins. */
 router.get('/editedInquiry/:id',requireAdmin, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = req.body.logged
   username = req.body.username
-  console.log(req.params.id)
   id = req.params.id
   Inquiry.getEditedInquiry(id)
     .then(inquiry => {

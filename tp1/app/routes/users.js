@@ -90,7 +90,6 @@ router.get('/login', function(req, res, next) {
     // verificar erro de login
     loginError = req.cookies['loginError'] == 'true'
     res.clearCookie('loginError')
-
     res.render('login',{d:data,error:loginError})
   });
 
