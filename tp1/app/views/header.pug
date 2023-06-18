@@ -45,10 +45,11 @@ block head
 
                     button.w3-btn.w3-indigo(type="button" onclick="search()") search
                             
-
+    if(logged === true)
+        script.
+            getNotifications()
+            
     script.
-        getNotifications()
-
         dateId.max = new Date().toISOString().split("T")[0]
 
 

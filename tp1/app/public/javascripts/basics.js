@@ -1,20 +1,24 @@
+
+/** Atualizar notificacao como vista */
 function seenNotification(notificationId){
     var notification = document.getElementById(notificationId)
     var n_notifications = document.getElementById('nNotifications')
-    console.log(notificationId)
+    // enviar ao servidor pedido de autalizacao
     fetch(`/users/api/notifications/seen/${notificationId}`,{
         method: 'POST'
     })
     .then(response => {
+        // atualizar elemento da notificacao
         n_notifications.textContent = parseInt(n_notifications.textContent) - 1
         notification.getElementsByClassName('seen')[0].remove()
     })
 }
 
-
+/** Remover notificacao */
 function removeNotification(notificationId){
     var notification = document.getElementById(notificationId)
     var n_notifications = document.getElementById('nNotifications')
+    // enviar ao servidor pedido de remocao
     fetch(`/users/api/notifications/remove/${notificationId}`,{
         method: 'POST'
     })
@@ -26,7 +30,7 @@ function removeNotification(notificationId){
     })
 }
 
-
+/**  Obter notificaçoes de utilizador*/
 async function getNotifications(){
     fetch('/users/api/notifications',{
         method: 'GET'
@@ -39,14 +43,17 @@ async function getNotifications(){
                     var notification_content = document.getElementById('notificationsContent')
                     var n_notifications = document.getElementById('nNotifications')
                     var n_notifications_count = 0
+                    // criar elementos para as notificacoes
                     for(i in notifications){
                         notification = notifications[i]
                         node = document.createElement('div')
                         node.onclick = function(){seenNotification(notification._id)}
                         innerHtml = `<p>${notification.message}</p>`
+                        // notificação tem ligação direta
                         if(notification.url){
                             innerHtml = `<a href="${notification.url}">${innerHtml}</a>`
                         }
+                        // notificação ainda nao foi vista
                         if(notification.seen == false){
                             n_notifications_count += 1
                             node.style.backgroundColor = "grey"
@@ -58,8 +65,11 @@ async function getNotifications(){
                         notification_content.appendChild(node)
                     }
                     n_notifications.textContent = n_notifications_count
+                    // atualizar valor de numero de notificacoes
                     if(n_notifications_count > 0)
                         n_notifications.style.display='block'
+                    else
+                        n_notifications.style.display='none'
                 }
             )
         }
@@ -67,7 +77,7 @@ async function getNotifications(){
 }
 
 
-
+/** Adicionar novo elemento para relacoes no inquerito */
 function addRelationForm() {
     var relationsContainer = document.getElementById('relationsContainer')
     var relations = relationsContainer.getElementsByTagName('relation')
@@ -89,16 +99,21 @@ function addRelationForm() {
                 <button class="w3-btn w3-blue" type="button" id="removeRelationBtn" onclick="removeRelation('relation$replace')">-</button>
             </relation>
         `
+    // primeira relacao, adiciona no inicio
     if(relations.length == 0){
         var node = document.createElement('div')
         node.classList.add('w3-container')
         node.innerHTML = baseRelation.replace(new RegExp('\\$replace','g'),relations.length.toString())
         relationsContainer.appendChild(node)
         relationsContainer.append(addRelationBtn)
-    }else{
+    }
+    // adicionar no final da lista, trocar posicao do botao de adicionar relacao
+    // apenas adiciona novo elemento se o anterior estiver preenchido
+    else{
         var lastRelation = relations[relations.length-1]
         var lastRelationInputs = lastRelation.getElementsByTagName('input')
         var filled = false
+        // verificar se ultimo elemento esta preenchido
         for(i in lastRelationInputs){
             if(lastRelationInputs[i].value && lastRelationInputs[i].value != ''){
                 filled = true
@@ -106,15 +121,26 @@ function addRelationForm() {
             }
         }
         if(filled){
+            var maxId = 0
+            var i = 0
+            // verificar id disponivel para nova relacao
+            while(i < relations.length){
+                let r = relations.item(i)
+                let rId = parseInt(r.id.split('relation')[1])
+                if(rId >= maxId)
+                    maxId = rId+ 1
+                i++
+            } 
             var node = document.createElement('div')
             node.classList.add('w3-container')
-            node.innerHTML = baseRelation.replace(new RegExp('\\$replace','g'),relations.length.toString())
+            node.innerHTML = baseRelation.replace(new RegExp('\\$replace','g'),maxId.toString())
             relationsContainer.appendChild(node)
             relationsContainer.append(addRelationBtn)
         }
     }
 }
 
+/** Remover elemento de relacao do inquerito */
 function removeRelation(id){
     var relation = document.getElementById(id)
     if(relation){
@@ -123,7 +149,7 @@ function removeRelation(id){
 }
 
 
-
+/**  Executa o get de acordo com os valores dos filtros de pesquisa*/
 function search(){
     var searchContainer = document.getElementById('searchBar')
     var searchInputs = searchContainer.getElementsByTagName('input')
@@ -135,19 +161,20 @@ function search(){
         }
     }
     if(query.length > 0){
-        console.log('?'+query.join('&'))
         window.location.replace(`/?${query.join('&')}`)
     }else{
         window.location.replace('/')
     }
 }
 
+/** Altera o valor de query de paginacao */
 function paginationQuery(pageNumber){
     var urlParams = new URLSearchParams(window.location.search);
     urlParams.set('page', pageNumber)
     window.location.search = urlParams.toString()
 }
 
+/** Altera o valor de query de sort */
 function sortQuery(sortType){
     var urlParams = new URLSearchParams(window.location.search);
     urlParams.set('sort', sortType)

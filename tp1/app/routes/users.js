@@ -112,7 +112,7 @@ router.get('/profile', requireAuthentication,function(req, res, next) {
     username = req.body.username
   }
   username = req.body.username
-  console.log('Profile page de user: ' + username)
+
   userController.getUserByUsername(username)
   .then(user => {
     res.render('userProfile',{username:username,logged : logged,d:data,user:user})
@@ -133,7 +133,7 @@ router.get('/editProfile', requireAuthentication,function(req, res, next) {
     username = req.body.username
   }
   username = req.body.username
-  console.log('Edit profile page de user: ' + username)
+
   userController.getUserByUsername(username)
   .then(user => {
     res.render('editUserProfile',{username:username,logged : logged,d:data,user:user})
@@ -148,7 +148,8 @@ router.get('/editProfile', requireAuthentication,function(req, res, next) {
 router.post('/editProfile', requireAuthentication,function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   username = req.body.username
-  console.log('Edit profile page de user: ' + username)
+
+  // criar objeto de utilizador modificado
   u = {}
   if(req.body.email){
     u['email'] = req.body.email
@@ -156,6 +157,7 @@ router.post('/editProfile', requireAuthentication,function(req, res, next) {
   if(req.body.filiation){
     u['filiation'] = req.body.filiation
   }
+
   userController.updateUserByUsername(username,u)
   .then(user => {
     res.redirect('profile')
@@ -171,28 +173,27 @@ router.post('/editProfile', requireAuthentication,function(req, res, next) {
 /* GET users login. */
 router.get('/login', function(req, res, next) {
     var data = new Date().toISOString().substring(0, 16)
-    console.log('Na cb do GET login')
-    console.log(req.sessionID)
+    // verificar erro de login
     loginError = req.cookies['loginError'] == 'true'
     res.clearCookie('loginError')
-    console.log('Login error: '+ loginError)
+
     res.render('login',{d:data,error:loginError})
   });
 
 
 /* POST users login. */
 router.post('/login', function(req, res, next) {
-    console.log('Na cb do POST login...')
-    console.log('Auth: ' + JSON.stringify(req.user))
     // verificar utilizador
     passport.authenticate('local', function(err, user, info) {
       if (err) { 
         return next(err); 
       }
+      // user nao existe
       if (!user) { 
         res.cookie('loginError','true')
         return res.redirect('login'); 
       }
+      // criar token de autenticacao
       jwt.sign({
         username: user.username,
         level: user.level}, 
@@ -211,24 +212,25 @@ router.post('/login', function(req, res, next) {
 
 
 
-/* GET users login. */
+/* GET pagina de registo. */
 router.get('/register', function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  console.log('Na cb do GET login')
-  console.log(req.sessionID)
   registerError = req.cookies['registerError'] == 'true'
+  // verificar erro de registo
   res.clearCookie('registerError')
   res.render('register',{error:registerError,d:data})
 });
 
 /* POST users register. */
 router.post('/register', function(req, res, next) {
-  console.log('Na cb do POST register...')
-  console.log('Password: '+ req.body.password)
   var data = new Date().getTime().toString()
+
+  // verificar se username esta disponivel
   userController.getUserByUsername(req.body.username)
     .then(result => {
+      // disponivel
       if(result == null){
+        // criar novo utilizador
         User.userModel.register(
           new User.userModel({ 
             username: req.body.username, 
@@ -248,6 +250,7 @@ router.post('/register', function(req, res, next) {
           }
           }) 
       }
+      // username ja usado
       else{
         res.cookie('registerError','true')
         res.redirect('register')
@@ -265,8 +268,6 @@ router.post('/register', function(req, res, next) {
 
 /* GET users logout. */
 router.get('/logout', requireAuthentication,function(req, res, next) {
-    console.log('Na cb do GET logout...')
-    console.log(req.sessionID)
     res.clearCookie('user_token')
     res.redirect('/')
     // req.logout(function(err){
@@ -282,7 +283,7 @@ router.get('/logout', requireAuthentication,function(req, res, next) {
 
 
 
-/* GET users login. */
+/* GET users notificacoes. */
 router.get('/api/notifications', verifyAuthentication,function(req, res, next) {
   if(req.body.logged){
     username = req.body.username
@@ -293,7 +294,7 @@ router.get('/api/notifications', verifyAuthentication,function(req, res, next) {
   }
 });
 
-
+/** POST de notificacao vista */
 router.post('/api/notifications/seen/:id', requireAuthentication,function(req, res, next) {
   notificationId = req.params.id
   username = req.body.username
@@ -303,6 +304,7 @@ router.post('/api/notifications/seen/:id', requireAuthentication,function(req, r
   })
 });
 
+/** Post para remover notificacao */
 router.post('/api/notifications/remove/:id', requireAuthentication,function(req, res, next) {
   notificationId = req.params.id
   username = req.body.username

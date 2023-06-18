@@ -1,7 +1,7 @@
 var Post = require('../models/posts')
 var userController = require('./users')
 
-
+// adicionar novo post
 module.exports.addPost = (originId,user,post,parent) =>{
     console.log('Post by user: ' + user)
     console.log(originId,user,post,parent)
@@ -24,6 +24,7 @@ module.exports.addPost = (originId,user,post,parent) =>{
                 message: `${user} responded to your comment`,
                 url: `/inquiry/${originId}`
             }
+            // enviar notificao ao autor do post original
             userController.addUserNotificationByUsername(postUser,notification)
         }
         return result
@@ -34,7 +35,7 @@ module.exports.addPost = (originId,user,post,parent) =>{
     })
 }
 
-
+// obter post
 module.exports.getPost = (id) =>{
     return Post.postsModel
     .findOne({_id: id})
@@ -46,6 +47,7 @@ module.exports.getPost = (id) =>{
     })
 }
 
+// obter posts relativos a um documento
 module.exports.getOriginComments = (originId) =>{
     return Post.postsModel
     .find({originId: originId})

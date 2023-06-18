@@ -1,7 +1,7 @@
 var Inquiry = require('../models/inquiries')
 var userController = require('../controllers/users')
 
-// Inquirição list
+// Inquirição list (pode receber filtros de procura e ordenacao e paginacao)
 module.exports.list = (page,searchQuery,sortQuery,docPerPage) => {
     return Inquiry.inquiriesModel
     .find(searchQuery)
@@ -17,7 +17,8 @@ module.exports.list = (page,searchQuery,sortQuery,docPerPage) => {
         })
 }
 
-module.exports.totalCount = (searchQuery,docPerPage) => {
+// Contar numero de documentos existentes (tendo em conta o filtro passado)
+module.exports.totalCount = (searchQuery) => {
     return Inquiry.inquiriesModel
     .find(searchQuery)
     .count()
@@ -30,7 +31,7 @@ module.exports.totalCount = (searchQuery,docPerPage) => {
     })
 }
 
-
+// Obter inquiricao pelo seu id
 module.exports.getInquiry = id => {
     return Inquiry.inquiriesModel
     .findOne({'_id':id})
@@ -44,6 +45,8 @@ module.exports.getInquiry = id => {
         )
 }
 
+
+// atualizar inquiricao
 module.exports.updateInquiry = (id,uInquiry) => {
     console.log('Update inquiry',id)
     return Inquiry.inquiriesModel
@@ -58,6 +61,7 @@ module.exports.updateInquiry = (id,uInquiry) => {
         )
 }
 
+// remover sugestao de edicao de inquiricao
 module.exports.removeEditedInquiry = id => {
     return Inquiry.editedInquiriesModel
     .findOneAndRemove({'_id':id})
@@ -71,7 +75,7 @@ module.exports.removeEditedInquiry = id => {
         )
 }
 
-
+// obter edicao de inquiricao
 module.exports.getEditedInquiry = id => {
     return Inquiry.editedInquiriesModel
     .findOne({'_id':id})
@@ -85,6 +89,7 @@ module.exports.getEditedInquiry = id => {
         )
 }
 
+// aceitar edicao de inquiricao
 module.exports.acceptEditedInquiry = id => {
     console.log('Accepting edited inquiry',id)
     data = new Date().getTime().toString()
@@ -100,8 +105,11 @@ module.exports.acceptEditedInquiry = id => {
                 message: `A tua edição da inquirição ${originalId} foi aceite`,
                 url: `/inquiry/${originalId}`
             }
+            // enviar mensagem ao editor
             userController.addUserNotificationByUsername(editor,notification)
+            // atualizar inquiricao editada
             this.updateInquiry(originalId,inquiry)
+            // remover pedido de edicao
             this.removeEditedInquiry(id,false)
         }
         return inquiry
@@ -113,6 +121,8 @@ module.exports.acceptEditedInquiry = id => {
     )
 }
 
+
+// remover edicao de inquiricao
 module.exports.removeEditedInquiry = (id,sendNotification) => {
     console.log('Removing edited inquiry',id)
     data = new Date().getTime().toString()
@@ -127,6 +137,7 @@ module.exports.removeEditedInquiry = (id,sendNotification) => {
                     message: `A tua edição da inquirição ${originalId} foi rejeitada`,
                     url: `/inquiry/${originalId}`
                 }
+                // enviar notificao ao editor
                 userController.addUserNotificationByUsername(editorId,notification)
             }
             return inquiry
@@ -139,7 +150,7 @@ module.exports.removeEditedInquiry = (id,sendNotification) => {
 }
 
 
-
+// adicionar novo post numa inquiricao
 module.exports.addPost = (id,user,post) =>{
     console.log('Inquiry post by user: ' + user)
     data = new Date().getTime().toString()
@@ -162,6 +173,7 @@ module.exports.addPost = (id,user,post) =>{
 }
 
 
+// adicionar resposta a um post numa inquiricao
 module.exports.addPostResponse = (inquiryId,user,postId,response) => {
     console.log('Response by user: ' + user)
     data = new Date().getTime().toString()
@@ -184,17 +196,19 @@ module.exports.addPostResponse = (inquiryId,user,postId,response) => {
 }
 
 
-
+// adicionar sugestao de edicao de inquiricao
 module.exports.addEditedInquiry = (originalId,editedInquiry,username,userLevel) => {
     data = new Date().getTime().toString()
     return this.getInquiry(originalId)
     .then(inquiry => {
         if(inquiry){
             inquiry._id = undefined
+            // adicionar inquiricao normal nos pedidos de inquiricao editada
             return Inquiry.editedInquiriesModel
                 .create(inquiry.toJSON())
                 .then(newInquiry => {
                     if(newInquiry){
+                        // colocar edicoes no elemento de inquiricao editada
                         return Inquiry.editedInquiriesModel
                             .updateOne({_id:newInquiry._id},editedInquiry)
                             .then(result => {
@@ -204,6 +218,7 @@ module.exports.addEditedInquiry = (originalId,editedInquiry,username,userLevel) 
                                     message: `${username} requested an edition of an inquiry`,
                                     url: `/editedInquiry/${newInquiry._id}`
                                 }
+                                // enviar notificacao aos admins sobre sugestao de edicao
                                 userController.addUserNotificationByLevel(1,notification)
                                 return result
                             })

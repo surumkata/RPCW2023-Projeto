@@ -16,6 +16,7 @@
 
 # inquiricoes
     * criar
+    * passar processamento de relaçoes para cliente?
 
 
 # melhorar views
@@ -36,8 +37,7 @@
 
 # jwt renovar manualmente quando for utilizado
 
-# barra de pesquisa
-    * nome
-    * lugar
-    * data
 
+
+# search bar
+	* verificacao dos limites de datas

@@ -175,7 +175,7 @@ router.get('/',verifyAuthentication, function(req, res, next) {
   console.log(page,searchQuery,sortQuery)
   Inquiry.list(page,searchQuery,sortQuery,docPerPage)
     .then(inquiries => {
-      Inquiry.totalCount(searchQuery,docPerPage)
+      Inquiry.totalCount(searchQuery)
       .then(totalCount => {
         // verificar se ha mais paginas de documentos
         hasNextPage = (totalCount - (page+1) * docPerPage)>0
@@ -190,6 +190,7 @@ router.get('/',verifyAuthentication, function(req, res, next) {
     })
 });
 
+
 /* GET inquiry page. */
 router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
@@ -199,14 +200,13 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
     logged = req.body.logged
     username = req.body.username
   }
-  console.log(req.params.id)
   id = req.params.id
   Inquiry.getInquiry(id)
     .then(inquiry => {
       if(inquiry){
-        console.log('Inquiry: ',JSON.stringify(inquiry))
         if('comments' in inquiry){
           comments = inquiry.comments
+          // processar posts da inquiricao
           Post.getOriginComments(id)
           .then(posts=>{
             posts = Post.processPosts(posts)
@@ -229,7 +229,7 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
 });
 
 
-/* GET edited inquiry page. */
+/* GET edited inquiry page. Apenas admins. */
 router.get('/editedInquiry/:id',requireAdmin, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = req.body.logged
@@ -282,20 +282,20 @@ router.get('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
 });
 
 
-/** POST de sugestao de edicao de um inquerito */
+/** POST de sugestao de edicao de um inquerito. Se for admin a sugerir, modificacao é imediatamente aplicada */
 router.post('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = req.body.logged
   username = req.body.username
   userLevel = req.body.level
   id = req.params.id
-  console.log('Body:' , JSON.stringify(req.body))
   var editedInquiry = {
     originalId: id,
     editor: username,
     dateEdited : data,
     relations_id : []
   }
+  // Verificar modificações nas relaçoes
   if(req.body.relationName){
     if(Array.isArray(req.body.relationName)){
       for(i in req.body.relationName){
@@ -313,7 +313,7 @@ router.post('/inquiry/:id/edit',requireAuthentication, function(req, res, next) 
       editedInquiry.relations_id.push(new_relation)
     }
   }
-  console.log('New relation:' , JSON.stringify(editedInquiry))
+  // admin imediatamente modifica inquiricao
   if(userLevel == 1){
     Inquiry.updateInquiry(id,editedInquiry)
   }else{
@@ -332,10 +332,13 @@ router.post('/inquiry/post/:id',requireAuthentication, function(req, res, next) 
   id = req.params.id
   user = req.body.username
   post = req.body.post
+  // adicionar post
   Post.addPost(id,user,post,null)
   .then(post => {
+    // adicionar referencia ao post na inquiricao
     Inquiry.addPost(id,user,post)
     .then(result => {
+      // adicionar referencia ao post no user
       User.addPostedInquiry(user,id)
       .then(result => {
         res.redirect('../'+id);
@@ -364,10 +367,13 @@ router.post('/inquiry/response/:id',requireAuthentication, function(req, res, ne
   response = req.body.response
   postId = req.query.post
 
+  // adicionar post
   Post.addPost(inquiryId,user,response,postId)
   .then(response => {
+      // adicionar referencia de post na inquiricao 
       Inquiry.addPostResponse(inquiryId,user,postId,response)
       .then(result => {
+        // adicionar referencia de post no user
         User.addPostedInquiry(user,inquiryId)
         .then(result => {
           res.redirect('../'+inquiryId);
@@ -383,7 +389,6 @@ router.post('/inquiry/response/:id',requireAuthentication, function(req, res, ne
   .catch(erro => {
     res.render('error', {error: erro, message: "Erro na criação da response"})
   })
-  
 });
 
 

@@ -16,6 +16,7 @@ module.exports.list = function(page) {
         })
 }
 
+// obter user
 module.exports.getUser = id => {
     return User.userModel
     .findOne({'_id':id})
@@ -29,7 +30,7 @@ module.exports.getUser = id => {
 }
 
 
-
+// obter user por username
 module.exports.getUserByUsername = username => {
     return User.userModel
     .findOne({'username':username})
@@ -42,6 +43,7 @@ module.exports.getUserByUsername = username => {
         )
 }
 
+// atualizar user, procura usando username
 module.exports.updateUserByUsername = (username,u) => {
     return User.userModel
     .updateOne({'username':username},u)
@@ -56,7 +58,7 @@ module.exports.updateUserByUsername = (username,u) => {
         )
 }
 
-
+// adicionar referencia a uma inquiricao em que o user realizou um post
 module.exports.addPostedInquiry = (username,inquiryId) => {
     return User.userModel
     .updateOne({'username':username},
@@ -73,7 +75,7 @@ module.exports.addPostedInquiry = (username,inquiryId) => {
     )
 }
 
-
+// adicionar notificacao a um user
 module.exports.addUserNotificationByUsername = (username,notification) => {
     console.log('Adding notification for user ' + username + ': ' + notification)
     return User.userModel
@@ -91,6 +93,7 @@ module.exports.addUserNotificationByUsername = (username,notification) => {
     )
 }
 
+// adicionar notificacao a todos os users de um dado nivel de acesso
 module.exports.addUserNotificationByLevel = (level,notification) => {
     console.log('Adding notification for user level ' + level + ': ' + notification)
     return User.userModel
@@ -108,7 +111,7 @@ module.exports.addUserNotificationByLevel = (level,notification) => {
     )
 }
 
-
+// atualizar notificacao do utilizador para vista
 module.exports.seeNotification = (username,notificationId) => {
     console.log('Seeing notification for user ' + username + ': ' + notificationId)
     return User.userModel
@@ -125,6 +128,7 @@ module.exports.seeNotification = (username,notificationId) => {
     )
 }
 
+// remover notificacao de utilizador
 module.exports.removeNotification = (username,notificationId) => {
     console.log('Seeing notification for user ' + username + ': ' + notificationId)
     return User.userModel
