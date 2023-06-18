@@ -163,16 +163,27 @@ router.get('/',verifyAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = false
   username = null
+  // default documentos por pagina
+  var docPerPage = 100
+  // valores de utilizador, se estiver logged
   if(req.body.logged){
     logged = req.body.logged
     username = req.body.username
   }
-
+  // obter filtros de pesquisa de documentos
   var [page,searchQuery,sortQuery] = getQueryFilters(req)
   console.log(page,searchQuery,sortQuery)
-  Inquiry.list(page,searchQuery,sortQuery)
+  Inquiry.list(page,searchQuery,sortQuery,docPerPage)
     .then(inquiries => {
-      res.render('index', {username:username,logged : logged,timeStartValue:timeStart,timeEndValue:timeEnd, is : inquiries, d : data,page:page})
+      Inquiry.totalCount(searchQuery,docPerPage)
+      .then(totalCount => {
+        // verificar se ha mais paginas de documentos
+        hasNextPage = (totalCount - (page+1) * docPerPage)>0
+        res.render('index', {username:username,logged : logged,timeStartValue:timeStart,timeEndValue:timeEnd, is : inquiries, d : data,page:page,hasNextPage:hasNextPage})
+      })
+      .catch(erro => {
+        res.render('error', {error : erro, message : "Erro na obtenção da lista de inquisições"})
+      })
     })
     .catch(erro => {
       res.render('error', {error : erro, message : "Erro na obtenção da lista de inquisições"})

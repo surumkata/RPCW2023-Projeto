@@ -2,12 +2,12 @@ var Inquiry = require('../models/inquiries')
 var userController = require('../controllers/users')
 
 // Inquirição list
-module.exports.list = (page,searchQuery,sortQuery) => {
+module.exports.list = (page,searchQuery,sortQuery,docPerPage) => {
     return Inquiry.inquiriesModel
     .find(searchQuery)
     .sort(sortQuery)
-    .skip(page*100)
-    .limit(100)
+    .skip(page*docPerPage)
+    .limit(docPerPage)
         .then(docs => {
             return docs
         })
@@ -16,6 +16,20 @@ module.exports.list = (page,searchQuery,sortQuery) => {
             return error
         })
 }
+
+module.exports.totalCount = (searchQuery,docPerPage) => {
+    return Inquiry.inquiriesModel
+    .find(searchQuery)
+    .count()
+    .then(count => {
+        return count
+    })
+    .catch(error => {
+        console.log('Error:',error)
+        return error
+    })
+}
+
 
 module.exports.getInquiry = id => {
     return Inquiry.inquiriesModel
