@@ -180,3 +180,23 @@ function sortQuery(sortType){
     urlParams.set('sort', sortType)
     window.location.search = urlParams.toString()
 }
+
+/** Verifica periodo de filtragem escolhido
+ * Impede botao de submissao se periodo for invalido
+ */
+function verifyPeriod(){
+    var startElem = document.getElementsByName('searchTimeStart')[0]
+    var endElem = document.getElementsByName('searchTimeEnd')[0]
+    var searchBtn = document.getElementById('searchBtn')
+    var searchMessage = document.getElementById('searchMessage')
+    if(startElem.value && endElem.value){
+        // tempo de inicio maior do que o de fim
+        if(startElem.value> endElem.value){
+            searchBtn.disabled = true
+            searchMessage.textContent = 'Período escolhido inválido'
+        }else{
+            searchBtn.disabled = false
+            searchMessage.textContent = ''
+        }
+    }
+}

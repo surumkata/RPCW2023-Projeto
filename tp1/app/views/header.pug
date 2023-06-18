@@ -39,17 +39,18 @@ block head
                         input(type="search" name="searchName" placeholder="Procura por nome de titular")
                         input(type="search" name="searchPlace" placeholder="Procura por localidade")
                         Label Limite Inferior:
-                        input(type="date"  name="searchTimeStart" id='dateId' value=timeStartValue placeholder="Procura por periodo")
+                        input(type="date"  name="searchTimeStart" id='dateId' onchange="verifyPeriod()" value=timeStartValue placeholder="Procura por periodo")
                         Label Limite Superior:
-                        input(type="date"  name="searchTimeEnd" id='dateId' value=timeEndValue placeholder="Procura por periodo")
-
-                    button.w3-btn.w3-indigo(type="button" onclick="search()") search
+                        input(type="date"  name="searchTimeEnd" id='dateId' onchange="verifyPeriod()" value=timeEndValue placeholder="Procura por periodo")
+                        p(id='searchMessage' style='none')
+                    button.w3-btn.w3-indigo(type="button" id="searchBtn" onclick="search()") search
                             
     if(logged === true)
         script.
             getNotifications()
             
     script.
+        verifyPeriod()
         dateId.max = new Date().toISOString().split("T")[0]
 
 
