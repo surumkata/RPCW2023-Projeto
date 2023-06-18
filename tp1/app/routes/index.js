@@ -109,7 +109,8 @@ router.get('/',verifyAuthentication, function(req, res, next) {
     logged = req.body.logged
     username = req.body.username
   }
-
+  var searchQuery = {}
+  var sortQuery = {UnitId:1}
   // paginacao das inquiricoes
   page = req.query.page
   if(!page){
@@ -117,10 +118,26 @@ router.get('/',verifyAuthentication, function(req, res, next) {
   }else{
     page = parseInt(page)
   }
+  // procura por nome de pessoa
+  personName = req.query.searchName
+  if(personName){
+    searchQuery['UnitTitle'] = personName
+  }
+  // procura por data de inicio
+  timeStart = req.query.searchTimeStart
+  if(timeStart){
+    searchQuery['UnitDateInitial'] = {"$gte":new Date(timeStart)}
+  }
+  // procura por data de fim
+  timeEnd = req.query.searchTimeEnd
+  if(timeEnd){
+    searchQuery['UnitDateFinal'] = {"$lte" : new Date(timeEnd)}
+  }
 
-  Inquiry.list(page)
+  console.log(searchQuery)
+  Inquiry.list(page,searchQuery,sortQuery)
     .then(inquiries => {
-      res.render('index', {username:username, is : inquiries, d : data,logged : logged})
+      res.render('index', {username:username,logged : logged,timeStartValue:timeStart,timeEndValue:timeEnd, is : inquiries, d : data})
     })
     .catch(erro => {
       res.render('error', {error : erro, message : "Erro na obtenção da lista de inquisições"})

@@ -27,7 +27,7 @@ function removeNotification(notificationId){
 }
 
 
-function getNotifications(){
+async function getNotifications(){
     fetch('/users/api/notifications',{
         method: 'GET'
     })
@@ -120,4 +120,28 @@ function removeRelation(id){
     if(relation){
         relation.remove()
     }
+}
+
+
+
+function search(){
+    var searchContainer = document.getElementById('searchBar')
+    var searchInputs = searchContainer.getElementsByTagName('input')
+    query = []
+    for(i in searchInputs){
+        let searchInput = searchInputs[i]
+        if(searchInput.value){
+            query.push(`${searchInput.name}=${searchInput.value}`)
+        }
+    }
+    if(query.length > 0){
+        console.log('?'+query.join('&'))
+        window.location.replace(`/?${query.join('&')}`)
+    }
+}
+
+function paginationQuery(pageNumber){
+    var urlParams = new URLSearchParams(window.location.search);
+    var page = urlParams.set('page', pageNumber)
+    window.location.search = urlParams.toString()
 }

@@ -1,0 +1,2 @@
+atualizar tipo de datas de string para Date: 
+* db.inquiricoes.updateMany({},[{ $set: {UnitDateInitial:{$dateFromString:{dateString:"$UnitDateInitial",format:"%Y-%m-%d"}}}}])

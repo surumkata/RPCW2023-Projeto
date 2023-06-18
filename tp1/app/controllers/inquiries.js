@@ -2,10 +2,10 @@ var Inquiry = require('../models/inquiries')
 var userController = require('../controllers/users')
 
 // Inquirição list
-module.exports.list = page => {
+module.exports.list = (page,searchQuery,sortQuery) => {
     return Inquiry.inquiriesModel
-    .find()
-    .sort({UnitId:1})
+    .find(searchQuery)
+    .sort(sortQuery)
     .skip(page*100)
     .limit(100)
         .then(docs => {

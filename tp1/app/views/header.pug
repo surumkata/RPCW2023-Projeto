@@ -32,9 +32,25 @@ block head
                             span Notificações
                             span.badge(id="nNotifications" style="display:none") 0
                         .content.w3-blue(id='notificationsContent')
+                .w3-col
+                    .w3-container.collapsible
+                        p Procurar inquérito
+                    .w3-container.content(id='searchBar')
+                        input(type="search" name="searchName" placeholder="Procura por nome de titular")
+                        input(type="search" name="searchPlace" placeholder="Procura por localidade")
+                        Label Limite Inferior:
+                        input(type="date"  name="searchTimeStart" id='dateId' value=timeStartValue placeholder="Procura por periodo")
+                        Label Limite Superior:
+                        input(type="date"  name="searchTimeEnd" id='dateId' value=timeEndValue placeholder="Procura por periodo")
+
+                    button.w3-btn.w3-indigo(type="button" onclick="search()") search
+                            
 
     script.
         getNotifications()
+
+        dateId.max = new Date().toISOString().split("T")[0]
+
 
         var coll = document.getElementsByClassName("collapsible");
         var i;
