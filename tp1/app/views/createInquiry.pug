@@ -8,19 +8,19 @@ block content
         form.w3-container(action="/createInquiry" method="POST")
             fieldset
               legend Metadata
-              label #[b UnitTitle: ]
+              label #[b Titular: ]
               input.w3-input(type="text" name="UnitTitle" required)
               br
-              label #[b birthplace: ]
+              label #[b Local de nascimento: ]
               input.w3-input(type="text" name="birthplace" required)
               br
-              label #[b current_concelho: ]
+              label #[b Concelho de  residência: ]
               input.w3-input(type="text" name="current_concelho" required)
               br
-              label #[b current_district: ]
+              label #[b Distrito de residência: ]
               input.w3-input(type="text" name="current_district" required)
               br
-              label #[b relations_id: ]
+              label #[b Laços Pessoais: ]
               .w3-container(id='relationsContainer')
                 button.w3-btn.w3-blue(type="button" id="addRelationBtn" onclick="addRelationForm()") +
 

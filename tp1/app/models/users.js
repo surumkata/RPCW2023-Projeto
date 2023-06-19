@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
     passportLocalMongoose = require('passport-local-mongoose')
 
 var notificationsSchema = new mongoose.Schema({
-    dateCreated : String,
+    dateCreated : Number,
     message: String,
     url: String,
     seen: {
