@@ -5,45 +5,43 @@ append scripts
 
 append styles
     link(rel='stylesheet', href='/stylesheets/basics.css')
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
 block head
     body
-      .w3-card-4
-        header.w3-container.w3-teal
-            .w3-row
-                if username
-                    .w3-col
-                        h1 User : #{username}
-                    .w3-col
-                        a(href="/users/profile") Profile
+        header.w3-bar.w3-teal.w3-xlarge.overflow
+            a.w3-bar-item.w3-button.w3-mobile(href="/")
+                i.fa.fa-home
+            if logged === true
+                a.w3-bar-item.w3-button.w3-mobile.w3-right(href="/users/logout") Logout
+            if username
+                a.w3-bar-item.w3-button.w3-mobile(href="/users/profile")
+                    i.fa.fa-address-book
+                a.w3-bar-item.w3-mobile.w3-right Welcome #{username}!
 
-                if (logged === false || !logged)
-                    .w3-col
-                        a(href="/users/login") Login
-                if logged === true
-                    .w3-col 
-                        a(href="/users/logout") Logout
-                if (logged === false || !logged)
-                    .w3-col
-                        a(href="/users/register") Register
-                if logged === true
-                    .w3-col 
-                        a.notification.collapsible
-                            span Notificações
-                            span.badge(id="nNotifications" style="display:none") 0
-                        .content.w3-blue(id='notificationsContent')
-                .w3-col
-                    .w3-container.collapsible
-                        p Procurar inquérito
-                    .w3-container.content(id='searchBar')
-                        input(type="search" name="searchName" placeholder="Procura por nome de titular")
-                        input(type="search" name="searchPlace" placeholder="Procura por localidade")
-                        Label Limite Inferior:
-                        input(type="date"  name="searchTimeStart" id='dateId' onchange="verifyPeriod()" value=timeStartValue placeholder="Procura por periodo")
-                        Label Limite Superior:
-                        input(type="date"  name="searchTimeEnd" id='dateId' onchange="verifyPeriod()" value=timeEndValue placeholder="Procura por periodo")
-                        p(id='searchMessage' style='none')
-                    button.w3-btn.w3-indigo(type="button" id="searchBtn" onclick="search()") search
+            if (logged === false || !logged)
+                a.w3-bar-item.w3-button.w3-mobile.w3-right(href="/users/register") Register
+            
+            if (logged === false || !logged)
+                a.w3-bar-item.w3-button.w3-mobile.w3-right(href="/users/login") Login
+            if logged === true
+                a.notification.collapsible.w3-bar-item.w3-mobile.w3-button(id='notificationsContent')
+                    i.fa.fa-bell
+                    span.badge(id="nNotifications" style="display:none") 0
+            
+            a.w3-bar-item.w3-mobile.w3-button.collapsible(id="searchBar")
+                i.fa.fa-search
+        .w3-container.content(id='searchBarC')
+            input(type="search" name="searchName" placeholder="Procura por nome de titular")
+            input(type="search" name="searchPlace" placeholder="Procura por localidade")
+            Label Limite Inferior:
+            input(type="date"  name="searchTimeStart" id='dateId' onchange="verifyPeriod()" value=timeStartValue placeholder="Procura por periodo")
+            Label Limite Superior:
+            input(type="date"  name="searchTimeEnd" id='dateId' onchange="verifyPeriod()" value=timeEndValue placeholder="Procura por periodo")
+            p(id='searchMessage' style='none')
+            button.w3-btn.w3-indigo(type="button" id="searchBtn" onclick="search()") search
+
+        .w3-container.content.w3-blue(id='notificationsContentC')
                             
     if(logged === true)
         script.
@@ -53,21 +51,16 @@ block head
         verifyPeriod()
         dateId.max = new Date().toISOString().split("T")[0]
 
+        var collapsibles = document.getElementsByClassName("collapsible");
 
-        var coll = document.getElementsByClassName("collapsible");
-        var i;
+        for (var i = 0; i < collapsibles.length; i++) {
+          var collapsible = collapsibles[i];
+          var id = collapsible.id;
 
-        for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-            content.style.display = "none";
-            } else {
-            content.style.display = "block";
-            }
-        });
+          collapsible.addEventListener("click", createClickListener(id));
         }
+
+        
 
 
 

@@ -1,21 +1,3 @@
-/* Style the button that is used to open and close the collapsible content */
-.collapsible {
-    background-color: #eee;
-    color: #444;
-    cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    border: none;
-    text-align: left;
-    outline: none;
-    font-size: 15px;
-  }
-  
-  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-  .active, .collapsible:hover {
-    background-color: #ccc;
-  }
-  
   /* Style the collapsible content. Note: hidden by default */
   .content {
     padding: 0 18px;
@@ -24,26 +6,25 @@
     background-color: #f1f1f1;
   }
 
-  .notification {
-    background-color: #555;
-    color: white;
-    text-decoration: none;
-    padding: 15px 26px;
-    position: relative;
-    display: inline-block;
-    border-radius: 2px;
-  }
-  
-  .notification:hover {
-    background: red;
-  }
-  
   .notification .badge {
     position: absolute;
-    top: -10px;
-    right: -10px;
-    padding: 5px 10px;
+    bottom: -5px;
+    right: -5px;
+    width: 25px;
+    height: 25px;
+    font-size: 12px;
+    padding: 5px;
+    background: red;
     border-radius: 50%;
-    background-color: red;
     color: white;
+  }
+
+  .notification {
+    position: relative;
+    display: inline-block;
+    overflow: visible;
+  }
+
+  .overflow{
+    overflow: visible;
   }

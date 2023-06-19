@@ -40,7 +40,7 @@ async function getNotifications(){
             response.json().then(
                 data =>{
                     var notifications = data.notifications
-                    var notification_content = document.getElementById('notificationsContent')
+                    var notification_content = document.getElementById('notificationsContentC')
                     var n_notifications = document.getElementById('nNotifications')
                     var n_notifications_count = 0
                     // criar elementos para as notificacoes
@@ -151,7 +151,7 @@ function removeRelation(id){
 
 /**  Executa o get de acordo com os valores dos filtros de pesquisa*/
 function search(){
-    var searchContainer = document.getElementById('searchBar')
+    var searchContainer = document.getElementById('searchBarC')
     var searchInputs = searchContainer.getElementsByTagName('input')
     query = []
     for(i in searchInputs){
@@ -200,3 +200,16 @@ function verifyPeriod(){
         }
     }
 }
+
+function createClickListener(id) {
+    return function() {
+      this.classList.toggle("active");
+      var content = document.getElementById(id + "C");
+  
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    };
+  }

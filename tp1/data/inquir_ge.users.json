@@ -1,0 +1,156 @@
+[{
+  "_id": {
+    "$oid": "6489e9b2a0192e75d51fec75"
+  },
+  "level": "1",
+  "username": "admin",
+  "salt": "e774cd9569f1929798576d6b3c6a1e4ad7b6a3f230da3b4112ddeff37326b249",
+  "hash": "16bd081b47f7bbab56469d8f0babc6e6e362656dba3de4dd9401cacab365c483f4626d9259cc6930c6a47aa1170b5ba6e175a6a843cc0becb5c93c401b6d39e65e7167d9324ca1fa2e00ac2a687d868aca1d0accd15856a9a5904093953ef092fe5dc0a352dfab4d1c253a8d5822116bd06af21850ea7f3de1f99bdbf7792a2aad0f9c688b2e8d745c8e9803aa32e9a0e4bf0446fcd6a82a6bfb181aef6c728f07660df0eb291d14d4a875bd02f16dcd364ed7115844d93c2b915394586e01454c0950323b0b052695fbb591757d932afe15aefaba19950c78d921c8b7eb2b45ef2f85369fbdc03450c11624d65b799210693cdb021776927cb098ceb58bec3ad635ed9b1b962541b5022f899009053fee77f8694a9002d040069cf0c999c1b82a56b32308e5bddeaf0b1f3d8fd97cab88c219099882fd9bc5598e46071038a56076a0d9239ba93c9034a171dd89747472f51f8c8dee16ccf637b2d6d5ec6a660cd0a6d0be7a853fe240c9ba58a465400eb88a83a54c53ae52af8abdfb74fca7c0433e39bf5be4d44f7b448fdae8837f14f638990e7202f549c8dc54a7df97f4a81520ecbf4154ad6584a0f4ce724dadf0e44fed09cf9a691cc09b3d2c2d61f8175de899e45377f57ccf1dea9ff172ab6ff7dbffdafb3ccfb99bcb6f4c897a5d46b644c61c2a727d0aa5800557b21d630462756191fb1a786a360a40141aae99",
+  "__v": 0,
+  "posts": [
+    "6489d528955fd79ce99f8824",
+    "6489d52f955fd79ce9a007bc"
+  ],
+  "notifications": [
+    {
+      "dateCreated": "1687124645996",
+      "message": "teste requested an edition of an inquiry",
+      "url": "/editedInquiry/648f7aa6cd6d4124d77d16ff",
+      "seen": true,
+      "_id": {
+        "$oid": "648f7aa6cd6d4124d77d1704"
+      }
+    },
+    {
+      "dateCreated": "1687125411366",
+      "message": "teste requested an edition of an inquiry",
+      "url": "/editedInquiry/648f7da3566412749903ec17",
+      "seen": true,
+      "_id": {
+        "$oid": "648f7da3566412749903ec1a"
+      }
+    },
+    {
+      "dateCreated": "1687125692118",
+      "message": "teste requested an edition of an inquiry",
+      "url": "/editedInquiry/648f7ebc39a54692b2371e41",
+      "seen": true,
+      "_id": {
+        "$oid": "648f7ebc39a54692b2371e45"
+      }
+    },
+    {
+      "dateCreated": "1687125847073",
+      "message": "teste requested an edition of an inquiry",
+      "url": "/editedInquiry/648f7f57c0abe96100f8d747",
+      "seen": true,
+      "_id": {
+        "$oid": "648f7f57c0abe96100f8d74b"
+      }
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "648b3ebd773da344a0223bf3"
+  },
+  "level": "0",
+  "posts": [
+    "6489d52f955fd79ce9a007bc",
+    "648b4c71f2e1d36613ffa4c2",
+    "1348317",
+    "1348417"
+  ],
+  "username": "teste",
+  "salt": "df92f60b60e826b226bde01f131b83fbb6cdb78235633b96bb85a8c851d31f9c",
+  "hash": "f3a31150b0fcae0f750ad1f9396743025784fb7647c05b035c76221cb2b13d4b1a2d730727dc1c206596e32662c864f0f320a6148a52f6d96bc2e4db952bb5a507852c60b77f680f328445237596b5c25f94f378275c60834fcf4b24d431eb28b4f481d49536e2b0310934de6f41b8abe541c1bb5c5d579cdb23ce40b00266c821ec4bdf6f1ea723915a5f968a232f173ea2d37eabdaba213f0524db65ab9a684f20775db85d16ee32139118699d371bc4feeb4988994c04e20e611be4df60edee55c63b27cf011cca6d4ea8d0ddaaf2408280e060152a91a1a9650de014ad046a751445c47bbc080432b470ce6f2e3c510360688b83d5e6f7bea00399397f3d5dfdf29d5a0937f091413843ef4ce5efa22c51ee45e12c095643f7f5be14eb2446d66296e691a5e4f67cf80f6489318f1310ce710d693a3472c7813335797b501ad664e42a841ae119c02828018ca2e474fb78e29bb868b1fc1d069c3c9a681a6117c4b70d3285214248cce551fa851d68c0a93084abe8764efe77078a92eb2dacdd123ee94bc73cc2207558ef579e12d6cfef232e590731e9cb5aa2baaae2ec508e8162ce1271d8dbd5fca7013409ac1be3dcb529078bb5572d735db518b84a5cbe5cb00479e3b14022400d64a2099efe468c1b9a3af9330e2fdb8a5764ba9f395740e828caf914ff270ad8319536458fa010673dc918a0f974e295da7db495",
+  "__v": 0,
+  "email": "brazafonso2001@gmail.com",
+  "notifications": [
+    {
+      "dateCreated": "1686953727335",
+      "message": "teste responded to your comment",
+      "url": "/inquiry/1348317",
+      "seen": true,
+      "_id": {
+        "$oid": "648cdefff378da3e1636f3c3"
+      }
+    },
+    {
+      "dateCreated": "1687006595618",
+      "message": "teste responded to your comment",
+      "url": "/inquiry/1348417",
+      "seen": true,
+      "_id": {
+        "$oid": "648dad835ddac3a6394a4821"
+      }
+    },
+    {
+      "dateCreated": "1687037686861",
+      "message": "A tua edição da inquirição 1348317 foi aceite",
+      "url": "/inquiry/1348317",
+      "seen": true,
+      "_id": {
+        "$oid": "648e26f63f0487ccc816f8b1"
+      }
+    },
+    {
+      "dateCreated": "1687125431631",
+      "message": "A tua edição da inquirição 648f7da3566412749903ec15 foi aceite",
+      "url": "/inquiry/648f7da3566412749903ec15",
+      "seen": true,
+      "_id": {
+        "$oid": "648f7db7566412749903ec44"
+      }
+    },
+    {
+      "dateCreated": "1687125709482",
+      "message": "A tua edição da inquirição 648f7ebc39a54692b2371e3f foi aceite",
+      "url": "/inquiry/648f7ebc39a54692b2371e3f",
+      "seen": true,
+      "_id": {
+        "$oid": "648f7ecd39a54692b2371e8c"
+      }
+    },
+    {
+      "dateCreated": "1687125856702",
+      "message": "A tua edição da inquirição 648f7f57c0abe96100f8d745 foi aceite",
+      "url": "/inquiry/648f7f57c0abe96100f8d745",
+      "seen": true,
+      "_id": {
+        "$oid": "648f7f60c0abe96100f8d795"
+      }
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "648c4d1e48911fdd325d13e1"
+  },
+  "level": "0",
+  "dateCreated": "1686916382211",
+  "posts": [],
+  "username": "a",
+  "salt": "8c8f9e209fef926bfcfaaf230a12c545147541ceee9fcb3394756bad2f779cf8",
+  "hash": "836efa36702dcdc8eaf94b7c26397974141f186b910f4c72256fa37c0f23c0cbbf3a910717b5bc06bb6d17fb74ca898b4907bc3efdc7ed4245c72ee19a0dbd2c4042f311077e23fd83b89effa338d4fadd8677cffca5c55d080e13ab56e496213250e2f22f6e50d56d2c417c52d3a756656438e3a2ceccfb8d0078f6e3066e39f70fb4bbf972f4e471c1e0bb7706cfcbffcf89f4a593aea23053c865e60e1be91205eb071806d34e8c8c224755c3c54b8482d4e177c1f20815ebbb8703e5050dd3cfcbb32fa0fcfdad318f0502b4371c6c924e4c642870a828db36af79007153f020a2b9e25837edee02da94f42a188f0e6d8daedcc3fcd41888f59178dfdd7146d75ab5ca0d137ac109afbf9e5329b1b92892511f33811f5859f91200479d83f46cbd2d1688fe1be8ed01ea54b2d5581592fb1bbc699442bf2793135e08e2540e70919f281a27b4a8633cc8540e9147d10bf931d7e78ef79771bb6bbab869b2becc13e4728f7bba0e42960b0a2ecec091839163fbcb44b590df4386a036bf9f7d0b94341dff7eaf2747002074e4a2b70be21719c674e67a3b90bbebdbab99b62561419b2f10c136014dfd439a5dbdaa72ad68dd9995d82ac2e9b22f8e07eb5bb761eb5b814cf491cab78021d4200ebc06c48af9b407f7eb9e60866c0b08a0a5b0185675f78393df13438c0921c426e62d35bdd331197fa502b54c3713aebefc",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "648e259fc4f80233ace34817"
+  },
+  "username": null,
+  "__v": 0,
+  "notifications": [
+    {
+      "dateCreated": "1687037343058",
+      "message": "A tua edição da inquirição 1348317 foi rejeitada",
+      "url": "/editedInquiry/1348317",
+      "seen": false,
+      "_id": {
+        "$oid": "648e259f5b5e95060d1b89dc"
+      }
+    }
+  ],
+  "posts": []
+}]
