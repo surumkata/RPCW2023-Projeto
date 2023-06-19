@@ -19,7 +19,7 @@ block content
             - let dateCreated = user.dateCreated ? new Date(user.dateCreated).toISOString().substring(0,10) : ''
             label #[b Registo: ] #{dateCreated}
             br
-            img(src=user.profilePicDir)
+            img(src=user.profilePicDir alt='Porfile Picture')
             br
         a(href='editProfile') Editar
 

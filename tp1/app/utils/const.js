@@ -8,8 +8,7 @@ module.exports.sessionSecret = 'inquiricoesSecret'
 /** Verifica estado de autenticacao */
 module.exports.verifyAuthentication = function(req, res, next){
     console.log('Verify authentication')
-    req.body.logged = false
-    req.body.level = 0
+    req.user ={logged:false,level:0}
     if(req.cookies && 'user_token' in req.cookies){
       var token = req.cookies['user_token']
       console.log('Token: ' + token)
@@ -18,9 +17,7 @@ module.exports.verifyAuthentication = function(req, res, next){
           if(!e){
             console.log('Logged in.')
             console.log('Payload: ' + JSON.stringify(payload))
-            req.body.logged = true
-            req.body.username = payload.username
-            req.body.level = payload.level
+            req.user ={username:payload.username, logged:true,level:payload.level}
             // atualizar token
             await exports.updateJwtToken(res,payload.username,payload.level)
           }
@@ -44,9 +41,7 @@ module.exports.verifyAuthentication = function(req, res, next){
           if(!e){
             console.log('Logged in.')
             console.log('Payload: ' + JSON.stringify(payload))
-            req.body.logged = true
-            req.body.username = payload.username
-            req.body.level = payload.level
+            req.user ={username:payload.username, logged:true,level:payload.level}
             // atualizar token
             await exports.updateJwtToken(res,payload.username,payload.level)
 
@@ -77,9 +72,7 @@ module.exports.verifyAuthentication = function(req, res, next){
           if(!e){
             console.log('Logged in.')
             console.log('Payload: ' + JSON.stringify(payload))
-            req.body.logged = true
-            req.body.username = payload.username
-            req.body.level = payload.level
+            req.user ={username:payload.username, logged:true,level:payload.level}
             // atualizar token
             await exports.updateJwtToken(res,payload.username,payload.level)
 

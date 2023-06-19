@@ -3,15 +3,17 @@
 function seenNotification(notificationId){
     var notification = document.getElementById(notificationId)
     var n_notifications = document.getElementById('nNotifications')
-    // enviar ao servidor pedido de autalizacao
-    fetch(`/users/api/notifications/seen/${notificationId}`,{
-        method: 'POST'
-    })
-    .then(response => {
-        // atualizar elemento da notificacao
-        n_notifications.textContent = parseInt(n_notifications.textContent) - 1
-        notification.getElementsByClassName('seen')[0].remove()
-    })
+    if(notification.getElementsByClassName('seen')[0]){
+        // enviar ao servidor pedido de autalizacao
+        fetch(`/users/api/notifications/seen/${notificationId}`,{
+            method: 'POST'
+        })
+        .then(response => {
+            // atualizar elemento da notificacao
+            n_notifications.textContent = parseInt(n_notifications.textContent) - 1
+            notification.getElementsByClassName('seen')[0].remove()
+        })
+    }
 }
 
 /** Remover notificacao */

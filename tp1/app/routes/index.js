@@ -87,9 +87,9 @@ router.get('/',verifyAuthentication, function(req, res, next) {
   // default documentos por pagina
   var docPerPage = 100
   // valores de utilizador, se estiver logged
-  if(req.body.logged){
-    logged = req.body.logged
-    username = req.body.username
+  if(req.user.logged){
+    logged = req.user.logged
+    username = req.user.username
   }
   // obter filtros de pesquisa de documentos
   var [page,searchQuery,sortQuery] = getQueryFilters(req)
@@ -116,9 +116,9 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = false
   username = null
-  if(req.body.logged){
-    logged = req.body.logged
-    username = req.body.username
+  if(req.user.logged){
+    logged = req.user.logged
+    username = req.user.username
   }
   id = req.params.id
   Inquiry.getInquiry(id)
@@ -152,17 +152,17 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
 /* GET create inquiry page. */
 router.get('/createInquiry',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = req.body.logged
-  username = req.body.username
+  logged = req.user.logged
+  username = req.user.username
   res.render('createInquiry', {username:username,logged : logged, d: data} );
 });
 
 /* Post create inquiry */
 router.post('/createInquiry',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = req.body.logged
-  username = req.body.username
-  userLevel = req.body.level
+  logged = req.user.logged
+  username = req.user.username
+  userLevel = req.user.level
   
   // processar inquiry
   var newInquiry = {
@@ -211,8 +211,8 @@ router.post('/createInquiry',requireAuthentication, function(req, res, next) {
 /* GET edited inquiry page. Apenas admins. */
 router.get('/editedInquiry/:id',requireAdmin, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = req.body.logged
-  username = req.body.username
+  logged = req.user.logged
+  username = req.user.username
   id = req.params.id
   Inquiry.getEditedInquiry(id)
     .then(inquiry => {
@@ -246,8 +246,8 @@ router.post('/editedInquiry/reject/:id',requireAdmin, function(req, res) {
 /* GET inquiry edit page. */
 router.get('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = req.body.logged
-  username = req.body.username
+  logged = req.user.logged
+  username = req.user.username
   console.log(req.params.id)
   id = req.params.id
   Inquiry.getInquiry(req.params.id)
@@ -263,9 +263,9 @@ router.get('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
 /** POST de sugestao de edicao de um inquerito. Se for admin a sugerir, modificacao é imediatamente aplicada */
 router.post('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = req.body.logged
-  username = req.body.username
-  userLevel = req.body.level
+  logged = req.user.logged
+  username = req.user.username
+  userLevel = req.user.level
   id = req.params.id
   var editedInquiry = {
     originalId: id,
@@ -308,7 +308,7 @@ router.post('/inquiry/post/:id',requireAuthentication, function(req, res, next) 
   console.log('Novo post')
   console.log('Id: '+ req.params.id)
   id = req.params.id
-  user = req.body.username
+  user = req.user.username
   post = req.body.post
   // adicionar post
   Post.addPost(id,user,post,null)
@@ -341,7 +341,7 @@ router.post('/inquiry/response/:id',requireAuthentication, function(req, res, ne
   console.log('Novo post')
   console.log('Id: '+ req.params.id)
   inquiryId = req.params.id
-  user = req.body.username
+  user = req.user.username
   response = req.body.response
   postId = req.query.post
 
