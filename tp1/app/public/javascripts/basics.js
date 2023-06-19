@@ -54,7 +54,7 @@ async function getNotifications(){
                             if(notification.url){
                                 innerHtml = `<a href="${notification.url}">${innerHtml}</a>`
                             }
-                            innerHtml += `<p>Data : ${new Date(notification.dateCreated).toISOString().substring(0,19)}</p>`
+                            innerHtml += `<p>Data : ${new Date(Number(notification.dateCreated)).toISOString().substring(0,19)}</p>`
                             // notificação ainda nao foi vista
                             if(notification.seen == false){
                                 n_notifications_count += 1
