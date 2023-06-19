@@ -12,7 +12,7 @@ block content
     .w3-bar
       a.w3-bar-item.w3-button(onclick="paginationQuery(0)") &laquo;
       if (page > 0)
-        - let previousPage = page-1 
+        - var previousPage = page-1 
         a.w3-bar-item.w3-button(onclick="paginationQuery("+previousPage+")") &#8249;
       - var total = 9;
       - let aux = 4 - maxPage + page;
@@ -34,7 +34,7 @@ block content
         - n = n+1
         - currentPage = currentPage+1
       if (hasNextPage)
-        - let nextPage = page + 1
+        - var nextPage = page + 1
         a.w3-bar-item.w3-button(onclick="paginationQuery("+nextPage+")") &#8250;
       a.w3-bar-item.w3-button(onclick="paginationQuery("+maxPage+")") &raquo;
 
@@ -68,6 +68,7 @@ block content
     .w3-bar
       a.w3-bar-item.w3-button(onclick="paginationQuery(0)") &laquo;
       if (page > 0)
+        - previousPage = page - 1
         a.w3-bar-item.w3-button(onclick="paginationQuery("+previousPage+")") &#8249;
       - total = 9;
       - aux = 4 - maxPage + page;
@@ -89,6 +90,7 @@ block content
         - n = n+1
         - currentPage = currentPage+1
       if (hasNextPage)
+        - nextPage = page + 1
         a.w3-bar-item.w3-button(onclick="paginationQuery("+nextPage+")") &#8250;
       a.w3-bar-item.w3-button(onclick="paginationQuery("+maxPage+")") &raquo;
     
