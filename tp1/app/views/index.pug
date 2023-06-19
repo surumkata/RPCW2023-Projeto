@@ -21,11 +21,13 @@ block content
         tr
           th ID
             button.w3-btn.w3-gray(onclick="sortQuery('id')") V
-          th Pessoa
+          th Titular
             button.w3-btn.w3-gray(onclick="sortQuery('person')") V
-          th Data Início
+          th Local de nascimento
+            button.w3-btn.w3-gray(onclick="sortQuery('birthplace')") V
+          th Ínicio do processo
             button.w3-btn.w3-gray(onclick="sortQuery('startDate')") V
-          th Data Fim
+          th Fim do processo
             button.w3-btn.w3-gray(onclick="sortQuery('endDate')") V
           th
           th #[a.w3-btn.w3-blue(href='/createInquiry') +]
@@ -35,6 +37,7 @@ block content
             td
               each person in i.UnitTitle
                 p=person
+            td=i.birthplace
             - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
             td=initDate
             - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)

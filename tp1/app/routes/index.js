@@ -28,13 +28,13 @@ function getQueryFilters(req){
   // procura por nome de pessoa
   personName = req.query.searchName
   if(personName){
-    searchQuery['UnitTitle'] = personName
+    searchQuery['UnitTitle'] = { '$regex' : new RegExp(personName, 'i').source,'$options':'i'}
   }
 
   // procura por nome de pessoa
   searchPlace = req.query.searchPlace
   if(searchPlace){
-    searchQuery['birthplace'] = searchPlace
+    searchQuery['birthplace'] = { '$regex' : new RegExp(searchPlace, 'i').source,'$options':'i'}
   }
 
   // procura por data de inicio
@@ -59,6 +59,9 @@ function getQueryFilters(req){
         break;
       case 'person':
         type = 'UnitTitle'
+        break;
+      case 'birthplace':
+        type = 'birthplace'
         break;
       case 'startDate':
         type = 'UnitDateInitial'

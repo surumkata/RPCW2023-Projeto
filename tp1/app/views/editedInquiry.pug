@@ -7,61 +7,19 @@ block content
     .w3-container
         fieldset
             legend Metadata
-            label #[b id: ] #{i._id}
+            label #[b Id da Inquirição: ] #{i.UnitId}
             br
-            label #[b UnitId: ] #{i.UnitId}
+            label #[b Titular(es): ] #{i.UnitTitle}
             br
-            label #[b UnitTitle: ] #{i.UnitTitle}
+            label #[b Afiliações: ] #{i.filiations}
             br
-            label #[b UnitDateInitial: ] #{i.UnitDateInitial}
+            label #[b Local de nascimento: ] #{i.birthplace}
             br
-            label #[b UnitDateFinal: ] #{i.UnitDateFinal}
+            label #[b Concelho de residência: ] #{i.current_concelho}
             br
-            label #[b UnitDateInitialCertainty: ] #{i.UnitDateInitialCertainty}
+            label #[b Distrito de residência: ] #{i.current_district}
             br
-            label #[b UnitDateFinalCertainty: ] #{i.UnitDateFinalCertainty}
-            br
-            label #[b AllowUnitDatesInference: ] #{i.AllowUnitDatesInference}
-            br
-            label #[b Dimensions: ] #{i.Dimensions}
-            br
-            label #[b AccessRestrict: ] #{i.AccessRestrict}
-            br
-            label #[b PhysLoc: ] #{i.PhysLoc}
-            br
-            label #[b PreviousLoc: ] #{i.PreviousLoc}
-            br
-            label #[b PhysTech: ] #{i.PhysTech}
-            br
-            label #[b RelatedMaterial: ] #{i.RelatedMaterial}
-            br
-            label #[b Note: ] #{i.Note}
-            br
-            label #[b Revised: ] #{i.Revised}
-            br
-            label #[b Published: ] #{i.Published}
-            br
-            label #[b Available: ] #{i.Available}
-            br
-            label #[b Creator: ] #{i.Creator}
-            br
-            label #[b Created: ] #{i.Created}
-            br
-            label #[b Username: ] #{i.Username}
-            br
-            label #[b ProcessInfoDate: ] #{i.ProcessInfoDate}
-            br
-            label #[b ProcessInfo: ] #{i.ProcessInfo}
-            br
-            label #[b filiations: ] #{i.filiations}
-            br
-            label #[b birthplace: ] #{i.birthplace}
-            br
-            label #[b current_concelho: ] #{i.current_concelho}
-            br
-            label #[b current_district: ] #{i.current_district}
-            br
-            label #[b relations_id: ]
+            label #[b Laços pessoais: ]
             .w3-container
               each relation in i.relations_id
                 b #{relation.name}
@@ -70,6 +28,48 @@ block content
                 br
                 a(href="/inquiry/"+relation.id) link
                 br
+            br
+            - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
+            - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
+            label #[b Data de produção inicial: ] #{i.UnitDateInitial}
+            br
+            label #[b Confiança na data: ] #{i.UnitDateInitialCertainty}
+            br
+            label #[b Data de produção final: ] #{i.UnitDateFinal}
+            br
+            label #[b Confiança na data: ] #{i.UnitDateFinalCertainty}
+            br
+            label #[b AllowUnitDatesInference: ] #{i.AllowUnitDatesInference}
+            br
+            label #[b Dimensões: ] #{i.Dimensions}
+            br
+            label #[b Acesso restrito: ] #{i.AccessRestrict}
+            br
+            label #[b Localização física: ] #{i.PhysLoc}
+            br
+            label #[b Localização anterior: ] #{i.PreviousLoc}
+            br
+            label #[b PhysTech: ] #{i.PhysTech}
+            br
+            label #[b Material relacionado: ] #{i.RelatedMaterial}
+            br
+            label #[b Nota: ] #{i.Note}
+            br
+            label #[b Revisto: ] #{i.Revised}
+            br
+            label #[b Publicado: ] #{i.Published}
+            br
+            label #[b Disponível: ] #{i.Available}
+            br
+            label #[b Criado por: ] #{i.Creator}
+            br
+            label #[b Data de criação: ] #{i.Created}
+            br
+            label #[b Editado por: ] #{i.Username}
+            br
+            label #[b Data de informação do processo: ] #{i.ProcessInfoDate}
+            br
+            label #[b Informação do processo: ] #{i.ProcessInfo}
             br
     form.w3-container(action="/editedInquiry/reject/"+i._id method="POST")
       input.w3-btn.w3-blue(type="submit" value="Rejeitar")
