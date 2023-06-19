@@ -99,7 +99,8 @@ router.get('/',verifyAuthentication, function(req, res, next) {
       .then(totalCount => {
         // verificar se ha mais paginas de documentos
         hasNextPage = (totalCount - (page+1) * docPerPage)>0
-        res.render('index', {username:username,logged : logged,timeStartValue:timeStart,timeEndValue:timeEnd, is : inquiries, d : data,page:page,hasNextPage:hasNextPage})
+        maxPage = Math.floor(totalCount / docPerPage);
+        res.render('index', {username:username,logged : logged,timeStartValue:timeStart,timeEndValue:timeEnd, is : inquiries, d : data,page:page,hasNextPage:hasNextPage,maxPage:maxPage})
       })
       .catch(erro => {
         res.render('error', {error : erro, message : "Erro na obtenção da lista de inquisições"})

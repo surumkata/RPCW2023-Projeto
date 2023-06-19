@@ -4,6 +4,9 @@
     display: none;
     overflow: hidden;
     background-color: #f1f1f1;
+    width: 50%;
+    position: absolute;
+    z-index: 1;
   }
 
   .notification .badge {
@@ -17,6 +20,7 @@
     background: red;
     border-radius: 50%;
     color: white;
+    z-index: 2;
   }
 
   .notification {
@@ -27,4 +31,22 @@
 
   .overflow{
     overflow: visible;
+  }
+
+  .search-inputs{
+    margin-bottom:10px;
+  }
+
+  .not {
+    border: 1px solid black;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .not p {
+    margin: 5px 0;
+  }
+  
+  .not button {
+    margin-top: 10px;
   }

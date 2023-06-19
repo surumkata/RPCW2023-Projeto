@@ -31,17 +31,20 @@ block head
             
             a.w3-bar-item.w3-mobile.w3-button.collapsible(id="searchBar")
                 i.fa.fa-search
-        .w3-container.content(id='searchBarC')
-            input(type="search" name="searchName" placeholder="Procura por nome de titular")
-            input(type="search" name="searchPlace" placeholder="Procura por localidade")
+        .w3-container.w3-teal.content(id='searchBarC', style="width=50%")
+            h3 Procurar Inquirições
+            input.w3-input.search-inputs(type="search" name="searchName" placeholder="Procura por nome de titular")
+            input.w3-input.search-inputs(type="search" name="searchPlace" placeholder="Procura por localidade")
             Label Limite Inferior:
-            input(type="date"  name="searchTimeStart" id='dateId' onchange="verifyPeriod()" value=timeStartValue placeholder="Procura por periodo")
+            input.w3-input.search-inputs(type="date"  name="searchTimeStart" id='dateId' onchange="verifyPeriod()" value=timeStartValue placeholder="Procura por periodo")
             Label Limite Superior:
-            input(type="date"  name="searchTimeEnd" id='dateId' onchange="verifyPeriod()" value=timeEndValue placeholder="Procura por periodo")
+            input.w3-input.search-inputs(type="date"  name="searchTimeEnd" id='dateId' onchange="verifyPeriod()" value=timeEndValue placeholder="Procura por periodo")
             p(id='searchMessage' style='none')
-            button.w3-btn.w3-indigo(type="button" id="searchBtn" onclick="search()") search
+            .w3-center
+                button.w3-button.w3-white(type="button" id="searchBtn" style="margin-bottom:10px" onclick="search()") Search
 
-        .w3-container.content.w3-blue(id='notificationsContentC')
+        .w3-container.content.w3-teal(id='notificationsContentC')
+            h3 Notifications
                             
     if(logged === true)
         script.
