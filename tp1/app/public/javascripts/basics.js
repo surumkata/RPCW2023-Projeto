@@ -39,37 +39,40 @@ async function getNotifications(){
         if(response.ok){
             response.json().then(
                 data =>{
-                    var notifications = data.notifications
-                    var notification_content = document.getElementById('notificationsContent')
-                    var n_notifications = document.getElementById('nNotifications')
-                    var n_notifications_count = 0
-                    // criar elementos para as notificacoes
-                    for(i in notifications){
-                        notification = notifications[i]
-                        node = document.createElement('div')
-                        node.onclick = function(){seenNotification(notification._id)}
-                        innerHtml = `<p>${notification.message}</p>`
-                        // notificação tem ligação direta
-                        if(notification.url){
-                            innerHtml = `<a href="${notification.url}">${innerHtml}</a>`
+                    if(data.notifications){
+                        var notifications = data.notifications.sort((a,b) => new Date(b.dateCreated) - new Date(a.dateCreated))
+                        var notification_content = document.getElementById('notificationsContent')
+                        var n_notifications = document.getElementById('nNotifications')
+                        var n_notifications_count = 0
+                        // criar elementos para as notificacoes
+                        for(i in notifications){
+                            notification = notifications[i]
+                            node = document.createElement('div')
+                            node.onclick = function(){seenNotification(notification._id)}
+                            innerHtml = `<p>${notification.message}</p>`
+                            // notificação tem ligação direta
+                            if(notification.url){
+                                innerHtml = `<a href="${notification.url}">${innerHtml}</a>`
+                            }
+                            innerHtml += `<p>Data : ${new Date(notification.dateCreated).toISOString().substring(0,19)}</p>`
+                            // notificação ainda nao foi vista
+                            if(notification.seen == false){
+                                n_notifications_count += 1
+                                node.style.backgroundColor = "grey"
+                                innerHtml = `${innerHtml} <button type='button' class='seen' onclick='seenNotification("${notification._id}")'>V</button>`
+                            }
+                            innerHtml = `${innerHtml} <button type='button' onclick='removeNotification("${notification._id}")'>X</button>`
+                            node.innerHTML = innerHtml
+                            node.id = notification._id
+                            notification_content.appendChild(node)
                         }
-                        // notificação ainda nao foi vista
-                        if(notification.seen == false){
-                            n_notifications_count += 1
-                            node.style.backgroundColor = "grey"
-                            innerHtml = `${innerHtml} <button type='button' class='seen' onclick='seenNotification("${notification._id}")'>V</button>`
-                        }
-                        innerHtml = `${innerHtml} <button type='button' onclick='removeNotification("${notification._id}")'>X</button>`
-                        node.innerHTML = innerHtml
-                        node.id = notification._id
-                        notification_content.appendChild(node)
+                        n_notifications.textContent = n_notifications_count
+                        // atualizar valor de numero de notificacoes
+                        if(n_notifications_count > 0)
+                            n_notifications.style.display='block'
+                        else
+                            n_notifications.style.display='none'
                     }
-                    n_notifications.textContent = n_notifications_count
-                    // atualizar valor de numero de notificacoes
-                    if(n_notifications_count > 0)
-                        n_notifications.style.display='block'
-                    else
-                        n_notifications.style.display='none'
                 }
             )
         }

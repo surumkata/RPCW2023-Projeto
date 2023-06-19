@@ -11,7 +11,11 @@ block content
             br
             label #[b Titular(es): ] #{i.UnitTitle}
             br
-            label #[b Afiliações: ] #{i.filiations}
+            label #[b Afiliações: ]
+            ul 
+              each filiation in i.filiations
+                li
+                  a(href='/?searchName=^'+filiation) #{filiation}
             br
             label #[b Local de nascimento: ] #{i.birthplace}
             br
