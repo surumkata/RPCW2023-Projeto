@@ -16,7 +16,10 @@ block content
             br
             label #[b Filiação: ] #{user.filiation}
             br
-            label #[b Registo: ] #{user.dateCreated}
+            - let dateCreated = user.dateCreated ? new Date(user.dateCreated).toISOString().substring(0,10) : ''
+            label #[b Registo: ] #{dateCreated}
+            br
+            img(src=user.profilePicDir)
             br
         a(href='editProfile') Editar
 

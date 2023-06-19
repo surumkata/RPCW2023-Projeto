@@ -15,9 +15,10 @@ var notificationsSchema = new mongoose.Schema({
 var usersSchema = new mongoose.Schema({
     name : String,
     level : String,
-    dateCreated : String,
+    dateCreated : Number,
     email:String,
     filiation:String,
+    profilePicDir:String,
     posts: [String],
     notifications: [notificationsSchema]
 },{collection: 'users'})

@@ -3,9 +3,9 @@ extends header
 block content
     .w3-card-4 
     header.w3-container-w3-teal
-      h1 User profile
+      h1 Perfil de Utilizador
     .w3-container
-        form.w3-container(action="editProfile" method="POST")
+        form.w3-container(action="editProfile" method="POST" enctype='multipart/form-data')
             fieldset
                 legend Dados de utilizador
                 label #[b Username: ] #{user.username}
@@ -19,7 +19,8 @@ block content
                 label #[b Filiação: ] #{user.filiation}
                 input.w3-input(type="text" name="filiation" value=user.filiation)
                 br
-                label #[b Registo: ] #{user.dateCreated}
+                label #[b Imagem de perfil: ] #{user.filiation}
+                input.w3-input(type="file" name="profilePic" value=user.profilePicDir accept="image/*")
                 br
             a(href='profile') Cancelar
             input.w3-btn.w3-blue(type="submit" value="Confirmar")

@@ -1,11 +1,14 @@
 var express = require('express');
+var multer = require('multer');
 const passport = require('passport');
-var router = express.Router();
-var jwt = require('jsonwebtoken')
+var fs = require('fs');
+var path = require('path');
 var User = require('../models/users')
 var userController = require('../controllers/users')
 var consts = require('../utils/const')
+var router = express.Router();
 
+var upload = multer({dest:'uploads'})
 
 var verifyAuthentication = consts.verifyAuthentication
 var requireAuthentication = consts.requireAuthentication
@@ -59,10 +62,11 @@ router.get('/editProfile', requireAuthentication,function(req, res, next) {
 });
 
 /* POST users profile page. */
-router.post('/editProfile', requireAuthentication,function(req, res, next) {
+router.post('/editProfile',requireAuthentication,upload.single('profilePic') ,function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  username = req.body.username
-
+  username = req.user.username
+  console.log(username)
+  console.log(req.user.login)
   // criar objeto de utilizador modificado
   u = {}
   if(req.body.email){
@@ -70,6 +74,15 @@ router.post('/editProfile', requireAuthentication,function(req, res, next) {
   }
   if(req.body.filiation){
     u['filiation'] = req.body.filiation
+  }
+  if(req.file){
+    console.log('cdir: ' + __dirname)
+    let oldPath = path.join(__dirname,'/../' + req.file.path)
+    console.log('old:'+ oldPath)
+    let newPath = path.join(__dirname, '/../data/images/users/'+username+'/' + req.file.originalname)
+    console.log('new:'+ newPath)
+    u['profilePicDir'] = newPath
+    fs.renameSync(oldPath, newPath)
   }
 
   userController.updateUserByUsername(username,u)
