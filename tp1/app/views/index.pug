@@ -2,99 +2,101 @@ extends header
 
 
 block content
-  .w3-container.w3-center
-    h1 Inquirições 
-    a.w3-button.w3-teal(href='/createInquiry') Adicionar Inquirição
+  #page-container
+    #content-wrap
+      .w3-container.w3-center
+        h1 Inquirições 
+        a.w3-button.w3-teal(href='/createInquiry') Adicionar Inquirição
+  
+        br
+        br
+  
+        .w3-bar
+          a.w3-bar-item.w3-button(onclick="paginationQuery(0)") &laquo;
+          if (page > 0)
+            - var previousPage = page-1 
+            a.w3-bar-item.w3-button(onclick="paginationQuery("+previousPage+")") &#8249;
+          - var total = 9;
+          - let aux = 4 - maxPage + page;
+          - var n = 4;
+          if (aux > 0)
+            - n = n + aux
+          - var currentPage = page - n;
+          while (n > 0)
+            if (currentPage >= 0)
+              a.w3-bar-item.w3-button(onclick="paginationQuery("+currentPage+")")=currentPage+1
+              - total = total - 1
+            - n = n-1
+            - currentPage = currentPage+1
+          a.w3-bar-item.w3-button.w3-teal(onclick="paginationQuery("+currentPage+")")=currentPage+1
+          - n = 1
+          - currentPage = page + 1;
+          while (n < total)
+            a.w3-bar-item.w3-button(onclick="paginationQuery("+currentPage+")")=currentPage+1
+            - n = n+1
+            - currentPage = currentPage+1
+          if (hasNextPage)
+            - var nextPage = page + 1
+            a.w3-bar-item.w3-button(onclick="paginationQuery("+nextPage+")") &#8250;
+          a.w3-bar-item.w3-button(onclick="paginationQuery("+maxPage+")") &raquo;
+  
+        table.w3-table-all
+          tr.w3-teal
+            th(style="width:10%;vertical-align: middle;") ID 
+              i.fa.fa-sort(onclick="sortQuery('id')")
+            th(style="width:30%;vertical-align: middle;") Titular 
+              i.fa.fa-sort(onclick="sortQuery('person')")
+            th(style="width:30%;vertical-align: middle;") Local de nascimento 
+              i.fa.fa-sort(onclick="sortQuery('birthplace')")
+            th(style="width:15%;vertical-align: middle;") Ínicio do processo 
+              i.fa.fa-sort(onclick="sortQuery('startDate')")
+            th(style="width:15%;vertical-align: middle;") Fim do processo 
+              i.fa.fa-sort(onclick="sortQuery('endDate')")
+          each i in is
+            tr.w3-hover-teal(onclick=`window.location.href="/inquiry/"+${i._id}`)
+              a(href="/inquiry/"+i._id)
+                td(style="vertical-align: middle;")=i.UnitId
+                td(style="vertical-align: middle;")
+                  each person in i.UnitTitle
+                    p=person
+                td(style="vertical-align: middle;")=i.birthplace
+                - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
+                td(style="vertical-align: middle;")=initDate
+                - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
+                td(style="vertical-align: middle;")=finalDate
+  
+        br
+  
+        .w3-bar
+          a.w3-bar-item.w3-button(onclick="paginationQuery(0)") &laquo;
+          if (page > 0)
+            - previousPage = page - 1
+            a.w3-bar-item.w3-button(onclick="paginationQuery("+previousPage+")") &#8249;
+          - total = 9;
+          - aux = 4 - maxPage + page;
+          - n = 4;
+          if (aux > 0)
+            - n = n + aux
+          - currentPage = page - n;
+          while (n > 0)
+            if (currentPage >= 0)
+              a.w3-bar-item.w3-button(onclick="paginationQuery("+currentPage+")")=currentPage+1
+              - total = total - 1
+            - n = n-1
+            - currentPage = currentPage+1
+          a.w3-bar-item.w3-button.w3-teal(onclick="paginationQuery("+currentPage+")")=currentPage+1
+          - n = 1
+          - currentPage = page + 1;
+          while (n < total)
+            a.w3-bar-item.w3-button(onclick="paginationQuery("+currentPage+")")=currentPage+1
+            - n = n+1
+            - currentPage = currentPage+1
+          if (hasNextPage)
+            - nextPage = page + 1
+            a.w3-bar-item.w3-button(onclick="paginationQuery("+nextPage+")") &#8250;
+          a.w3-bar-item.w3-button(onclick="paginationQuery("+maxPage+")") &raquo;
+  
+        br
 
-    br
-    br
-
-    .w3-bar
-      a.w3-bar-item.w3-button(onclick="paginationQuery(0)") &laquo;
-      if (page > 0)
-        - var previousPage = page-1 
-        a.w3-bar-item.w3-button(onclick="paginationQuery("+previousPage+")") &#8249;
-      - var total = 9;
-      - let aux = 4 - maxPage + page;
-      - var n = 4;
-      if (aux > 0)
-        - n = n + aux
-      - var currentPage = page - n;
-      while (n > 0)
-        if (currentPage >= 0)
-          a.w3-bar-item.w3-button(onclick="paginationQuery("+currentPage+")")=currentPage
-          - total = total - 1
-        - n = n-1
-        - currentPage = currentPage+1
-      a.w3-bar-item.w3-button.w3-teal(onclick="paginationQuery("+currentPage+")")=currentPage
-      - n = 1
-      - currentPage = page + 1;
-      while (n < total)
-        a.w3-bar-item.w3-button(onclick="paginationQuery("+currentPage+")")=currentPage
-        - n = n+1
-        - currentPage = currentPage+1
-      if (hasNextPage)
-        - var nextPage = page + 1
-        a.w3-bar-item.w3-button(onclick="paginationQuery("+nextPage+")") &#8250;
-      a.w3-bar-item.w3-button(onclick="paginationQuery("+maxPage+")") &raquo;
-
-    table.w3-table-all
-      tr.w3-teal
-        th(style="width:10%;vertical-align: middle;") ID 
-          i.fa.fa-sort(onclick="sortQuery('id')")
-        th(style="width:30%;vertical-align: middle;") Titular 
-          i.fa.fa-sort(onclick="sortQuery('person')")
-        th(style="width:30%;vertical-align: middle;") Local de nascimento 
-          i.fa.fa-sort(onclick="sortQuery('birthplace')")
-        th(style="width:15%;vertical-align: middle;") Ínicio do processo 
-          i.fa.fa-sort(onclick="sortQuery('startDate')")
-        th(style="width:15%;vertical-align: middle;") Fim do processo 
-          i.fa.fa-sort(onclick="sortQuery('endDate')")
-      each i in is
-        tr.w3-hover-teal(onclick=`window.location.href="/inquiry/"+${i._id}`)
-          a(href="/inquiry/"+i._id)
-            td(style="vertical-align: middle;")=i.UnitId
-            td(style="vertical-align: middle;")
-              each person in i.UnitTitle
-                p=person
-            td(style="vertical-align: middle;")=i.birthplace
-            - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
-            td(style="vertical-align: middle;")=initDate
-            - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
-            td(style="vertical-align: middle;")=finalDate
-
-    br
-
-    .w3-bar
-      a.w3-bar-item.w3-button(onclick="paginationQuery(0)") &laquo;
-      if (page > 0)
-        - previousPage = page - 1
-        a.w3-bar-item.w3-button(onclick="paginationQuery("+previousPage+")") &#8249;
-      - total = 9;
-      - aux = 4 - maxPage + page;
-      - n = 4;
-      if (aux > 0)
-        - n = n + aux
-      - currentPage = page - n;
-      while (n > 0)
-        if (currentPage >= 0)
-          a.w3-bar-item.w3-button(onclick="paginationQuery("+currentPage+")")=currentPage
-          - total = total - 1
-        - n = n-1
-        - currentPage = currentPage+1
-      a.w3-bar-item.w3-button.w3-teal(onclick="paginationQuery("+currentPage+")")=currentPage
-      - n = 1
-      - currentPage = page + 1;
-      while (n < total)
-        a.w3-bar-item.w3-button(onclick="paginationQuery("+currentPage+")")=currentPage
-        - n = n+1
-        - currentPage = currentPage+1
-      if (hasNextPage)
-        - nextPage = page + 1
-        a.w3-bar-item.w3-button(onclick="paginationQuery("+nextPage+")") &#8250;
-      a.w3-bar-item.w3-button(onclick="paginationQuery("+maxPage+")") &raquo;
-    
-    br
-
-  footer.w3-teal.w3-center 
-    address Generated by auth:RPCW2023 #{d}
+    footer.w3-teal.w3-center 
+      address Generated by auth:RPCW2023 #{d}
