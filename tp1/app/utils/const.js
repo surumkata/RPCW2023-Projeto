@@ -17,9 +17,9 @@ module.exports.verifyAuthentication = function(req, res, next){
           if(!e){
             console.log('Logged in.')
             console.log('Payload: ' + JSON.stringify(payload))
-            req.user ={username:payload.username, logged:true,level:payload.level}
+            req.user = {email:payload.email,username:payload.username, logged:true,level:payload.level}
             // atualizar token
-            await exports.updateJwtToken(res,payload.username,payload.level)
+            await exports.updateJwtToken(res,payload.email,payload.username,payload.level)
           }
           else{
             console.log('Error: ' + e)
@@ -41,9 +41,9 @@ module.exports.verifyAuthentication = function(req, res, next){
           if(!e){
             console.log('Logged in.')
             console.log('Payload: ' + JSON.stringify(payload))
-            req.user ={username:payload.username, logged:true,level:payload.level}
+            req.user = {email:payload.email,username:payload.username, logged:true,level:payload.level}
             // atualizar token
-            await exports.updateJwtToken(res,payload.username,payload.level)
+            await exports.updateJwtToken(res,payload.email,payload.username,payload.level)
 
             return next()
           }else{
@@ -72,9 +72,9 @@ module.exports.verifyAuthentication = function(req, res, next){
           if(!e){
             console.log('Logged in.')
             console.log('Payload: ' + JSON.stringify(payload))
-            req.user ={username:payload.username, logged:true,level:payload.level}
+            req.user = {email:payload.email,username:payload.username, logged:true,level:payload.level}
             // atualizar token
-            await exports.updateJwtToken(res,payload.username,payload.level)
+            await exports.updateJwtToken(res,payload.email,payload.username,payload.level)
 
             if(payload.level != 1){
               return res.json({error: 'Unauthorized access.'})
@@ -95,8 +95,9 @@ module.exports.verifyAuthentication = function(req, res, next){
   }
 
 /** Cria token jwt */
-module.exports.createJwtToken = function(username,level,callback){
+module.exports.createJwtToken = function(email,username,level,callback){
     jwt.sign({
+        email:email,
         username: username,
         level: level}, 
         exports.sessionSecret,
@@ -110,9 +111,9 @@ module.exports.clearJwtToken = function(res){
 }
 
 /** Atualiza token jwt */
-module.exports.updateJwtToken = async function(res,username,level){
+module.exports.updateJwtToken = async function(res,email,username,level){
     exports.clearJwtToken(res)
-    await exports.createJwtToken(username,level,
+    await exports.createJwtToken(email,username,level,
         function(e,token){
             if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
             else{

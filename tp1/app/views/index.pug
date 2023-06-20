@@ -68,7 +68,6 @@ block content
     .w3-bar
       a.w3-bar-item.w3-button(onclick="paginationQuery(0)") &laquo;
       if (page > 0)
-        - previousPage = page - 1
         a.w3-bar-item.w3-button(onclick="paginationQuery("+previousPage+")") &#8249;
       - total = 9;
       - aux = 4 - maxPage + page;

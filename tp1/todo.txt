@@ -15,8 +15,8 @@
 
 
 # inquiricoes
-    * criar
-    * passar processamento de relaçoes para cliente?
+    * passar processamento de data para cliente no index?
+    * definir direito campos necessarios na edição e criação
 
 
 # melhorar views
@@ -30,6 +30,10 @@
     * dataUltimoAcesso
     * password
     * ...
+
+    * passar a usar email como id
+    * novas formas de autenticaçao (google,facebook,etc.)
+
 
 # posts e respostas
     * feedback?

@@ -30,7 +30,7 @@ router.get('/profile', requireAuthentication,function(req, res, next) {
   }
   username = req.user.username
 
-  userController.getUserByUsername(username)
+  userController.getUserByEmail(username)
   .then(user => {
     res.render('userProfile',{username:username,logged : logged,d:data,user:user})
   })
@@ -51,7 +51,7 @@ router.get('/editProfile', requireAuthentication,function(req, res, next) {
   }
   username = req.user.username
 
-  userController.getUserByUsername(username)
+  userController.getUserByEmail(username)
   .then(user => {
     res.render('editUserProfile',{username:username,logged : logged,d:data,user:user})
   })
@@ -89,7 +89,7 @@ router.post('/editProfile',requireAuthentication,upload.single('profilePic') ,fu
     u['profilePicDir'] = '/images/users/'+username+'/profilePic.'+fileExtension
   }
 
-  userController.updateUserByUsername(username,u)
+  userController.updateUserByEmail(username,u)
   .then(user => {
     res.redirect('profile')
   })
@@ -124,7 +124,7 @@ router.post('/login', function(req, res, next) {
         return res.redirect('login'); 
       }
       // criar token de autenticacao
-      createJwtToken(user.username,user.level,
+      createJwtToken(user.email,user.username,user.level,
         function(e, token) {
             if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
             else{
@@ -154,15 +154,15 @@ router.post('/register', function(req, res, next) {
   // verificar se password e confirmacao de password coincidem
   if(req.body.password == req.body.confirmPassword){
     // verificar se username esta disponivel
-    userController.getUserByUsername(req.user.username)
+    userController.getUserByEmail(req.user.username)
       .then(result => {
         // disponivel
         if(result == null){
           // criar novo utilizador
           User.userModel.register(
             new User.userModel({ 
-              username: req.user.username, 
-              name: req.body.name,
+              username: req.user.username,
+              email: req.body.email, 
               level: 0,
               active: true,
               dateCreated: data }), 
@@ -215,7 +215,7 @@ router.get('/logout', requireAuthentication,function(req, res, next) {
 router.get('/api/notifications', verifyAuthentication,function(req, res, next) {
   if(req.user.logged){
     username = req.user.username
-    userController.getUserByUsername(username)
+    userController.getUserByEmail(username)
     .then(user => {
       res.json({notifications:user.notifications})
     })

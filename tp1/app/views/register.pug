@@ -8,7 +8,9 @@ block content
 
         form.w3-container(action="/users/register" method="POST")
             fieldset 
-                legend Introduza as credenciais de autenticação 
+                legend Introduza as credenciais de autenticação
+                label Email 
+                input.w3-input(type="email" name="email" required) 
                 label Username 
                 input.w3-input(type="text" name="username" required)
                 if error

@@ -31,9 +31,9 @@ module.exports.getUser = id => {
 
 
 // obter user por username
-module.exports.getUserByUsername = username => {
+module.exports.getUserByEmail = email => {
     return User.userModel
-    .findOne({'username':username})
+    .findOne({'email':email})
         .then(user => {
             return user
         })
@@ -44,9 +44,9 @@ module.exports.getUserByUsername = username => {
 }
 
 // atualizar user, procura usando username
-module.exports.updateUserByUsername = (username,u) => {
+module.exports.updateUserByEmail = (email,u) => {
     return User.userModel
-    .updateOne({'username':username},u)
+    .updateOne({'email':email},u)
         .then(user => {
             console.log('Updated user: ' + JSON.stringify(user))
             return user
@@ -59,9 +59,9 @@ module.exports.updateUserByUsername = (username,u) => {
 }
 
 // adicionar referencia a uma inquiricao em que o user realizou um post
-module.exports.addPostedInquiry = (username,inquiryId) => {
+module.exports.addPostedInquiry = (email,inquiryId) => {
     return User.userModel
-    .updateOne({'username':username},
+    .updateOne({'email':email},
     {"$addToSet":{"posts": inquiryId}},
     { "new": true, "upsert": true })
     .then(result => {
@@ -76,10 +76,10 @@ module.exports.addPostedInquiry = (username,inquiryId) => {
 }
 
 // adicionar notificacao a um user
-module.exports.addUserNotificationByUsername = (username,notification) => {
-    console.log('Adding notification for user ' + username + ': ' + notification)
+module.exports.addUserNotificationByEmail = (email,notification) => {
+    console.log('Adding notification for user ' + email + ': ' + notification)
     return User.userModel
-    .updateOne({'username':username},
+    .updateOne({'email':email},
     {"$push":{"notifications": notification}},
     { "new": true, "upsert": true })
     .then(result => {
@@ -112,10 +112,10 @@ module.exports.addUserNotificationByLevel = (level,notification) => {
 }
 
 // atualizar notificacao do utilizador para vista
-module.exports.seeNotification = (username,notificationId) => {
-    console.log('Seeing notification for user ' + username + ': ' + notificationId)
+module.exports.seeNotification = (email,notificationId) => {
+    console.log('Seeing notification for user ' + email + ': ' + notificationId)
     return User.userModel
-    .updateOne({'username':username,'notifications._id':notificationId},
+    .updateOne({'email':email,'notifications._id':notificationId},
     {"$set":{"notifications.$.seen": true}})
     .then(result => {
         console.log('Updated user notification to seen: ' + JSON.stringify(result))
@@ -129,10 +129,10 @@ module.exports.seeNotification = (username,notificationId) => {
 }
 
 // remover notificacao de utilizador
-module.exports.removeNotification = (username,notificationId) => {
-    console.log('Seeing notification for user ' + username + ': ' + notificationId)
+module.exports.removeNotification = (email,notificationId) => {
+    console.log('Seeing notification for user ' + email + ': ' + notificationId)
     return User.userModel
-    .updateOne({'username':username},
+    .updateOne({'email':email},
     {"$pull":{ notifications: {_id : notificationId}}})
     .then(result => {
         console.log('Updated user notification to seen: ' + JSON.stringify(result))
