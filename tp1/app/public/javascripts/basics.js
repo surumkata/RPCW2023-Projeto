@@ -32,6 +32,16 @@ function removeNotification(notificationId){
     })
 }
 
+
+/** Funcao de onclick de notificao */
+function nofiticationClick(id,url){
+    seenNotification(id)
+    // notificação tem ligação direta
+    if(url){
+        window.location.replace(url)
+    }
+}
+
 /**  Obter notificaçoes de utilizador*/
 async function getNotifications(){
     fetch('/users/api/notifications',{
@@ -50,16 +60,9 @@ async function getNotifications(){
                         for(i in notifications){
                             let notification = notifications[i]
                             let node = document.createElement('div')
-                            node.onclick = function()
-                            {
-                                seenNotification(notification._id)
-                                // notificação tem ligação direta
-                                if(notification.url){
-                                    window.location.replace(notification.url)
-                                }
-                            }
                             let innerHtml = `<p>${notification.message}</p>`
                             innerHtml += `<p>Data : ${new Date(Number(notification.dateCreated)).toISOString().substring(0,19)}</p>`
+                            innerHtml = `<div onclick="nofiticationClick('${notification._id}','${notification.url}')">${innerHtml} </div>`
                             // notificação ainda nao foi vista
                             if(notification.seen == false){
                                 n_notifications_count += 1
@@ -83,6 +86,8 @@ async function getNotifications(){
         }
     })
 }
+
+
 
 
 /** Adicionar novo elemento para relacoes no inquerito */

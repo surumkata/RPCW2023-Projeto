@@ -19,7 +19,9 @@ block content
                 label #[b Filiação: ] #{user.filiation}
                 input.w3-input(type="text" name="filiation" value=user.filiation)
                 br
-                label #[b Imagem de perfil: ] #{user.filiation}
+                label #[b Imagem de perfil: ]
+                if user.profilePicDir
+                    img(src=user.profilePicDir alt="Profile Pciture")
                 input.w3-input(type="file" name="profilePic" value=user.profilePicDir accept="image/*")
                 br
             a(href='profile') Cancelar

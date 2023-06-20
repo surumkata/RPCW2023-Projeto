@@ -5,9 +5,12 @@ block content
     header.w3-container-w3-teal
       h1 Criar Inquirição
     .w3-container
-        form.w3-container(action="/createInquiry" method="POST")
+        form.w3-container(action="/createInquiry" method="POST" enctype='multipart/form-data')
             fieldset
               legend Metadata
+              label #[b Imagem de inquérito: ]
+              input.w3-input(type="file" name="inquiryPic" accept="image/*")
+              br
               label #[b Titular: ]
               input.w3-input(type="text" name="UnitTitle" required)
               br
@@ -25,6 +28,13 @@ block content
                 button.w3-btn.w3-blue(type="button" id="addRelationBtn" onclick="addRelationForm()") +
 
               br
+              label #[b Data de produção inicial: ]
+              input.w3-input(type="date" name="UnitDateInitial" id='dateId' required)
+              br
+              label #[b Data de produção final: ]
+              input.w3-input(type="date" name="UnitDateFinal" id='dateId'  required)
+              br
+
               a.w3-btn.w3-blue(name="cancel" href='/') Cancelar
               input.w3-btn.w3-blue(type="submit" name="submit" value="Submeter inquiricao") 
               br

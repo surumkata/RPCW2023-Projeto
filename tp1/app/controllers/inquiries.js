@@ -1,6 +1,19 @@
+var fs = require('fs');
+var path = require('path');
 var Inquiry = require('../models/inquiries')
 var userController = require('../controllers/users')
 const { default: mongoose } = require('mongoose')
+
+// criar pasta para imagens de inquiricoes
+if(!fs.existsSync(path.join(__dirname, '../public/images/inquiries'))){
+    fs.mkdirSync(path.join(__dirname, '../public/images/inquiries'))
+}
+
+// criar pasta para imagens de inquiricoes editadas
+if(!fs.existsSync(path.join(__dirname, '../public/images/editedInquiries'))){
+    fs.mkdirSync(path.join(__dirname, '../public/images/editedInquiries'))
+}
+
 
 // Inquirição list (pode receber filtros de procura e ordenacao e paginacao)
 module.exports.list = (page,searchQuery,sortQuery,docPerPage) => {
@@ -98,19 +111,49 @@ module.exports.acceptEditedInquiry = id => {
     .findOne({'_id':id},{_id:0})
     .then(inquiry => {
         if(inquiry){
-            editor = inquiry.editor
-            originalId = inquiry.originalId
-            dateEdited = inquiry.dateEdited
-            notification = {
+            let editor = inquiry.editor
+            let originalId = inquiry.originalId
+            let dateEdited = inquiry.dateEdited
+            let inquiryPicDir = inquiry.inquiryPicDir
+
+            let notification = {
                 dateCreated : data,
                 message: `A tua edição da inquirição ${originalId} foi aceite`,
                 url: `/inquiry/${originalId}`
             }
+            // se houver uma fotografia nova na edicao, mover para inquiricao
+            if(inquiryPicDir){
+                let publicPath  = path.join(__dirname,'/../public')
+                let fileExtension = inquiryPicDir.split('.').slice(-1)
+                let picDir = path.join(publicPath,'/images/inquiries/'+originalId)
+                let originalInquiryPicDir = path.join(picDir,'/inquiryPic.'+fileExtension)
+                let oldPath = path.join(publicPath,inquiryPicDir)
+                
+                if(fs.existsSync(oldPath)){
+                    if(!fs.existsSync(picDir)){
+                        fs.mkdirSync(picDir)
+                    }
+
+                    console.log(oldPath,originalInquiryPicDir)
+                    console.log(originalId,id)
+                    fs.renameSync(oldPath, originalInquiryPicDir)
+                    inquiry.inquiryPicDir = `/images/inquiries/${originalId}/inquiryPic.${fileExtension}`
+                    // remover imagem antiga
+                    this.getInquiry(originalId)
+                    .then(inquiry =>{
+                        if(inquiry)
+                            fs.rmSync(path.join(publicPath,inquiry.inquiryPicDir))
+                    })
+                    .catch( error => {
+                        console.log('Error:',error)
+                    })
+                }
+            }
+            
             // enviar mensagem ao editor
-            userController.addUserNotificationByemail(editor,notification)
+            userController.addUserNotificationByEmail(editor,notification)
             // atualizar inquiricao editada
             this.updateInquiry(originalId,inquiry)
-            // remover pedido de edicao
             this.removeEditedInquiry(id,false)
         }
         return inquiry
@@ -130,16 +173,26 @@ module.exports.removeEditedInquiry = (id,sendNotification) => {
     return Inquiry.editedInquiriesModel
     .findOneAndRemove({'_id':id})
         .then(inquiry => {
+            let inquiryPicDir = inquiry.inquiryPicDir
             if(sendNotification){
-                originalId = inquiry.originalId
-                editorId = inquiry.editor
-                notification = {
+                let originalId = inquiry.originalId
+                let editorId = inquiry.editor
+                let notification = {
                     dateCreated : data,
                     message: `A tua edição da inquirição ${originalId} foi rejeitada`,
                     url: `/inquiry/${originalId}`
                 }
+
                 // enviar notificao ao editor
-                userController.addUserNotificationByemail(editorId,notification)
+                userController.addUserNotificationByEmail(editorId,notification)
+            }
+            // se houver uma fotografia nova na edicao, remover
+            if(inquiryPicDir){
+                let editedInquiryPicDir  = path.join(__dirname,'/../public')
+                let newPath = path.join(editedInquiryPicDir,inquiryPicDir)
+                if(fs.existsSync(newPath)){
+                    fs.rmSync(newPath)
+                }
             }
             return inquiry
         })

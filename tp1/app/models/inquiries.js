@@ -15,6 +15,7 @@ var commentsSchema = new mongoose.Schema({
 
 var inquiriesSchema = new mongoose.Schema({
     _id: String,
+    inquiryPicDir:String,
     UnitId: Number,
     UnitTitle : [String],
     dateEdited:String,
@@ -54,6 +55,7 @@ var editedInquiriesSchema = new mongoose.Schema({
     editor: String,
     originalId: String,
     dateEdited:String,
+    inquiryPicDir:String,
     UnitId: Number,
     UnitTitle : [String],
     UnitDateInitial : Date,

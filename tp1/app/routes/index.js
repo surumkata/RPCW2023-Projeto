@@ -1,14 +1,23 @@
 var express = require('express');
-var router = express.Router();
+var multer = require('multer');
+var fs = require('fs');
+var path = require('path');
 var Inquiry = require('../controllers/inquiries')
 var User = require('../controllers/users')
 var Post = require('../controllers/posts')
 var consts = require('../utils/const')
+var router = express.Router();
+
+var upload = multer({dest:'uploads'})
 
 var verifyAuthentication = consts.verifyAuthentication
 var requireAuthentication = consts.requireAuthentication
 var requireAdmin = consts.requireAdmin
 
+
+if(!fs.existsSync(path.join(__dirname, '../uploads'))){
+  fs.mkdirSync(path.join(__dirname, '../uploads'))
+}
 
 
 /** Processa query por filtros de pesquisa */
@@ -25,31 +34,31 @@ function getQueryFilters(req){
   }
 
   // procura por nome de pessoa
-  personName = req.query.searchName
+  var personName = req.query.searchName
   if(personName){
     searchQuery['UnitTitle'] = { '$regex' : new RegExp(personName, 'i').source,'$options':'i'}
   }
 
   // procura por nome de pessoa
-  searchPlace = req.query.searchPlace
+  var searchPlace = req.query.searchPlace
   if(searchPlace){
     searchQuery['birthplace'] = { '$regex' : new RegExp(searchPlace, 'i').source,'$options':'i'}
   }
 
   // procura por data de inicio
-  timeStart = req.query.searchTimeStart
+  var timeStart = req.query.searchTimeStart
   if(timeStart){
     searchQuery['UnitDateInitial'] = {"$gte":new Date(timeStart)}
   }
 
   // procura por data de fim
-  timeEnd = req.query.searchTimeEnd
+  var timeEnd = req.query.searchTimeEnd
   if(timeEnd){
     searchQuery['UnitDateFinal'] = {"$lte" : new Date(timeEnd)}
   }
 
   // sorting por tipo de dado
-  sortType = req.query.sort
+  var sortType = req.query.sort
   if(sortType){
     var type = ''
     switch (sortType) {
@@ -75,7 +84,7 @@ function getQueryFilters(req){
     sortQuery = {}
     sortQuery[type] = 1
   }
-  return [page,searchQuery,sortQuery]
+  return [page,searchQuery,sortQuery,timeStart,timeEnd]
 }
 
 
@@ -92,7 +101,7 @@ router.get('/',verifyAuthentication, function(req, res, next) {
     username = req.user.username
   }
   // obter filtros de pesquisa de documentos
-  var [page,searchQuery,sortQuery] = getQueryFilters(req)
+  var [page,searchQuery,sortQuery,timeStart,timeEnd] = getQueryFilters(req)
   Inquiry.list(page,searchQuery,sortQuery,docPerPage)
     .then(inquiries => {
       Inquiry.totalCount(searchQuery)
@@ -159,16 +168,16 @@ router.get('/createInquiry',requireAuthentication, function(req, res, next) {
 });
 
 /* Post create inquiry */
-router.post('/createInquiry',requireAuthentication, function(req, res, next) {
+router.post('/createInquiry',requireAuthentication,upload.single('inquiryPic'), function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = req.user.logged
   username = req.user.username
   userLevel = req.user.level
   email = req.user.email
-  
+  console.log(JSON.stringify(req.body))
   // processar inquiry
   var newInquiry = {
-    editor: username,
+    editor: email,
     dateEdited : data,
     relations_id : []
   }
@@ -190,11 +199,51 @@ router.post('/createInquiry',requireAuthentication, function(req, res, next) {
       newInquiry.relations_id.push(new_relation)
     }
   }
+  if(req.body.UnitDateInitial){
+    newInquiry.UnitDateInitial = req.body.UnitDateInitial
+  }
+  if(req.body.UnitDateFinal){
+    newInquiry.UnitDateFinal = req.body.UnitDateFinal
+  }
+
+  // id para a inquiricao
   newInquiryId = Inquiry.newId()
+
+  // upload de inquiry pic
+  if(req.file){
+    let oldPath = path.join(__dirname,'/../' + req.file.path)
+    let fileExtension = req.file.originalname.split('.').slice(-1)
+    let inquiryImagesPath
+    let newPath
+    let imageName
+    // admin modifica diretamente imagem
+    if(userLevel == 1){
+      imageName = 'inquiryPic.' + fileExtension
+      inquiryImagesPath = path.join(__dirname,'/../public/images/inquiries/'+newInquiryId)
+      newPath = path.join(inquiryImagesPath,`/${imageName}`)
+      // adicionar campo de diretoria de imagem de inquiry
+      newInquiry['inquiryPicDir'] = '/images/inquiries/'+newInquiryId+'/' + imageName
+    }else{
+      imageName = `inquiryPic_${email}_${new Date().getTime()}.` + fileExtension
+      inquiryImagesPath = path.join(__dirname,'/../public/images/editedInquiries/'+newInquiryId)
+      newPath = path.join(inquiryImagesPath,`/${imageName}`)
+      // adicionar campo de diretoria de imagem de inquiry
+      newInquiry['inquiryPicDir'] = '/images/editedInquiries/'+newInquiryId+'/' + imageName
+    }
+    // criar pasta para imagens da inquiry se nao houver
+    if (!fs.existsSync(inquiryImagesPath)){
+      fs.mkdirSync(inquiryImagesPath);
+    }
+    // mover imagem da pasta uploads para pasta da inquiry
+    fs.renameSync(oldPath, newPath)
+  }
+
+  
   Inquiry.newUnitId()
   .then(newUnitId =>{
     newInquiry['UnitId'] = newUnitId
     console.log('Adding inquiry',newInquiry)
+    // admin imediatamente adiciona inquiry
     if(userLevel == 1){
       newInquiry['_id'] = newInquiryId
       Inquiry.addInquiry(newInquiry)
@@ -262,7 +311,7 @@ router.get('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
 
 
 /** POST de sugestao de edicao de um inquerito. Se for admin a sugerir, modificacao é imediatamente aplicada */
-router.post('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
+router.post('/inquiry/:id/edit',requireAuthentication,upload.single('inquiryPic'), function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = req.user.logged
   username = req.user.username
@@ -293,6 +342,36 @@ router.post('/inquiry/:id/edit',requireAuthentication, function(req, res, next) 
       editedInquiry.relations_id.push(new_relation)
     }
   }
+
+  // upload de inquiry pic
+  if(req.file){
+    let oldPath = path.join(__dirname,'/../' + req.file.path)
+    let fileExtension = req.file.originalname.split('.').slice(-1)
+    let inquiryImagesPath
+    let newPath
+    let imageName
+    // admin modifica diretamente imagem
+    if(userLevel == 1){
+      imageName = 'inquiryPic.' + fileExtension
+      inquiryImagesPath = path.join(__dirname,'/../public/images/inquiries/'+id)
+      newPath = path.join(inquiryImagesPath,`/${imageName}`)
+      // adicionar campo de diretoria de imagem de inquiry
+      editedInquiry['inquiryPicDir'] = '/images/inquiries/'+id+'/' + imageName
+    }else{
+      imageName = `inquiryPic_${email}_${new Date().getTime()}.` + fileExtension
+      inquiryImagesPath = path.join(__dirname,'/../public/images/editedInquiries/'+id)
+      newPath = path.join(inquiryImagesPath,`/${imageName}`)
+      // adicionar campo de diretoria de imagem de inquiry
+      editedInquiry['inquiryPicDir'] = '/images/editedInquiries/'+id+'/' + imageName
+    }
+    // criar pasta para imagens da inquiry se nao houver
+    if (!fs.existsSync(inquiryImagesPath)){
+      fs.mkdirSync(inquiryImagesPath);
+    }
+    // mover imagem da pasta uploads para pasta da inquiry
+    fs.renameSync(oldPath, newPath)
+  }
+
   // admin imediatamente modifica inquiricao
   if(userLevel == 1){
     Inquiry.updateInquiry(id,editedInquiry)

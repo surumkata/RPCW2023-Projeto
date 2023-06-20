@@ -72,7 +72,7 @@ router.post('/editProfile',requireAuthentication,upload.single('profilePic') ,fu
   // upload de profile pic
   if(req.file){
     let oldPath = path.join(__dirname,'/../' + req.file.path)
-    let fileExtension = req.file.originalname.split('.')[1]
+    let fileExtension = req.file.originalname.split('.').slice(-1)
     let userImagesPath = path.join(__dirname,'/../public/images/users/'+email)
     let newPath = path.join(userImagesPath,'/profilePic.' + fileExtension)
     // criar pasta para imagens do utilizador se nao houverem

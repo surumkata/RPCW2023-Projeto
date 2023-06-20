@@ -1,5 +1,13 @@
 var User = require('../models/users')
 var mongoose = require('mongoose')
+var fs = require('fs');
+var path = require('path');
+
+// criar pasta para users de inquiricoes
+if(!fs.existsSync(path.join(__dirname, '../public/images/users'))){
+    fs.mkdirSync(path.join(__dirname, '../public/images/users'))
+}
+
 
 // Users list
 module.exports.list = function(page) {
@@ -32,6 +40,7 @@ module.exports.getUser = id => {
 
 // obter user por username
 module.exports.getUserByEmail = email => {
+    console.log('Geting user ' + email)
     return User.userModel
     .findOne({'email':email})
         .then(user => {
@@ -45,6 +54,7 @@ module.exports.getUserByEmail = email => {
 
 // atualizar user, procura usando username
 module.exports.updateUserByEmail = (email,u) => {
+    console.log('Updating user ' + email)
     return User.userModel
     .updateOne({'email':email},u)
         .then(user => {
@@ -52,7 +62,7 @@ module.exports.updateUserByEmail = (email,u) => {
             return user
         })
         .catch( error => {
-            console.log(error)
+            console.log('Updated user: '+ error)
             return error
         }
         )
@@ -60,16 +70,17 @@ module.exports.updateUserByEmail = (email,u) => {
 
 // adicionar referencia a uma inquiricao em que o user realizou um post
 module.exports.addPostedInquiry = (email,inquiryId) => {
+    console.log('Adding post inquiry reference ' + email)
     return User.userModel
     .updateOne({'email':email},
     {"$addToSet":{"posts": inquiryId}},
     { "new": true, "upsert": true })
     .then(result => {
-        console.log('Updated user: ' + JSON.stringify(result))
+        console.log('Updated user post reference: ' + JSON.stringify(result))
         return result
     })
     .catch( error => {
-        console.log(error)
+        console.log('Updated user post reference: ' +error)
         return error
     }
     )
@@ -83,11 +94,11 @@ module.exports.addUserNotificationByEmail = (email,notification) => {
     {"$push":{"notifications": notification}},
     { "new": true, "upsert": true })
     .then(result => {
-        console.log('Updated user: ' + JSON.stringify(result))
+        console.log('Updated user notifications: ' + JSON.stringify(result))
         return result
     })
     .catch( error => {
-        console.log(error)
+        console.log('Updated user notifications: ' +error)
         return error
     }
     )
@@ -101,11 +112,11 @@ module.exports.addUserNotificationByLevel = (level,notification) => {
     {"$push":{"notifications": notification}},
     { "new": true, "upsert": true })
     .then(result => {
-        console.log('Updated user: ' + JSON.stringify(result))
+        console.log('Updated user notifications: ' + JSON.stringify(result))
         return result
     })
     .catch( error => {
-        console.log(error)
+        console.log('Updated user notifications: ' + error)
         return error
     }
     )
@@ -122,7 +133,7 @@ module.exports.seeNotification = (email,notificationId) => {
         return result
     })
     .catch( error => {
-        console.log(error)
+        console.log('Updated user notification to seen: ' +error)
         return error
     }
     )
@@ -139,7 +150,7 @@ module.exports.removeNotification = (email,notificationId) => {
         return result
     })
     .catch( error => {
-        console.log(error)
+        console.log('Updated user notification to seen: ' +error)
         return error
     }
     )

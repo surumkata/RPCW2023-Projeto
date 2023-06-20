@@ -5,9 +5,15 @@ block content
     header.w3-container-w3-teal
       h1 Editar Inquirição
     .w3-container
-        form.w3-container(action="/inquiry/"+i._id+"/edit" method="POST")
+        form.w3-container(action="/inquiry/"+i._id+"/edit" method="POST" enctype='multipart/form-data')
             fieldset
               legend Metadata
+              label #[b Imagem de inquérito: ]
+              if i.inquiryPicDir
+                img(src=i.inquiryPicDir alt='Inquiry Picture')
+                br
+              input.w3-input(type="file" name="inquiryPic" accept="image/*")
+              br
               label #[b id: ] #{i._id}
               br
               label #[b UnitId: ] #{i.UnitId}
