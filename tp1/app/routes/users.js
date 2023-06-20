@@ -154,14 +154,14 @@ router.post('/register', function(req, res, next) {
   // verificar se password e confirmacao de password coincidem
   if(req.body.password == req.body.confirmPassword){
     // verificar se username esta disponivel
-    userController.getUserByEmail(req.user.username)
+    userController.getUserByUsername(req.body.email)
       .then(result => {
         // disponivel
         if(result == null){
           // criar novo utilizador
           User.userModel.register(
             new User.userModel({ 
-              username: req.user.username,
+              username: req.body.username,
               email: req.body.email, 
               level: 0,
               active: true,

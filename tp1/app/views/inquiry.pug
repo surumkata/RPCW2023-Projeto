@@ -1,109 +1,114 @@
 extends header
 
 block content
-  .w3-card-4 
-    header.w3-container-w3-teal
-      h1 Inquirição
-    .w3-container
-        fieldset
-            legend Metadata
-            label #[b Id da Inquirição: ] #{i.UnitId}
-            br
-            label #[b Titular(es): ] #{i.UnitTitle}
-            br
-            label #[b Afiliações: ]
-            ul 
-              each filiation in i.filiations
-                li
-                  a(href='/?searchName=^'+filiation) #{filiation}
-            br
-            label #[b Local de nascimento: ] #{i.birthplace}
-            br
-            label #[b Concelho de residência: ] #{i.current_concelho}
-            br
-            label #[b Distrito de residência: ] #{i.current_district}
-            br
-            label #[b Laços pessoais: ]
-            .w3-container
-              each relation in i.relations_id
-                b #{relation.name}
-                br
-                label #[b Relação] : #{relation.type}
-                br
-                a(href="/inquiry/"+relation.id) link
-                br
-            br
-            - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
-            - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
-            label #[b Data de produção inicial: ] #{initDate}
-            br
-            label #[b Confiança na data: ] #{i.UnitDateInitialCertainty}
-            br
-            label #[b Data de produção final: ] #{finalDate}
-            br
-            label #[b Confiança na data: ] #{i.UnitDateFinalCertainty}
-            br
-            label #[b AllowUnitDatesInference: ] #{i.AllowUnitDatesInference}
-            br
-            label #[b Dimensões: ] #{i.Dimensions}
-            br
-            label #[b Acesso restrito: ] #{i.AccessRestrict}
-            br
-            label #[b Localização física: ] #{i.PhysLoc}
-            br
-            label #[b Localização anterior: ] #{i.PreviousLoc}
-            br
-            label #[b PhysTech: ] #{i.PhysTech}
-            br
-            label #[b Material relacionado: ] #{i.RelatedMaterial}
-            br
-            label #[b Nota: ] #{i.Note}
-            br
-            label #[b Revisto: ] #{i.Revised}
-            br
-            label #[b Publicado: ] #{i.Published}
-            br
-            label #[b Disponível: ] #{i.Available}
-            br
-            label #[b Criado por: ] #{i.Creator}
-            br
-            label #[b Data de criação: ] #{i.Created}
-            br
-            label #[b Editado por: ] #{i.Username}
-            br
-            label #[b Data de informação do processo: ] #{i.ProcessInfoDate}
-            br
-            label #[b Informação do processo: ] #{i.ProcessInfo}
-            br
-    a.w3-btn.w3-blue(href="/inquiry/"+i._id+"/edit") Editar
-    .w3-container
-      h1 Posts
+  #page-container
+    #content-wrap
+      .w3-container
 
-      form.w3-container(action="/inquiry/post/"+i._id method="POST")
-        legend Novo post.
-        textarea.w3-texarea(name="post", cols="30", rows="10" required) 
+        h1 Inquirição #{i.UnitId}
+
+        label #[b Id da Inquirição: ] #{i.UnitId}
         br
-        input.w3-btn.w3-blue(type="submit" value="Publicar")
-      
-      each post in posts
+        label #[b Titular(es): ] #{i.UnitTitle}
+        br
+        label #[b Afiliações: ]
+        ul 
+          each filiation in i.filiations
+            li
+              a(href='/?searchName=^'+filiation) #{filiation}
+        br
+        label #[b Local de nascimento: ] #{i.birthplace}
+        br
+        label #[b Concelho de residência: ] #{i.current_concelho}
+        br
+        label #[b Distrito de residência: ] #{i.current_district}
+        br
+        label #[b Laços pessoais: ]
         .w3-container
-          h2 Post #{post.id}
-          h3 User: #{post.author}
-          h4 Data: #{post.dateCreated}
-          p= post.text
-
+          each relation in i.relations_id
+            a(href="/inquiry/"+relation.id) #[b #{relation.name}]
+            br
+            label #[b Relação] : #{relation.type}
+            br
+          else
+            b Não tem
+        - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
+        - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
+        label #[b Data de produção inicial: ] #{initDate}
+        br
+        label #[b Confiança na data: ] #{i.UnitDateInitialCertainty}
+        br
+        label #[b Data de produção final: ] #{finalDate}
+        br
+        label #[b Confiança na data: ] #{i.UnitDateFinalCertainty}
+        br
+        label #[b AllowUnitDatesInference: ] #{i.AllowUnitDatesInference}
+        br
+        label #[b Dimensões: ] #{i.Dimensions}
+        br
+        label #[b Acesso restrito: ] #{i.AccessRestrict}
+        br
+        label #[b Localização física: ] #{i.PhysLoc}
+        br
+        label #[b Localização anterior: ] #{i.PreviousLoc}
+        br
+        label #[b PhysTech: ] #{i.PhysTech}
+        br
+        label #[b Material relacionado: ] #{i.RelatedMaterial}
+        br
+        label #[b Nota: ] #{i.Note}
+        br
+        label #[b Revisto: ] #{i.Revised}
+        br
+        label #[b Publicado: ] #{i.Published}
+        br
+        label #[b Disponível: ] #{i.Available}
+        br
+        label #[b Criado por: ] #{i.Creator}
+        br
+        label #[b Data de criação: ] #{i.Created}
+        br
+        label #[b Editado por: ] #{i.Username}
+        br
+        label #[b Data de informação do processo: ] #{i.ProcessInfoDate}
+        br
+        label #[b Informação do processo: ] #{i.ProcessInfo}
+        br
+        br
+        a.w3-button.w3-teal(href="/inquiry/"+i._id+"/edit") Editar
+        br
+        br
+        .w3-card.w3-teal
           .w3-container
-            each response in post.postResponses
-              h3 Response #{response.id}
-              h3 User: #{response.author}
-              h5 Data: #{response.dateCreated}
-              p= response.text 
-            
-            form.w3-container(action="/inquiry/response/"+i._id+"?post="+post.id method="POST")
-              legend Nova resposta.
-              textarea.w3-texarea(name="response", cols="30", rows="10" required) 
-              br
-              input.w3-btn.w3-blue(type="submit" value="Publicar")
+            h1 Posts
+          hr
 
-    footer.w3-indigo 
+          form.w3-container(action="/inquiry/post/"+i._id method="POST")
+            legend Novo post:
+            textarea.w3-texarea(name="post", cols="30", rows="10" required) 
+            br
+            input.w3-button.w3-white(type="submit" value="Publicar")
+
+          each post in posts
+            hr
+            .w3-container
+              - let date = new Date(post.dateCreated).toISOString().substring(0,10)
+              h6 Date: #{date}
+              p #{post.author}: #{post.text}
+
+              .w3-container
+                each response in post.postResponses
+                  h6 Date: #{response.dateCreated}
+                  p #{response.author}: #{response.text} 
+
+                form.w3-container(action="/inquiry/response/"+i._id+"?post="+post.id method="POST")
+                  legend Nova resposta:
+                  textarea.w3-texarea(name="response", cols="30", rows="10" required) 
+                  br
+                  input.w3-button.w3-white(type="submit" value="Publicar")
+                  br
+                  br
+
+    br
+    footer.w3-teal.w3-center
       address Generated by auth:RPCW2023 #{d} | #[a(href="/") Voltar]
