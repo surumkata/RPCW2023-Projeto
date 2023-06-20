@@ -53,7 +53,7 @@ app.set('view engine', 'pug');
 
 var User = require('./models/users')
 
-passport.use(new localStrategy(User.userModel.authenticate()))
+passport.use(User.userModel.createStrategy())
 passport.serializeUser((user,done) => {
   console.log("Vou serializar o user na sessao" + JSON.stringify(user))
   done(null,user.id)

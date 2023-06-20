@@ -14,7 +14,7 @@ var notificationsSchema = new mongoose.Schema({
 
 var usersSchema = new mongoose.Schema({
     email:String,
-    name : String,
+    username : String,
     level : String,
     dateCreated : Number,
     filiation:String,
@@ -23,6 +23,6 @@ var usersSchema = new mongoose.Schema({
     notifications: [notificationsSchema]
 },{collection: 'users'})
 
-usersSchema.plugin(passportLocalMongoose)
+usersSchema.plugin(passportLocalMongoose,{usernameField: 'email'})
 
 module.exports.userModel = mongoose.model('user',usersSchema)

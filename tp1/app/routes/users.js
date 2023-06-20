@@ -22,15 +22,12 @@ var clearJwtToken = consts.clearJwtToken
 /* GET users profile page. */
 router.get('/profile', requireAuthentication,function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = false
-  username = null
-  if(req.user.logged){
-    logged = req.user.logged
-    username = req.user.username
-  }
-  username = req.user.username
 
-  userController.getUserByEmail(username)
+  logged = req.user.logged
+  username = req.user.username
+  email = req.user.email
+
+  userController.getUserByEmail(email)
   .then(user => {
     res.render('userProfile',{username:username,logged : logged,d:data,user:user})
   })
@@ -43,15 +40,14 @@ router.get('/profile', requireAuthentication,function(req, res, next) {
 /* GET users profile edit page. */
 router.get('/editProfile', requireAuthentication,function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = false
-  username = null
-  if(req.user.logged){
-    logged = req.user.logged
-    username = req.user.username
-  }
-  username = req.user.username
 
-  userController.getUserByEmail(username)
+
+  logged = req.user.logged
+  username = req.user.username
+  email = req.user.email
+
+
+  userController.getUserByEmail(email)
   .then(user => {
     res.render('editUserProfile',{username:username,logged : logged,d:data,user:user})
   })
@@ -64,11 +60,11 @@ router.get('/editProfile', requireAuthentication,function(req, res, next) {
 /* POST users profile page. */
 router.post('/editProfile',requireAuthentication,upload.single('profilePic') ,function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  username = req.user.username
+  email = req.user.email
   // criar objeto de utilizador modificado
   u = {}
-  if(req.body.email){
-    u['email'] = req.body.email
+  if(req.body.username){
+    u['username'] = req.body.username
   }
   if(req.body.filiation){
     u['filiation'] = req.body.filiation
@@ -77,7 +73,7 @@ router.post('/editProfile',requireAuthentication,upload.single('profilePic') ,fu
   if(req.file){
     let oldPath = path.join(__dirname,'/../' + req.file.path)
     let fileExtension = req.file.originalname.split('.')[1]
-    let userImagesPath = path.join(__dirname,'/../public/images/users/'+username)
+    let userImagesPath = path.join(__dirname,'/../public/images/users/'+email)
     let newPath = path.join(userImagesPath,'/profilePic.' + fileExtension)
     // criar pasta para imagens do utilizador se nao houverem
     if (!fs.existsSync(userImagesPath)){
@@ -86,10 +82,10 @@ router.post('/editProfile',requireAuthentication,upload.single('profilePic') ,fu
     // mover imagem da pasta uploads para pasta do utilizador
     fs.renameSync(oldPath, newPath)
     // adicionar campo de diretoria de imagem de perfil ao user
-    u['profilePicDir'] = '/images/users/'+username+'/profilePic.'+fileExtension
+    u['profilePicDir'] = '/images/users/'+email+'/profilePic.'+fileExtension
   }
 
-  userController.updateUserByEmail(username,u)
+  userController.updateUserByEmail(email,u)
   .then(user => {
     res.redirect('profile')
   })
@@ -215,7 +211,8 @@ router.get('/logout', requireAuthentication,function(req, res, next) {
 router.get('/api/notifications', verifyAuthentication,function(req, res, next) {
   if(req.user.logged){
     username = req.user.username
-    userController.getUserByEmail(username)
+    email = req.user.email
+    userController.getUserByEmail(email)
     .then(user => {
       res.json({notifications:user.notifications})
     })
@@ -225,8 +222,8 @@ router.get('/api/notifications', verifyAuthentication,function(req, res, next) {
 /** POST de notificacao vista */
 router.post('/api/notifications/seen/:id', requireAuthentication,function(req, res, next) {
   notificationId = req.params.id
-  username = req.user.username
-  userController.seeNotification(username,notificationId)
+  email = req.user.email
+  userController.seeNotification(email,notificationId)
   .then(user => {
     res.json({})
   })
@@ -235,8 +232,8 @@ router.post('/api/notifications/seen/:id', requireAuthentication,function(req, r
 /** Post para remover notificacao */
 router.post('/api/notifications/remove/:id', requireAuthentication,function(req, res, next) {
   notificationId = req.params.id
-  username = req.user.username
-  userController.removeNotification(username,notificationId)
+  email = req.user.email
+  userController.removeNotification(email,notificationId)
   .then(user => {
     res.json({})
   })

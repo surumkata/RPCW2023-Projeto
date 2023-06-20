@@ -29,8 +29,8 @@ block content
                 a(href="/inquiry/"+relation.id) link
                 br
             br
-            - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
-            - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
+            - let initDate = i.UnitDateInitial ? new Date(i.UnitDateInitial).toISOString().substring(0,10) : ''
+            - let finalDate = i.UnitDateFinal ? new Date(i.UnitDateFinal).toISOString().substring(0,10) : ''
             label #[b Data de produção inicial: ] #{i.UnitDateInitial}
             br
             label #[b Confiança na data: ] #{i.UnitDateInitialCertainty}

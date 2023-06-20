@@ -107,7 +107,7 @@ module.exports.acceptEditedInquiry = id => {
                 url: `/inquiry/${originalId}`
             }
             // enviar mensagem ao editor
-            userController.addUserNotificationByUsername(editor,notification)
+            userController.addUserNotificationByemail(editor,notification)
             // atualizar inquiricao editada
             this.updateInquiry(originalId,inquiry)
             // remover pedido de edicao
@@ -139,7 +139,7 @@ module.exports.removeEditedInquiry = (id,sendNotification) => {
                     url: `/inquiry/${originalId}`
                 }
                 // enviar notificao ao editor
-                userController.addUserNotificationByUsername(editorId,notification)
+                userController.addUserNotificationByemail(editorId,notification)
             }
             return inquiry
         })
@@ -198,8 +198,8 @@ module.exports.addPostResponse = (inquiryId,user,postId,response) => {
 
 
 // adicionar sugestao de edicao de inquiricao
-module.exports.addEditedInquiry = (originalId,editedInquiry,username) => {
-    console.log('Adding edited inquiry: ' + username)
+module.exports.addEditedInquiry = (originalId,editedInquiry,email) => {
+    console.log('Adding edited inquiry: ' + email)
     data = new Date().getTime().toString()
     if(originalId){
         return this.getInquiry(originalId)
@@ -218,7 +218,7 @@ module.exports.addEditedInquiry = (originalId,editedInquiry,username) => {
                                     console.log('Added edited inquiry')
                                     notification = {
                                         dateCreated : data,
-                                        message: `${username} requested an edition of an inquiry`,
+                                        message: `${email} requested an edition of an inquiry`,
                                         url: `/editedInquiry/${newInquiry._id}`
                                     }
                                     // enviar notificacao aos admins sobre sugestao de edicao
@@ -256,7 +256,7 @@ module.exports.addEditedInquiry = (originalId,editedInquiry,username) => {
                             console.log('Added edited inquiry')
                             notification = {
                                 dateCreated : data,
-                                message: `${username} requested an edition of an inquiry`,
+                                message: `${email} requested an edition of an inquiry`,
                                 url: `/editedInquiry/${newInquiry._id}`
                             }
                             // enviar notificacao aos admins sobre sugestao de edicao

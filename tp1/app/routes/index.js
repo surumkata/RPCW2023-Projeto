@@ -164,6 +164,7 @@ router.post('/createInquiry',requireAuthentication, function(req, res, next) {
   logged = req.user.logged
   username = req.user.username
   userLevel = req.user.level
+  email = req.user.email
   
   // processar inquiry
   var newInquiry = {
@@ -199,7 +200,7 @@ router.post('/createInquiry',requireAuthentication, function(req, res, next) {
       Inquiry.addInquiry(newInquiry)
     }else{
       newInquiry['originalId'] = newInquiryId
-      Inquiry.addEditedInquiry(null,newInquiry,username)
+      Inquiry.addEditedInquiry(null,newInquiry,email)
     }
     res.redirect('/');
   })
@@ -249,7 +250,6 @@ router.get('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
   logged = req.user.logged
   username = req.user.username
-  console.log(req.params.id)
   id = req.params.id
   Inquiry.getInquiry(req.params.id)
     .then(inquiry => {
@@ -266,11 +266,12 @@ router.post('/inquiry/:id/edit',requireAuthentication, function(req, res, next) 
   var data = new Date().toISOString().substring(0, 16)
   logged = req.user.logged
   username = req.user.username
+  email = req.user.email
   userLevel = req.user.level
   id = req.params.id
   var editedInquiry = {
     originalId: id,
-    editor: username,
+    editor: email,
     dateEdited : data,
     relations_id : []
   }
@@ -296,7 +297,7 @@ router.post('/inquiry/:id/edit',requireAuthentication, function(req, res, next) 
   if(userLevel == 1){
     Inquiry.updateInquiry(id,editedInquiry)
   }else{
-    Inquiry.addEditedInquiry(id,editedInquiry,username)
+    Inquiry.addEditedInquiry(id,editedInquiry,email)
   }
   res.redirect(`/inquiry/${id}`);
 });
@@ -310,15 +311,16 @@ router.post('/inquiry/post/:id',requireAuthentication, function(req, res, next) 
   console.log('Id: '+ req.params.id)
   id = req.params.id
   user = req.user.username
+  email = req.user.email
   post = req.body.post
   // adicionar post
-  Post.addPost(id,user,post,null)
+  Post.addPost(id,email,post,null)
   .then(post => {
     // adicionar referencia ao post na inquiricao
-    Inquiry.addPost(id,user,post)
+    Inquiry.addPost(id,email,post)
     .then(result => {
       // adicionar referencia ao post no user
-      User.addPostedInquiry(user,id)
+      User.addPostedInquiry(email,id)
       .then(result => {
         res.redirect('../'+id);
       })
@@ -343,17 +345,18 @@ router.post('/inquiry/response/:id',requireAuthentication, function(req, res, ne
   console.log('Id: '+ req.params.id)
   inquiryId = req.params.id
   user = req.user.username
+  email = req.user.email
   response = req.body.response
   postId = req.query.post
 
   // adicionar post
-  Post.addPost(inquiryId,user,response,postId)
+  Post.addPost(inquiryId,email,response,postId)
   .then(response => {
       // adicionar referencia de post na inquiricao 
-      Inquiry.addPostResponse(inquiryId,user,postId,response)
+      Inquiry.addPostResponse(inquiryId,email,postId,response)
       .then(result => {
         // adicionar referencia de post no user
-        User.addPostedInquiry(user,inquiryId)
+        User.addPostedInquiry(email,inquiryId)
         .then(result => {
           res.redirect('../'+inquiryId);
         })

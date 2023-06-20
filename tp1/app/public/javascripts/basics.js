@@ -3,6 +3,7 @@
 function seenNotification(notificationId){
     var notification = document.getElementById(notificationId)
     var n_notifications = document.getElementById('nNotifications')
+    console.log('here',notificationId,notification)
     if(notification.getElementsByClassName('seen')[0]){
         // enviar ao servidor pedido de autalizacao
         fetch(`/users/api/notifications/seen/${notificationId}`,{
@@ -48,10 +49,10 @@ async function getNotifications(){
                         var n_notifications_count = 0
                         // criar elementos para as notificacoes
                         for(i in notifications){
-                            notification = notifications[i]
-                            node = document.createElement('div')
+                            let notification = notifications[i]
+                            let node = document.createElement('div')
                             node.onclick = function(){seenNotification(notification._id)}
-                            innerHtml = `<p>${notification.message}</p>`
+                            let innerHtml = `<p>${notification.message}</p>`
                             // notificação tem ligação direta
                             if(notification.url){
                                 innerHtml = `<a href="${notification.url}">${innerHtml}</a>`
