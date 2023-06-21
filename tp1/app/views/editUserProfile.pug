@@ -8,17 +8,30 @@ block content
         form.w3-container(action="editProfile" method="POST" enctype='multipart/form-data')
             fieldset
                 legend Dados de utilizador
-                label #[b Username: ] #{user.username}
+                label #[b Email: ] #{user.email}
                 br
                 if(user.level === 1)
                     label #[b Level: ] Admin
                     br
-                label #[b Email: ] 
-                input.w3-input(type="email" name="email" value=user.email)
+                label #[b Username: ] 
+                input.w3-input(type="text" name="username" value=user.username)
                 br
-                label #[b Filiação: ] #{user.filiation}
-                input.w3-input(type="text" name="filiation" value=user.filiation)
-                br
+                label #[b Filiações: ]
+                .w3-container(id='affiliationsContainer')
+                    - let count = 0
+                    each affiliation in user.filiations
+                        .w3-container
+                            affiliation(id='affiliation'+count)
+                                label #[b Nome] : 
+                                    input.w3-input(type="text" name="affiliationName" value=affiliation.name)
+                                label #[b Relação] : 
+                                    input.w3-input(type="text" name="affiliationRelation" value=affiliation.relation)
+                                label #[b Processo] : 
+                                    input.w3-input(type="text" name="affiliationProcess" value=affiliation.process)
+                                button.w3-btn.w3-blue(type="button" id="removeAffiliationBtn" onclick="removeElement('affiliation"+count+"')") -
+                        - count+=1
+                    button.w3-btn.w3-blue(type="button" id="addAffiliationBtn" onclick="addUserAffiliationForm()") +
+                
                 label #[b Imagem de perfil: ]
                 if user.profilePicDir
                     img(src=user.profilePicDir alt="Profile Pciture")

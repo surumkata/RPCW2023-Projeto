@@ -12,12 +12,19 @@ var notificationsSchema = new mongoose.Schema({
     }
 })
 
+var filiationsSchema = new mongoose.Schema({
+    name : String,
+    relation: String,
+    process: String
+})
+
+
 var usersSchema = new mongoose.Schema({
     email:String,
     username : String,
     level : String,
     dateCreated : Number,
-    filiation:String,
+    filiations:[filiationsSchema],
     profilePicDir:String,
     posts: [String],
     notifications: [notificationsSchema]

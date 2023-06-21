@@ -62,13 +62,31 @@ router.post('/editProfile',requireAuthentication,upload.single('profilePic') ,fu
   var data = new Date().toISOString().substring(0, 16)
   email = req.user.email
   // criar objeto de utilizador modificado
-  u = {}
+  var u = {
+    filiations : []
+  }
   if(req.body.username){
     u['username'] = req.body.username
   }
-  if(req.body.filiation){
-    u['filiation'] = req.body.filiation
+
+  if(req.body.affiliationName){
+    if(Array.isArray(req.body.affiliationName)){
+      for(i in req.body.affiliationName){
+        let new_affiliation = {}
+        new_affiliation['name'] = req.body.affiliationName[i]
+        new_affiliation['relation'] = req.body.affiliationRelation[i]
+        new_affiliation['process'] = req.body.affiliationProcess[i]
+        u.filiations.push(new_affiliation)
+      }
+    }else{
+      let new_affiliation = {}
+      new_affiliation['name'] = req.body.affiliationName
+      new_affiliation['relation'] = req.body.affiliationRelation
+      new_affiliation['process'] = req.body.affiliationProcess
+      u.filiations.push(new_affiliation)
+    }
   }
+
   // upload de profile pic
   if(req.file){
     let oldPath = path.join(__dirname,'/../' + req.file.path)

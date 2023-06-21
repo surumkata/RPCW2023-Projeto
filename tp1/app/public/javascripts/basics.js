@@ -207,6 +207,66 @@ function addAffiliationForm() {
     }
 }
 
+/** Adicionar novo elemento para relacoes no user */
+function addUserAffiliationForm() {
+    var affiliationsContainer = document.getElementById('affiliationsContainer')
+    var affiliations = affiliationsContainer.getElementsByTagName('affiliation')
+    var addAffiliationBtn = document.getElementById('addAffiliationBtn')
+    var baseAffiliation =`
+            <affiliation id="affiliation$replace">
+                <label>
+                    <b>Nome</b> : <input class="w3-input" type="text" name="affiliationName" value="" required>
+                </label>
+                <label>
+                    <b>Relação</b> : <input class="w3-input" type="text" name="affiliationRelation" value="">
+                </label>
+                <label>
+                    <b>Processo</b> : <input class="w3-input" type="text" name="affiliationProcess" value="">
+                </label>
+                <button class="w3-btn w3-blue" type="button" id="removeAffiliationBtn" onclick="removeElement('affiliation$replace')">-</button>
+            </affiliation>
+        `
+    // primeira afiliacao, adiciona no inicio
+    if(affiliations.length == 0){
+        var node = document.createElement('div')
+        node.classList.add('w3-container')
+        node.innerHTML = baseAffiliation.replace(new RegExp('\\$replace','g'),affiliations.length.toString())
+        affiliationsContainer.appendChild(node)
+        affiliationsContainer.append(addAffiliationBtn)
+    }
+    // adicionar no final da lista, trocar posicao do botao de adicionar relacao
+    // apenas adiciona novo elemento se o anterior estiver preenchido
+    else{
+        var lastAffiliation= affiliations[affiliations.length-1]
+        var lastAffiliationInputs = lastAffiliation.getElementsByTagName('input')
+        var filled = false
+        // verificar se ultimo elemento esta preenchido
+        for(i in lastAffiliationInputs){
+            if(lastAffiliationInputs[i].value && lastAffiliationInputs[i].value != ''){
+                filled = true
+                break
+            }
+        }
+        if(filled){
+            var maxId = 0
+            var i = 0
+            // verificar id disponivel para nova relacao
+            while(i < affiliations.length){
+                let a = affiliations.item(i)
+                let aId = parseInt(a.id.split('affiliation')[1])
+                if(aId >= maxId)
+                    maxId = aId+ 1
+                i++
+            } 
+            var node = document.createElement('div')
+            node.classList.add('w3-container')
+            node.innerHTML = baseAffiliation.replace(new RegExp('\\$replace','g'),maxId.toString())
+            affiliationsContainer.appendChild(node)
+            affiliationsContainer.append(addAffiliationBtn)
+        }
+    }
+}
+
 
 
 /** Remover elemento por id*/

@@ -14,7 +14,18 @@ block content
                 br
             label #[b Email: ] #{user.email}
             br
-            label #[b Filiação: ] #{user.filiation}
+            label #[b Filiações: ]
+            ul 
+                each filiation in user.filiations
+                    li
+                        if filiation.process
+                            a(href='/inquiry/'+filiation.process) #{filiation.name}
+                        else
+                            p #{filiation.name}
+                        br
+                        if filiation.relation
+                            label #[b Relação : ] #{filiation.relation}
+                    
             br
             - let dateCreated = user.dateCreated ? new Date(user.dateCreated).toISOString().substring(0,10) : ''
             label #[b Registo: ] #{dateCreated}
