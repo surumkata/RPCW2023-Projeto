@@ -57,6 +57,13 @@ function getQueryFilters(req){
     searchQuery['UnitDateFinal'] = {"$lte" : new Date(timeEnd)}
   }
 
+  // ordenamento
+  var order = req.query.order
+  orderQuery = 1
+  if(order == 'desc'){
+    orderQuery = -1
+  }
+
   // sorting por tipo de dado
   var sortType = req.query.sort
   if(sortType){
@@ -82,8 +89,9 @@ function getQueryFilters(req){
         break;
     }
     sortQuery = {}
-    sortQuery[type] = 1
+    sortQuery[type] = orderQuery
   }
+
   return [page,searchQuery,sortQuery,timeStart,timeEnd]
 }
 

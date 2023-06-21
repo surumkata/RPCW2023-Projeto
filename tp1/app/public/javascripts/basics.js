@@ -190,7 +190,17 @@ function paginationQuery(pageNumber){
 /** Altera o valor de query de sort */
 function sortQuery(sortType){
     var urlParams = new URLSearchParams(window.location.search);
+    var originalSort = urlParams.get('sort')
     urlParams.set('sort', sortType)
+    urlParams.set('page', 0)
+    var order = urlParams.get('order')
+    if(!order || order == 'desc' || (originalSort && originalSort != sortType)){
+        urlParams.set('order', 'asc')
+    }else{
+        urlParams.set('order', 'desc')
+    }
+
+
     window.location.search = urlParams.toString()
 }
 
