@@ -44,10 +44,14 @@ block content
           tr.w3-teal
             th(style="width:10%;vertical-align: middle;") ID 
               i.fa.fa-sort(onclick="sortQuery('id')")
-            th(style="width:30%;vertical-align: middle;") Titular 
+            th(style="width:15%;vertical-align: middle;") Titular 
               i.fa.fa-sort(onclick="sortQuery('person')")
-            th(style="width:30%;vertical-align: middle;") Local de nascimento 
+            th(style="width:15%;vertical-align: middle;") Local de nascimento 
               i.fa.fa-sort(onclick="sortQuery('birthplace')")
+            th(style="width:15%;vertical-align: middle;") Concelho de residência
+              i.fa.fa-sort(onclick="sortQuery('current_concelho')")
+            th(style="width:15%;vertical-align: middle;") Distrito de residência
+              i.fa.fa-sort(onclick="sortQuery('current_district')")
             th(style="width:15%;vertical-align: middle;") Ínicio do processo 
               i.fa.fa-sort(onclick="sortQuery('startDate')")
             th(style="width:15%;vertical-align: middle;") Fim do processo 
@@ -60,6 +64,8 @@ block content
                   each person in i.UnitTitle
                     p=person
                 td(style="vertical-align: middle;")=i.birthplace
+                td(style="vertical-align: middle;")=i.current_concelho
+                td(style="vertical-align: middle;")=i.current_district
                 - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
                 td(style="vertical-align: middle;")=initDate
                 - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)

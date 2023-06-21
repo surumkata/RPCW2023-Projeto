@@ -39,10 +39,22 @@ function getQueryFilters(req){
     searchQuery['UnitTitle'] = { '$regex' : new RegExp(personName, 'i').source,'$options':'i'}
   }
 
-  // procura por nome de pessoa
-  var searchPlace = req.query.searchPlace
-  if(searchPlace){
-    searchQuery['birthplace'] = { '$regex' : new RegExp(searchPlace, 'i').source,'$options':'i'}
+  // procura por local de nascimento
+  var searchBirthPlace = req.query.searchBirthplace
+  if(searchBirthPlace){
+    searchQuery['birthplace'] = { '$regex' : new RegExp(searchBirthPlace, 'i').source,'$options':'i'}
+  }
+
+  // procura por concelho de residência
+  var searchConcelho = req.query.searchConcelho
+  if(searchConcelho){
+    searchQuery['current_concelho'] = { '$regex' : new RegExp(searchConcelho, 'i').source,'$options':'i'}
+  }
+
+  // procura por distrito de residência
+  var searchDistrict = req.query.searchDistrict
+  if(searchDistrict){
+    searchQuery['current_district'] = { '$regex' : new RegExp(searchDistrict, 'i').source,'$options':'i'}
   }
 
   // procura por data de inicio
@@ -77,6 +89,12 @@ function getQueryFilters(req){
         break;
       case 'birthplace':
         type = 'birthplace'
+        break;
+      case 'current_concelho':
+        type = 'current_concelho'
+        break;
+      case 'current_district':
+        type = 'current_district'
         break;
       case 'startDate':
         type = 'UnitDateInitial'

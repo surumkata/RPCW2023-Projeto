@@ -24,8 +24,8 @@ def get_info_scopecontent(fields):
         cur_concelho = fields[3]
     cur_district = 'null'  
     if fields[4]:
-        cur_district = fields[6]
-    other = fields[7]
+        cur_district = fields[10]
+    other = fields[11]
     return [fil, birth, cur_concelho,cur_district,other]
     
 
@@ -69,9 +69,9 @@ df.drop(['DescriptionLevel','UnitTitleType','CompleteUnitId','LangMaterial','All
 
 pd.set_option('display.max_columns', None)
 # Check changes
-print(df.info())
-print(df.nunique())
-print(df.head())
+# print(df.info())
+# print(df.nunique())
+# print(df.head())
 
 # Get info from UnitTitle (name of the person(s))
 df['UnitTitle'] = df['UnitTitle'].str.replace(r'.*de genere de\s+((\w+\b\s*)+)',r'\1', regex=True)
@@ -114,7 +114,7 @@ birthplace = []
 current_concelho = []
 current_district = []
 
-re_scopecontent= r'(.+:(.+)\..+)?residente em\s*(.+),.*concelho de (.+?)( e distrito\s*(\(.+?\))?\s*(.+?))?\.(.+)?'
+re_scopecontent= r'(.+:(.+)\..+)?residente em\s*(.+),.*concelho de (.+?)( e distrito\s*(\(.+?\))?((do)|(de)|(da))?\s*(.+?))?\.(.+)?'
 
 for i in df.index:
     e = df.iloc[i]

@@ -34,11 +34,13 @@ block head
         .w3-container.w3-teal.content(id='searchBarC', style="width=50%")
             h3 Procurar Inquirições
             input.w3-input.search-inputs(type="search" name="searchName" placeholder="Procura por nome de titular")
-            input.w3-input.search-inputs(type="search" name="searchPlace" placeholder="Procura por localidade")
+            input.w3-input.search-inputs(type="search" name="searchBirthplace" placeholder="Procura por local de nascimento")
+            input.w3-input.search-inputs(type="search" name="searchConcelho" placeholder="Procura por concelho de residência")
+            input.w3-input.search-inputs(type="search" name="searchDistrict" placeholder="Procura por distrito de residência")
             - let today = new Date().toISOString().split("T")[0]
-            Label Limite Inferior:
+            Label Data do processo (Limite Inferior):
             input.w3-input.search-inputs(type="date"  name="searchTimeStart" max=today onchange="verifyPeriod()" value=timeStartValue placeholder="Procura por periodo")
-            Label Limite Superior:
+            Label Data do processo (Limite Superior):
             input.w3-input.search-inputs(type="date"  name="searchTimeEnd" max=today onchange="verifyPeriod()" value=timeEndValue placeholder="Procura por periodo")
             p(id='searchMessage' style='none')
             .w3-center
