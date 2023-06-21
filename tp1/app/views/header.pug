@@ -35,10 +35,11 @@ block head
             h3 Procurar Inquirições
             input.w3-input.search-inputs(type="search" name="searchName" placeholder="Procura por nome de titular")
             input.w3-input.search-inputs(type="search" name="searchPlace" placeholder="Procura por localidade")
+            - let today = new Date().toISOString().split("T")[0]
             Label Limite Inferior:
-            input.w3-input.search-inputs(type="date"  name="searchTimeStart" id='dateId' onchange="verifyPeriod()" value=timeStartValue placeholder="Procura por periodo")
+            input.w3-input.search-inputs(type="date"  name="searchTimeStart" max=today onchange="verifyPeriod()" value=timeStartValue placeholder="Procura por periodo")
             Label Limite Superior:
-            input.w3-input.search-inputs(type="date"  name="searchTimeEnd" id='dateId' onchange="verifyPeriod()" value=timeEndValue placeholder="Procura por periodo")
+            input.w3-input.search-inputs(type="date"  name="searchTimeEnd" max=today onchange="verifyPeriod()" value=timeEndValue placeholder="Procura por periodo")
             p(id='searchMessage' style='none')
             .w3-center
                 button.w3-button.w3-white(type="button" id="searchBtn" style="margin-bottom:10px" onclick="search()") Search
@@ -52,7 +53,6 @@ block head
             
     script.
         verifyPeriod()
-        dateId.max = new Date().toISOString().split("T")[0]
 
         var collapsibles = document.getElementsByClassName("collapsible");
 

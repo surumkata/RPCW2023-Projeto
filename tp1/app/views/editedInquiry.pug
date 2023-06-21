@@ -14,7 +14,11 @@ block content
             br
             label #[b Titular(es): ] #{i.UnitTitle}
             br
-            label #[b Afiliações: ] #{i.filiations}
+            label #[b Filiações: ]
+            ul 
+              each filiation in i.filiations
+                li
+                  a(href='/?searchName=^'+filiation) #{filiation}
             br
             label #[b Local de nascimento: ] #{i.birthplace}
             br
@@ -25,44 +29,25 @@ block content
             label #[b Laços pessoais: ]
             .w3-container
               each relation in i.relations_id
-                b #{relation.name}
+                a(href="/inquiry/"+relation.id) #[b #{relation.name}]
                 br
                 label #[b Relação] : #{relation.type}
                 br
-                a(href="/inquiry/"+relation.id) link
-                br
+              else
+                b Não tem
+            - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
+            - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
+            label #[b Data de produção inicial: ] #{initDate}
             br
-            - let initDate = i.UnitDateInitial ? new Date(i.UnitDateInitial).toISOString().substring(0,10) : ''
-            - let finalDate = i.UnitDateFinal ? new Date(i.UnitDateFinal).toISOString().substring(0,10) : ''
-            label #[b Data de produção inicial: ] #{i.UnitDateInitial}
-            br
-            label #[b Confiança na data: ] #{i.UnitDateInitialCertainty}
-            br
-            label #[b Data de produção final: ] #{i.UnitDateFinal}
-            br
-            label #[b Confiança na data: ] #{i.UnitDateFinalCertainty}
-            br
-            label #[b AllowUnitDatesInference: ] #{i.AllowUnitDatesInference}
-            br
-            label #[b Dimensões: ] #{i.Dimensions}
-            br
-            label #[b Acesso restrito: ] #{i.AccessRestrict}
+            label #[b Data de produção final: ] #{finalDate}
             br
             label #[b Localização física: ] #{i.PhysLoc}
             br
             label #[b Localização anterior: ] #{i.PreviousLoc}
             br
-            label #[b PhysTech: ] #{i.PhysTech}
-            br
             label #[b Material relacionado: ] #{i.RelatedMaterial}
             br
             label #[b Nota: ] #{i.Note}
-            br
-            label #[b Revisto: ] #{i.Revised}
-            br
-            label #[b Publicado: ] #{i.Published}
-            br
-            label #[b Disponível: ] #{i.Available}
             br
             label #[b Criado por: ] #{i.Creator}
             br

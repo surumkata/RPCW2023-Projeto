@@ -69,9 +69,9 @@ df.drop(['DescriptionLevel','UnitTitleType','CompleteUnitId','LangMaterial','All
 
 pd.set_option('display.max_columns', None)
 # Check changes
-# print(df.info())
-# print(df.nunique())
-# print(df.head())
+print(df.info())
+print(df.nunique())
+print(df.head())
 
 # Get info from UnitTitle (name of the person(s))
 df['UnitTitle'] = df['UnitTitle'].str.replace(r'.*de genere de\s+((\w+\b\s*)+)',r'\1', regex=True)
@@ -109,7 +109,7 @@ for i in df.index:
 
 
 # Get info from ScopeContent
-filiations = []
+affiliations = []
 birthplace = []
 current_concelho = []
 current_district = []
@@ -147,7 +147,7 @@ for i in df.index:
                     j += 1
                 count+=1
         
-        filiations.append(fil)
+        affiliations.append(fil)
         birthplace.append(birth)
         current_concelho.append(cur_concelho)
         current_district.append(cur_district)
@@ -157,7 +157,7 @@ for i in df.index:
         print(traceback.format_exc())
         exit(1)
 
-df['filiations'] = filiations
+df['affiliations'] = affiliations
 df['birthplace'] = birthplace
 df['current_concelho'] = current_concelho
 df['current_district'] = current_district
