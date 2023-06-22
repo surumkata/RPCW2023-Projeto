@@ -98,19 +98,22 @@ function addRelationForm() {
     var baseRelation =`
             <relation id="relation$replace">
                 <label>
-                    <b>Nome</b> : <input class="w3-input" type="text" name="relationName" value="" required>
+                    <b>Nome</b> : <input class="w3-input w3-border w3-hover-border-black" type="text" name="relationName" value="" required>
                 </label>
                 <br>
                 <label>
-                    <b>Relação</b> :<input class="w3-input" type="text" name="relationType" value="" required>
+                    <b>Relação</b> :<input class="w3-input w3-border w3-hover-border-black" type="text" name="relationType" value="" required>
                 </label>
                 <br>
                 <label>
-                    <b>ID do Processo</b> :<input class="w3-input" type="number" name="relationId" value="" required>
+                    <b>ID do Processo</b> :<input class="w3-input w3-border w3-hover-border-black" type="number" name="relationId" value="" required>
                 </label>
                 <br>
-                <button class="w3-btn w3-blue" type="button" id="removeRelationBtn" onclick="removeElement('relation$replace')">-</button>
+                <div class="w3-center w3-container" id="removeRelationBtn">
+                    <button class="main-button colored" type="button" onclick="removeElement('relation$replace')">- Remover relação</button>
+                </div>
             </relation>
+            <br>
         `
     // primeira relacao, adiciona no inicio
     if(relations.length == 0){
@@ -161,10 +164,14 @@ function addAffiliationForm() {
     var baseAffiliation =`
             <affiliation id="affiliation$replace">
                 <label>
-                    <b>Nome</b> : <input class="w3-input" type="text" name="affiliationName" value="" required>
+                    <b>Nome</b> : <input class="w3-input w3-border w3-hover-border-black" type="text" name="affiliationName" value="" required>
                 </label>
-                <button class="w3-btn w3-blue" type="button" id="removeAffiliationBtn" onclick="removeElement('affiliation$replace')">-</button>
+                <br>
+                <div class="w3-container w3-center" id="removeAffiliationBtn">
+                    <button class="main-button colored" type="button" onclick="removeElement('affiliation$replace')">- Remover afiliação</button>
+                </div>
             </affiliation>
+            <br>
         `
     // primeira afiliacao, adiciona no inicio
     if(affiliations.length == 0){
