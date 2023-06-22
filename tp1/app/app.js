@@ -6,7 +6,7 @@ var logger = require('morgan');
 var consts = require('./utils/const')
 var User = require('./models/users')
 var Post = require('./models/posts')
-
+require("dotenv").config()
 //import de mongoose module
 var mongoose = require('mongoose')
 
@@ -26,7 +26,7 @@ const {v4:uuidv4} = require('uuid')
 var session = require('express-session')
 var fileStore = require('session-file-store') (session)
 var passport = require('passport')
-var localStrategy = require('passport-local').Strategy
+require("./utils/passportConfig")(passport);
 
 
 var indexRouter = require('./routes/index');
@@ -39,31 +39,31 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 
-// app.use(session({
-//   genid : res => {
-//     console.log('Dentro do middleware da sessão...')
-//     console.log('Id da sessao: ' + res.sessionID)
-//     return uuidv4()
-//   },
-//   store : new fileStore(),
-//   secret : consts.sessionSecret,
-//   resave : false,
-//   saveUninitialized : true
-// }))
+app.use(session({
+  genid : res => {
+    console.log('Dentro do middleware da sessão...')
+    console.log('Id da sessao: ' + res.sessionID)
+    return uuidv4()
+  },
+  store : new fileStore(),
+  secret : consts.sessionSecret,
+  resave : false,
+  saveUninitialized : true
+}))
 
 var User = require('./models/users')
 
-passport.use(User.userModel.createStrategy())
-passport.serializeUser((user,done) => {
-  console.log("Vou serializar o user na sessao" + JSON.stringify(user))
-  done(null,user.id)
-})
-passport.deserializeUser((uid,done)=> {
-  console.log("Vou desserializar o user " + uid)
-  User.userModel.findOne({"id" : uid})
-    .then(user => done(null,user))
-    .catch(erro => done(erro,false))
-})
+passport.use('local',User.userModel.createStrategy())
+passport.serializeUser( (user, done) => { 
+  console.log(`\n--------> Serialize User:`)
+  done(null, user)
+} )
+
+
+passport.deserializeUser((user, done) => {
+      console.log("\n--------- Deserialized User:")
+      done (null, user)
+}) 
 
 
 

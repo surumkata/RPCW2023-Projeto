@@ -1,5 +1,6 @@
 var jwt = require('jsonwebtoken')
 
+
 // segredo jwt
 module.exports.sessionSecret = 'inquiricoesSecret'
 
@@ -123,3 +124,5 @@ module.exports.updateJwtToken = async function(res,email,username,level){
         })
 
 }
+
+

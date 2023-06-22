@@ -151,6 +151,24 @@ router.post('/login', function(req, res, next) {
   });
 
 
+/** Get de autenticacao com google */
+router.get('/login/google', passport.authenticate("google", { scope: ["email", "profile"] }));
+
+/** Obter data de user com autenticacao por google */
+router.get("/login/google/callback",passport.authenticate("google", { session: false }),(req, res) => {
+  console.log('Authentication with google callback')
+  username = req.user.username
+  email = req.user.email
+  level = req.user.level
+  return createJwtToken(email,username,level,
+    function(e, token) {
+      if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
+      else{
+        res.cookie('user_token',token,{httpOnly: true})
+        res.redirect('/')
+      }
+    })
+});
 
 
 /* GET pagina de registo. */
