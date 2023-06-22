@@ -357,3 +357,19 @@ function createClickListener(id) {
       }
     };
   }
+
+function showMore() {
+  var dots = document.getElementById("dots");
+  var moreText = document.getElementById("more");
+  var btnText = document.getElementById("showBtn");
+
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = "Mostrar mais<br> &#xfe40;";
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = "Mostrar menos<br> &#65087;";
+    moreText.style.display = "block";
+  }
+}

@@ -9,11 +9,7 @@
     z-index: 1;
   }
 
-  /* Style the collapsible content. Note: hidden by default */
-  .content-info {
-    display: none;
-    overflow: hidden;
-  }
+  #more {display: none;}
 
   .notification .badge {
     position: absolute;
