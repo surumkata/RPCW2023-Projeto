@@ -69,3 +69,36 @@
     width: 100%;
     height: 2.5rem;            /* Footer height */
   }
+
+  .main-color{
+    background-color: #7F1610;
+    color: white;
+  }
+
+  .main-color-hover:hover{color:#fff!important;background-color:#7F1610!important}
+
+  .main-button{border:none;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
+  .main-button{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+  .main-button:disabled{cursor:not-allowed;opacity:0.3}
+  .w3-bar .main-button{white-space:normal}
+  .main-button:hover{color:#fff!important;background-color:#74150f!important}
+
+  .colored.main-button{
+    color:#fff!important;background-color:#7F1610!important
+  }
+
+  .colored.main-button:hover{color:#fff!important;background-color:#74150f!important}
+
+  .profile-picture{
+    vertical-align: middle;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+  }
+
+  .profile-picture-post{
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
