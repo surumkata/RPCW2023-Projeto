@@ -4,63 +4,74 @@ block content
   #page-container
     #content-wrap
       .w3-container
-
-        h1 Inquirição #{i.UnitId}
-        if i.inquiryPicDir
-          img(src=i.inquiryPicDir alt='Inquiry Picture')
+        br
+        .w3-card-4(style="width:40%; margin:auto; overflow:hidden")
+          .w3-container.w3-center.main-color
+            h1 Inquirição #{i.UnitId}
           br
-        label #[b Id de documento: ] #{i._id}
-        br
-        label #[b Titular(es): ] #{i.UnitTitle}
-        br
-        label #[b Filiações: ]
-        ul 
-          each filiation in i.filiations
-            li
-              a(href='/?searchName=^'+filiation) #{filiation}
-        br
-        label #[b Local de nascimento: ] #{i.birthplace}
-        br
-        label #[b Concelho de residência: ] #{i.current_concelho}
-        br
-        label #[b Distrito de residência: ] #{i.current_district}
-        br
-        label #[b Laços pessoais: ]
-        .w3-container
-          each relation in i.relations_id
-            a(href="/inquiry/"+relation.id) #[b #{relation.name}]
+          if i.inquiryPicDir
+            .w3-container.w3-center
+              img(src=i.inquiryPicDir alt='Inquiry Picture')
             br
-            label #[b Relação] : #{relation.type}
+          .w3-container
+            h4 #[b Informações de inquirição]
+            label #[b Id de documento: ] #{i._id}
             br
-          else
-            b Não tem
-        - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
-        - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
-        label #[b Data de produção inicial: ] #{initDate}
-        br
-        label #[b Data de produção final: ] #{finalDate}
-        br
-        label #[b Localização física: ] #{i.PhysLoc}
-        br
-        label #[b Localização anterior: ] #{i.PreviousLoc}
-        br
-        label #[b Material relacionado: ] #{i.RelatedMaterial}
-        br
-        label #[b Nota: ] #{i.Note}
-        br
-        label #[b Criado por: ] #{i.Creator}
-        br
-        label #[b Data de criação: ] #{i.Created}
-        br
-        label #[b Editado por: ] #{i.Username}
-        br
-        label #[b Data de informação do processo: ] #{i.ProcessInfoDate}
-        br
-        label #[b Informação do processo: ] #{i.ProcessInfo}
-        br
-        br
-        a.w3-button.main-color(href="/inquiry/"+i._id+"/edit") Editar
-        br
+            label #[b Titular(es): ] #{i.UnitTitle}
+            br
+            label #[b Filiações: ]
+            ul 
+              each filiation in i.filiations
+                li
+                  a(href='/?searchName=^'+filiation) #{filiation}
+            br
+          .w3-container.w3-center
+            a.w3-bar-item.w3-mobile.main-button.collapsible-info(id="infos") Saber mais
+          br
+          .w3-container.w3-white.content-info(id='infosC')
+            label #[b Local de nascimento: ] #{i.birthplace}
+            br
+            label #[b Concelho de residência: ] #{i.current_concelho}
+            br
+            label #[b Distrito de residência: ] #{i.current_district}
+            br
+            label #[b Laços pessoais: ]
+            .w3-container
+              each relation in i.relations_id
+                a(href="/inquiry/"+relation.id) #[b #{relation.name}]
+                br
+                label #[b Relação] : #{relation.type}
+                br
+              else
+                b Não tem
+            - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
+            - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
+            label #[b Data de produção inicial: ] #{initDate}
+            br
+            label #[b Data de produção final: ] #{finalDate}
+            br
+            label #[b Localização física: ] #{i.PhysLoc}
+            br
+            label #[b Localização anterior: ] #{i.PreviousLoc}
+            br
+            label #[b Material relacionado: ] #{i.RelatedMaterial}
+            br
+            label #[b Nota: ] #{i.Note}
+            br
+            label #[b Criado por: ] #{i.Creator}
+            br
+            label #[b Data de criação: ] #{i.Created}
+            br
+            label #[b Editado por: ] #{i.Username}
+            br
+            label #[b Data de informação do processo: ] #{i.ProcessInfoDate}
+            br
+            label #[b Informação do processo: ] #{i.ProcessInfo}
+            br
+          br
+          .w3-container.w3-center
+            a.colored.main-button(href="/inquiry/"+i._id+"/edit") Editar
+          br
         br
         .w3-card.main-color
           .w3-container
@@ -92,6 +103,18 @@ block content
                   input.w3-button.w3-white(type="submit" value="Publicar")
                   br
                   br
+
+    script.
+        verifyPeriod()
+
+        var collapsibles = document.getElementsByClassName("collapsible-info");
+
+        for (var i = 0; i < collapsibles.length; i++) {
+          var collapsible = collapsibles[i];
+          var id = collapsible.id;
+
+          collapsible.addEventListener("click", createClickListener(id));
+        }
 
     br
     footer.main-color.w3-center
