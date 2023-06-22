@@ -20,8 +20,17 @@ var filiationsSchema = new mongoose.Schema({
 
 
 var usersSchema = new mongoose.Schema({
-    email:String,
-    username : String,
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    username : {
+        type: String,
+        required: true,
+        minlength: 1,
+        unique: false
+    },
     level : String,
     dateCreated : Number,
     filiations:[filiationsSchema],
@@ -30,6 +39,6 @@ var usersSchema = new mongoose.Schema({
     notifications: [notificationsSchema]
 },{collection: 'users'})
 
-usersSchema.plugin(passportLocalMongoose,{usernameField: 'email'})
+usersSchema.plugin(passportLocalMongoose,{usernameField: 'email',usernameUnique:false})
 
 module.exports.userModel = mongoose.model('user',usersSchema)

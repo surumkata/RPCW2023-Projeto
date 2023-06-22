@@ -14,9 +14,13 @@ var verifyAuthentication = consts.verifyAuthentication
 var requireAuthentication = consts.requireAuthentication
 var requireAdmin = consts.requireAdmin
 
-
+// criar pastas base
 if(!fs.existsSync(path.join(__dirname, '../uploads'))){
   fs.mkdirSync(path.join(__dirname, '../uploads'))
+}
+
+if(!fs.existsSync(path.join(__dirname, '../public/images'))){
+  fs.mkdirSync(path.join(__dirname, '../public/images'))
 }
 
 

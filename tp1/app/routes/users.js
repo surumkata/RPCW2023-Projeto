@@ -167,20 +167,37 @@ router.post('/register', function(req, res, next) {
   var data = new Date().getTime().toString()
   // verificar se password e confirmacao de password coincidem
   if(req.body.password == req.body.confirmPassword){
+  var email = req.body.email
+  var username = req.body.username
+  var password = req.body.password
     // verificar se username esta disponivel
-    userController.getUserByUsername(req.body.email)
+    userController.getUserByEmail(email)
       .then(result => {
         // disponivel
         if(result == null){
+
+          // adicionar imagem default ao utilizador
+          let defaultPicPath = path.join(__dirname,'/../public/images/default/profilePic.png')
+          let userImagesPath = path.join(__dirname,'/../public/images/users/'+email)
+          let newPath = path.join(userImagesPath,'/profilePic.png')
+          // criar pasta para imagens do utilizador se nao houver
+          if (!fs.existsSync(userImagesPath)){
+            fs.mkdirSync(userImagesPath);
+          }
+          // copiar imagem da pasta default para pasta do utilizador
+          fs.copyFileSync(defaultPicPath, newPath)
+          // adicionar campo de diretoria de imagem de perfil ao user
+          profilePicDir = '/images/users/'+email+'/profilePic.png'
+
           // criar novo utilizador
           User.userModel.register(
             new User.userModel({ 
-              username: req.body.username,
-              email: req.body.email, 
+              email: email, 
+              username: username,
               level: 0,
-              active: true,
-              dateCreated: data }), 
-            req.body.password, 
+              dateCreated: data,
+              profilePicDir:profilePicDir }), 
+            password, 
             function(err, user) {
             if (err){
               console.log('Erro: ' + err)
