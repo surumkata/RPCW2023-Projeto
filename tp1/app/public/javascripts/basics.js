@@ -213,17 +213,22 @@ function addUserAffiliationForm() {
     var affiliations = affiliationsContainer.getElementsByTagName('affiliation')
     var addAffiliationBtn = document.getElementById('addAffiliationBtn')
     var baseAffiliation =`
+            <br>
             <affiliation id="affiliation$replace">
                 <label>
-                    <b>Nome</b> : <input class="w3-input" type="text" name="affiliationName" value="" required>
+                    <b>Nome</b> : <input class="w3-input w3-border w3-hover-border-black" type="text" name="affiliationName" value="" required>
                 </label>
                 <label>
-                    <b>Relação</b> : <input class="w3-input" type="text" name="affiliationRelation" value="">
+                    <b>Relação</b> : <input class="w3-input w3-border w3-hover-border-black" type="text" name="affiliationRelation" value="">
                 </label>
                 <label>
-                    <b>Processo</b> : <input class="w3-input" type="text" name="affiliationProcess" value="">
+                    <b>Processo</b> : <input class="w3-input w3-border w3-hover-border-black" type="text" name="affiliationProcess" value="">
                 </label>
-                <button class="w3-btn w3-blue" type="button" id="removeAffiliationBtn" onclick="removeElement('affiliation$replace')">-</button>
+                <br>
+                <div class="w3-container w3-center">
+                    <button class="colored main-button" type="button" id="removeAffiliationBtn" onclick="removeElement('affiliation$replace')">- Remover afiliação</button>
+                </div>
+                <br>
             </affiliation>
         `
     // primeira afiliacao, adiciona no inicio

@@ -9,29 +9,29 @@ append styles
 
 block head
     body
-        header.w3-bar.w3-teal.w3-xlarge.overflow
-            a.w3-bar-item.w3-button.w3-mobile(href="/")
+        header.w3-bar.main-color.w3-xlarge.overflow
+            a.w3-bar-item.main-button.w3-mobile(href="/")
                 i.fa.fa-home
             if logged === true
-                a.w3-bar-item.w3-button.w3-mobile.w3-right(href="/users/logout") Logout
+                a.w3-bar-item.main-button.w3-mobile.w3-right(href="/users/logout") Logout
             if username
-                a.w3-bar-item.w3-button.w3-mobile(href="/users/profile")
+                a.w3-bar-item.main-button.w3-mobile(href="/users/profile")
                     i.fa.fa-address-book
                 a.w3-bar-item.w3-mobile.w3-right Welcome #{username}!
 
             if (logged === false || !logged)
-                a.w3-bar-item.w3-button.w3-mobile.w3-right(href="/users/register") Register
+                a.w3-bar-item.main-button.w3-mobile.w3-right(href="/users/register") Register
             
             if (logged === false || !logged)
-                a.w3-bar-item.w3-button.w3-mobile.w3-right(href="/users/login") Login
+                a.w3-bar-item.main-button.w3-mobile.w3-right(href="/users/login") Login
             if logged === true
-                a.notification.collapsible.w3-bar-item.w3-mobile.w3-button(id='notificationsContent')
+                a.notification.collapsible.w3-bar-item.w3-mobile.main-button(id='notificationsContent')
                     i.fa.fa-bell
                     span.badge(id="nNotifications" style="display:none") 0
             
-            a.w3-bar-item.w3-mobile.w3-button.collapsible(id="searchBar")
+            a.w3-bar-item.w3-mobile.main-button.collapsible(id="searchBar")
                 i.fa.fa-search
-        .w3-container.w3-teal.content(id='searchBarC', style="width=50%")
+        .w3-container.main-color.content(id='searchBarC', style="width=50%")
             h3 Procurar Inquirições
             input.w3-input.search-inputs(type="search" name="searchName" placeholder="Procura por nome de titular")
             input.w3-input.search-inputs(type="search" name="searchBirthplace" placeholder="Procura por local de nascimento")
@@ -44,9 +44,9 @@ block head
             input.w3-input.search-inputs(type="date"  name="searchTimeEnd" max=today onchange="verifyPeriod()" value=timeEndValue placeholder="Procura por periodo")
             p(id='searchMessage' style='none')
             .w3-center
-                button.w3-button.w3-white(type="button" id="searchBtn" style="margin-bottom:10px" onclick="search()") Search
+                button.main-button.w3-white(type="button" id="searchBtn" style="margin-bottom:10px" onclick="search()") Search
 
-        .w3-container.content.w3-teal(id='notificationsContentC')
+        .w3-container.content.main-color(id='notificationsContentC')
             h3 Notifications
                             
     if(logged === true)

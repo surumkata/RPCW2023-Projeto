@@ -168,7 +168,7 @@ router.post('/register', function(req, res, next) {
   // verificar se password e confirmacao de password coincidem
   if(req.body.password == req.body.confirmPassword){
     // verificar se username esta disponivel
-    userController.getUserByUsername(req.body.email)
+    userController.getUserByEmail(req.body.email)
       .then(result => {
         // disponivel
         if(result == null){
