@@ -171,6 +171,26 @@ router.get("/login/google/callback",passport.authenticate("google", { session: f
 });
 
 
+/** Get de autenticacao com facebook */
+router.get('/login/facebook', passport.authenticate("facebook", {authType: 'reauthenticate',scope:'email'}));
+
+/** Obter data de user com autenticacao por google */
+router.get("/login/facebook/callback",passport.authenticate("facebook", { session: false }),(req, res) => {
+  console.log('Authentication with facebook callback')
+  username = req.user.username
+  email = req.user.email
+  level = req.user.level
+  return createJwtToken(email,username,level,
+    function(e, token) {
+      if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
+      else{
+        res.cookie('user_token',token,{httpOnly: true})
+        res.redirect('/')
+      }
+    })
+});
+
+
 /* GET pagina de registo. */
 router.get('/register', function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)

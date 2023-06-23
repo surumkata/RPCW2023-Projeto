@@ -26,7 +26,8 @@ const {v4:uuidv4} = require('uuid')
 var session = require('express-session')
 var fileStore = require('session-file-store') (session)
 var passport = require('passport')
-require("./utils/passportConfig")(passport);
+require("./utils/passportConfig").googleStrategy(passport);
+require("./utils/passportConfig").facebookStrategy(passport);
 
 
 var indexRouter = require('./routes/index');
