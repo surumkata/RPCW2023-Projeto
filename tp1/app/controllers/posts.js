@@ -1,31 +1,38 @@
 var Post = require('../models/posts')
 var userController = require('./users')
+var activityController = require('../controllers/activities')
 
 // adicionar novo post
 module.exports.addPost = (originId,user,post,parent) =>{
     console.log('Post by user: ' + user)
     console.log(originId,user,post,parent)
-    data = new Date().getTime().toString()
-    newPost = {
+    var data = new Date().toISOString()
+    var newPost = {
         parentId: parent,
         author: user,
         text: post,
         dateCreated : data,
         originId : originId
     }
+    var type = parent?'response':'post'
+    // adicioanr atividade de post ou response
+    activityController.register(type,originId)
     return Post.postsModel
     .create(newPost)
     .then(result => {
         console.log('Post:',result)
         if(parent){
-            postUser = user
-            notification = {
-                dateCreated : data,
-                message: `${user} responded to your comment`,
-                url: `/inquiry/${originId}`
-            }
-            // enviar notificao ao autor do post original
-            userController.addUserNotificationByUsername(postUser,notification)
+            exports.getPost(parent)
+            .then(post => {
+                var postUser = post.author
+                var notification = {
+                    dateCreated : data,
+                    message: `${user} responded to your comment`,
+                    url: `/inquiry/${originId}`
+                }
+                // enviar notificao ao autor do post original
+                userController.addUserNotificationByEmail(postUser,notification)
+            })
         }
         return result
     })

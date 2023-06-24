@@ -6,7 +6,7 @@ var postsSchema = new mongoose.Schema({
     parentId: String,
     author: String,
     text : String,
-    dateCreated : Number,
+    dateCreated : Date,
     originId : String,
 },{collection:'posts'})
 

@@ -5,6 +5,7 @@ var path = require('path');
 var Inquiry = require('../controllers/inquiries')
 var User = require('../controllers/users')
 var Post = require('../controllers/posts')
+var Activity = require('../controllers/activities')
 var consts = require('../utils/const')
 var router = express.Router();
 
@@ -339,6 +340,8 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
     .catch(erro => {
       res.render('error', {error: erro, message: "Erro na obtenção da pagina de inquiricao"})
     })
+  // registar atividade de visita de uma inquiricao
+  Activity.register('visit',id)
 });
 
 
