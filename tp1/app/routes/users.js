@@ -266,16 +266,15 @@ router.post('/register', function(req, res, next) {
 /* GET users logout. */
 router.get('/logout', requireAuthentication,function(req, res, next) {
     clearJwtToken(res)
-    res.redirect('/')
-    // req.logout(function(err){
-    //     if(err)
-    //         res.render('error',{error:err})
-    //     else
-    //     {
-    //       res.clearCookie('user_token')
-    //       res.redirect('/')
-    //     }
-    // })
+    req.logout(function(err){
+        if(err)
+            res.render('error',{error:err})
+        else
+        {
+          res.clearCookie('user_token')
+          res.redirect('/')
+        }
+    })
   });
 
 

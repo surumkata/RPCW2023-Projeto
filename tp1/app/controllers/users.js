@@ -156,3 +156,17 @@ module.exports.removeNotification = (email,notificationId) => {
     )
 }
 
+/** Atualiza valor de ultimo acesso de user */
+module.exports.updateLastAccess = (email) => {
+    date = new Date().toISOString()
+    return User.userModel
+    .updateOne({'email':email},{'$set':{'lastAccess':date}})
+    .then(result => {
+        return result
+    })
+    .catch( error => {
+        console.log('Updated user:  ' +error)
+        return error
+    }
+    )
+}

@@ -1,5 +1,5 @@
 var jwt = require('jsonwebtoken')
-
+var userController = require('../controllers/users')
 
 // segredo jwt
 module.exports.sessionSecret = 'inquiricoesSecret'
@@ -97,6 +97,7 @@ module.exports.verifyAuthentication = function(req, res, next){
 
 /** Cria token jwt */
 module.exports.createJwtToken = function(email,username,level,callback){
+    userController.updateLastAccess(email)
     jwt.sign({
         email:email,
         username: username,
