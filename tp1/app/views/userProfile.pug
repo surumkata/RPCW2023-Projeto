@@ -24,15 +24,15 @@ block content
               if user.filitations
                 label #[b Filiações: ]
                 ul 
-                  each filiation in user.filiations
+                  each affiliation in user.affiliations
                     li
-                      if filiation.process
-                        a(href='/inquiry/'+filiation.process) #{filiation.name}
+                      if affiliation.process
+                        a(href='/inquiry/'+affiliation.process) #{affiliation.name}
                       else
-                        p #{filiation.name}
+                        p #{affiliation.name}
                       br
-                      if filiation.relation
-                        label #[b Relação : ] #{filiation.relation}
+                      if affiliation.relation
+                        label #[b Relação : ] #{affiliation.relation}
               - let dateCreated = user.dateCreated ? new Date(user.dateCreated).toISOString().substring(0,10) : ''
               label #[b Registo: ] #{dateCreated}
             br

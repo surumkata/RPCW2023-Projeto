@@ -33,7 +33,7 @@ var usersSchema = new mongoose.Schema({
     },
     level : String,
     dateCreated : Number,
-    filiations:[filiationsSchema],
+    affiliations:[filiationsSchema],
     profilePicDir:String,
     posts: [String],
     notifications: [notificationsSchema]

@@ -125,7 +125,7 @@ function getInquiryFields(req,inquiryId,email,userLevel,date){
   var inquiry = {
     editor: email,
     dateEdited : date,
-    filiations :[],
+    affiliations :[],
     relations_id : []
   }
 
@@ -184,11 +184,11 @@ function getInquiryFields(req,inquiryId,email,userLevel,date){
     if(Array.isArray(req.body.affiliationName)){
       for(i in req.body.affiliationName){
         new_affiliation = req.body.affiliationName[i]
-        inquiry.filiations.push(new_affiliation)
+        inquiry.affiliations.push(new_affiliation)
       }
     }else{
       new_affiliation = req.body.affiliationName
-      inquiry.filiations.push(new_affiliation)
+      inquiry.affiliations.push(new_affiliation)
     }
   }
 

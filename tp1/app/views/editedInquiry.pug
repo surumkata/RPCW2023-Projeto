@@ -16,9 +16,9 @@ block content
             br
             label #[b Filiações: ]
             ul 
-              each filiation in i.filiations
+              each affiliation in i.affiliations
                 li
-                  a(href='/?searchName=^'+filiation) #{filiation}
+                  a(href='/?searchName=^'+affiliation) #{affiliation}
             br
             label #[b Local de nascimento: ] #{i.birthplace}
             br

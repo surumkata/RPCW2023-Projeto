@@ -21,15 +21,10 @@ block content
             br
             label #[b Filiações: ]
             ul 
-              each filiation in i.filiations
+              each affiliation in i.affiliations
                 li
-                  a(href='/?searchName=^'+filiation) #{filiation}
+                  a(href='/?searchName=^'+affiliation) #{affiliation}
             br
-          .w3-container.w3-center
-            span#dots
-            a.w3-bar-item.w3-mobile.main-button.collapsible-info(id="showBtn" onclick="showMore()") Mostrar mais #[br] &#xfe40;              
-          br
-          .w3-container(id='more')
             label #[b Local de nascimento: ] #{i.birthplace}
             br
             label #[b Concelho de residência: ] #{i.current_concelho}
@@ -51,6 +46,11 @@ block content
             br
             label #[b Data de produção final: ] #{finalDate}
             br
+          .w3-container.w3-center
+            span#dots
+            a.w3-bar-item.w3-mobile.main-button.collapsible-info(id="showBtn" onclick="showMore()") Mostrar mais #[br] &#xfe40;              
+          br
+          .w3-container(id='more')
             label #[b Localização física: ] #{i.PhysLoc}
             br
             label #[b Localização anterior: ] #{i.PreviousLoc}

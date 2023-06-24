@@ -63,7 +63,7 @@ router.post('/editProfile',requireAuthentication,upload.single('profilePic') ,fu
   email = req.user.email
   // criar objeto de utilizador modificado
   var u = {
-    filiations : []
+    affiliations : []
   }
   if(req.body.username){
     u['username'] = req.body.username
@@ -76,14 +76,14 @@ router.post('/editProfile',requireAuthentication,upload.single('profilePic') ,fu
         new_affiliation['name'] = req.body.affiliationName[i]
         new_affiliation['relation'] = req.body.affiliationRelation[i]
         new_affiliation['process'] = req.body.affiliationProcess[i]
-        u.filiations.push(new_affiliation)
+        u.affiliations.push(new_affiliation)
       }
     }else{
       let new_affiliation = {}
       new_affiliation['name'] = req.body.affiliationName
       new_affiliation['relation'] = req.body.affiliationRelation
       new_affiliation['process'] = req.body.affiliationProcess
-      u.filiations.push(new_affiliation)
+      u.affiliations.push(new_affiliation)
     }
   }
 
