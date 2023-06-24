@@ -18,23 +18,26 @@ block content
               .w3-container(id='affiliationsContainer')
                 button.w3-btn.w3-blue(type="button" id="addAffiliationBtn" onclick="addAffiliationForm()") +
 
-              br
               label #[b Data de nascimento: ]
-              input.w3-input(type="date" name="birthdate" max=today)
+              input.w3-input.w3-border.w3-hover-border-black(type="date" name="birthdate" max=today)
               br
               label #[b Local de nascimento: ]
-              input.w3-input(type="text" name="birthplace")
+              input.w3-input.w3-border.w3-hover-border-black(type="text" name="birthplace")
               br
               label #[b Concelho de residência: ]
-              input.w3-input(type="text" name="current_concelho")
+              input.w3-input.w3-border.w3-hover-border-black(type="text" name="current_concelho")
               br
               label #[b Distrito de residência: ]
-              input.w3-input(type="text" name="current_district")
+              input.w3-input.w3-border.w3-hover-border-black(type="text" name="current_district")
+              br
+              label #[b País: ]
+              input.w3-input.w3-border.w3-hover-border-black(type="text" name="country")
               br
               label #[b Laços Pessoais: ]
+              br
               .w3-container(id='relationsContainer')
-                button.w3-btn.w3-blue(type="button" id="addRelationBtn" onclick="addRelationForm()") +
-
+                .w3-container.w3-center(id="addRelationBtn")
+                  button.colored.main-button(type="button" onclick="addRelationForm()") + Adicionar relação
               br
               label #[b Data de produção inicial *: ]
               input.w3-input(type="date" name="UnitDateInitial" max=today required)
@@ -42,15 +45,23 @@ block content
               label #[b Data de produção final *: ]
               input.w3-input(type="date" name="UnitDateFinal" max=today  required)
               br
-
+              label #[b Repositório: ]
+              input.w3-input.w3-border.w3-hover-border-black(type="text" name="Repository")
+              br
               label #[b Localização física: ]
-              input.w3-input(type="text" name="PhysLoc")
+              input.w3-input.w3-border.w3-hover-border-black(type="text" name="PhysLoc")
               br
               label #[b Localização anterior: ]
-              input.w3-input(type="text" name="PreviousLoc")
+              input.w3-input.w3-border.w3-hover-border-black(type="text" name="PreviousLoc")
               br
               label #[b Material relacionado: ]
-              input.w3-input(type="text" name="RelatedMaterial")
+              input.w3-input.w3-border.w3-hover-border-black(type="text" name="RelatedMaterial")
+              br
+              label #[b Escopo de conteúdo: ]
+              textarea.w3-input.w3-border.w3-hover-border-black(name="ScopeContent")
+              br
+              label #[b Nota: ]
+              input.w3-input.w3-border.w3-hover-border-black(type="text" name="Note")
               br
 
               a.w3-btn.w3-blue(name="cancel" href='/') Cancelar

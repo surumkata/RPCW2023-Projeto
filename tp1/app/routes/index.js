@@ -124,7 +124,7 @@ function getInquiryFields(req,inquiryId,email,userLevel,date){
   // processar inquiry
   var inquiry = {
     editor: email,
-    dateEdited : date,
+    ProcessInfoDate : date,
     affiliations :[],
     relations_id : []
   }
@@ -154,6 +154,11 @@ function getInquiryFields(req,inquiryId,email,userLevel,date){
     inquiry.current_concelho = req.body.current_concelho
   }
 
+  // valor de pais
+  if(req.body.country){
+    inquiry.country = req.body.country
+  }
+
   // valor de inicio de processo
   if(req.body.UnitDateInitial){
     inquiry.UnitDateInitial = req.body.UnitDateInitial
@@ -177,6 +182,21 @@ function getInquiryFields(req,inquiryId,email,userLevel,date){
   // valor de material relacionado
   if(req.body.RelatedMaterial){
     inquiry.RelatedMaterial = req.body.RelatedMaterial
+  }
+
+  // valor de escopo de conteudo
+  if(req.body.ScopeContent){
+    inquiry.ScopeContent = req.body.ScopeContent
+  }
+
+  // valor de escopo de nota
+  if(req.body.Note){
+    inquiry.Note = req.body.Note
+  }
+
+  // valor de repositorio
+  if(req.body.Repository){
+    inquiry.Repository = req.body.Repository
   }
 
   // valor de afiliacoes

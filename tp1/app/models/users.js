@@ -36,7 +36,8 @@ var usersSchema = new mongoose.Schema({
     affiliations:[filiationsSchema],
     profilePicDir:String,
     posts: [String],
-    notifications: [notificationsSchema]
+    notifications: [notificationsSchema],
+    lastAccess: Date
 },{collection: 'users'})
 
 usersSchema.plugin(passportLocalMongoose,{usernameField: 'email',usernameUnique:false})

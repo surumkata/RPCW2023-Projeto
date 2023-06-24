@@ -18,7 +18,6 @@ var inquiriesSchema = new mongoose.Schema({
     inquiryPicDir:String,
     UnitId: Number,
     UnitTitle : [String],
-    dateEdited:String,
     editor:String,
     UnitDateInitial : Date,
     UnitDateFinal : Date,
@@ -37,7 +36,6 @@ var inquiriesSchema = new mongoose.Schema({
     Available : Boolean,
     Creator : String,
     Created : String,
-    Username : String,
     ProcessInfoDate : String,
     ProcessInfo : String,
     affiliations : [String],
@@ -45,6 +43,9 @@ var inquiriesSchema = new mongoose.Schema({
     birthdate : Date,
     current_concelho : String,
     current_district : String,
+    country: String,
+    ScopeContent: String,
+    Repository: String,
     relations_id : [relationsIdSchema],
     comments: [commentsSchema]
 },{collection:'inquiricoes'})
@@ -55,7 +56,6 @@ module.exports.inquiriesModel = mongoose.model('inquiricoe',inquiriesSchema)
 var editedInquiriesSchema = new mongoose.Schema({
     editor: String,
     originalId: String,
-    dateEdited:String,
     inquiryPicDir:String,
     UnitId: Number,
     UnitTitle : [String],
@@ -76,7 +76,6 @@ var editedInquiriesSchema = new mongoose.Schema({
     Available : Boolean,
     Creator : String,
     Created : String,
-    Username : String,
     ProcessInfoDate : String,
     ProcessInfo : String,
     affiliations : [String],
@@ -84,6 +83,9 @@ var editedInquiriesSchema = new mongoose.Schema({
     birthdate : Date,
     current_concelho : String,
     current_district : String,
+    country: String,
+    ScopeContent: String,
+    Repository: String,
     relations_id : [relationsIdSchema],
     comments: [commentsSchema]
 },{collection:'editedInquiricoes'})

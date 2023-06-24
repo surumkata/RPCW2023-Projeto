@@ -62,16 +62,16 @@ ds_info = df.iloc[0]
 df.drop(index=0,axis=0,inplace=True)
 df.reset_index(drop=True, inplace=True)
 
-# Drop columns because they have redundant information (available from other columns or from ds_info)
-df.drop(['DescriptionLevel','UnitTitleType','CompleteUnitId','LangMaterial','AllowExtentsInference','AllowTextualContentInference','RepositoryCode','CountryCode','Repository','ApplySelectionTable','Highlighted'],axis=1,inplace=True)
-
-
-
 pd.set_option('display.max_columns', None)
 # Check changes
-# print(df.info())
-# print(df.nunique())
-# print(df.head())
+print(df.info())
+print(df.nunique())
+print(df.head())
+# Drop columns because they have redundant information (available from other columns or from ds_info)
+df.drop(['DescriptionLevel','UnitTitleType','CompleteUnitId','LangMaterial','AllowExtentsInference','AllowTextualContentInference','RepositoryCode','CountryCode','ApplySelectionTable','Highlighted'],axis=1,inplace=True)
+
+
+
 
 # Get info from UnitTitle (name of the person(s))
 df['UnitTitle'] = df['UnitTitle'].str.replace(r'.*de genere de\s+((\w+\b\s*)+)',r'\1', regex=True)
@@ -161,16 +161,19 @@ df['affiliations'] = affiliations
 df['birthplace'] = birthplace
 df['current_concelho'] = current_concelho
 df['current_district'] = current_district
-df.drop('ScopeContent',axis=1,inplace=True)
+df['country'] = pd.Series(['Portugal' for x in range(len(df.index))])
+#df.drop('ScopeContent',axis=1,inplace=True)
 
 print('count',count)
 
 
 df['relations_id'] = relations_id
 
-df.rename({'ID':'_id'},axis=1,inplace=True)
+df.rename({'ID':'_id','Username':'editor'},axis=1,inplace=True)
 
-out = open(f'{path}/data/dataset.json','w')
+out = open(f'{path}/data/dataset.json','w',encoding='utf-8')
 
-df.to_json(out,orient= 'records',indent=4)
+df.to_json(out,orient= 'records',indent=4,force_ascii=False)
+
+out.close()
 

@@ -57,7 +57,7 @@ block content
             th(style="width:15%;vertical-align: middle;") Fim do processo 
               i.fa.fa-sort(onclick="sortQuery('endDate')")
           each i in is
-            tr.main-color-hover(onclick=`window.location.href="/inquiry/"+${i._id}`)
+            tr.main-color-hover(onclick=`window.location.href="/inquiry/`+i._id+`"`)
               a(href="/inquiry/"+i._id)
                 td(style="vertical-align: middle;")=i.UnitId
                 td(style="vertical-align: middle;")

@@ -52,6 +52,9 @@ block content
             label #[b Distrito de residência: ]
             input.w3-input.w3-border.w3-hover-border-black(type="text" name="current_district" value=i.current_district)
             br
+            label #[b País: ]
+            input.w3-input.w3-border.w3-hover-border-black(type="text" name="country" value=i.country)
+            br
             label #[b Laços Pessoais: ]
             br
             .w3-container(id='relationsContainer')
@@ -74,6 +77,9 @@ block content
                 - count+=1
               .w3-container.w3-center(id="addRelationBtn")
                 button.colored.main-button(type="button" onclick="addRelationForm()") + Adicionar relação
+            label #[b Repositório: ]
+            input.w3-input.w3-border.w3-hover-border-black(type="text" name="Repository" value=i.Repository)
+            br
             label #[b Localização física: ]
             input.w3-input.w3-border.w3-hover-border-black(type="text" name="PhysLoc" value=i.PhysLoc)
             br
@@ -82,7 +88,12 @@ block content
             br
             label #[b Material relacionado: ]
             input.w3-input.w3-border.w3-hover-border-black(type="text" name="RelatedMaterial" value=i.RelatedMaterial)
-            b
+            br
+            label #[b Escopo de conteúdo: ]
+            textarea.w3-input.w3-border.w3-hover-border-black(name="ScopeContent" )=i.ScopeContent
+            br
+            label #[b Nota: ]
+            input.w3-input.w3-border.w3-hover-border-black(type="text" name="Note" value=i.Note)
             br
             input.colored.main-button.w3-right(type="submit" value="Submeter modificações")
             a.colored.main-button(name="cancel" href='/inquiry/'+i._id) Cancelar

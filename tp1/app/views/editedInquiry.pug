@@ -10,7 +10,7 @@ block content
             if i.inquiryPicDir
               img(src=i.inquiryPicDir alt='Inquiry Picture')
               br
-            label #[b Id da Inquirição: ] #{i.UnitId}
+            label #[b Id de documento: ] #{i._id}
             br
             label #[b Titular(es): ] #{i.UnitTitle}
             br
@@ -25,6 +25,8 @@ block content
             label #[b Concelho de residência: ] #{i.current_concelho}
             br
             label #[b Distrito de residência: ] #{i.current_district}
+            br
+            label #[b País: ] #{i.country}
             br
             label #[b Laços pessoais: ]
             .w3-container
@@ -41,11 +43,15 @@ block content
             br
             label #[b Data de produção final: ] #{finalDate}
             br
+            label #[b Repositório original: ] #{i.Repository}
+            br
             label #[b Localização física: ] #{i.PhysLoc}
             br
             label #[b Localização anterior: ] #{i.PreviousLoc}
             br
             label #[b Material relacionado: ] #{i.RelatedMaterial}
+            br
+            label #[b Escopo do conteúdo: ] #{i.ScopeContent}
             br
             label #[b Nota: ] #{i.Note}
             br
@@ -53,11 +59,12 @@ block content
             br
             label #[b Data de criação: ] #{i.Created}
             br
-            label #[b Editado por: ] #{i.Username}
+            label #[b Editado por: ] #{i.editor}
             br
             label #[b Data de informação do processo: ] #{i.ProcessInfoDate}
             br
             label #[b Informação do processo: ] #{i.ProcessInfo}
+            br
             br
     form.w3-container(action="/editedInquiry/reject/"+i._id method="POST")
       input.w3-btn.w3-blue(type="submit" value="Rejeitar")
