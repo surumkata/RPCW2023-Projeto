@@ -275,14 +275,16 @@ function getInquiryFields(req,inquiryId,email,userLevel,date){
 /* GET home page. */
 router.get('/',verifyAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = false
-  username = null
+  var logged = false
+  var username = null
+  var level = 0
   // default documentos por pagina
   var docPerPage = 100
   // valores de utilizador, se estiver logged
   if(req.user.logged){
     logged = req.user.logged
     username = req.user.username
+    level = req.user.level
   }
   // obter filtros de pesquisa de documentos
   var [page,searchQuery,sortQuery,timeStart,timeEnd] = getQueryFilters(req)
@@ -293,7 +295,7 @@ router.get('/',verifyAuthentication, function(req, res, next) {
         // verificar se ha mais paginas de documentos
         hasNextPage = (totalCount - (page+1) * docPerPage)>0
         maxPage = Math.floor(totalCount / docPerPage);
-        res.render('index', {username:username,logged : logged,timeStartValue:timeStart,timeEndValue:timeEnd, is : inquiries, d : data,page:page,hasNextPage:hasNextPage,maxPage:maxPage})
+        res.render('index', {username:username,logged : logged,level:level,timeStartValue:timeStart,timeEndValue:timeEnd, is : inquiries, d : data,page:page,hasNextPage:hasNextPage,maxPage:maxPage})
       })
       .catch(erro => {
         res.render('error', {error : erro, message : "Erro na obtenção da lista de inquisições"})
@@ -308,24 +310,26 @@ router.get('/',verifyAuthentication, function(req, res, next) {
 /* GET inquiry page. */
 router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = false
-  username = null
+  var logged = false
+  var username = null
+  var level = 0
   if(req.user.logged){
     logged = req.user.logged
     username = req.user.username
+    level = req.user.level
   }
-  id = req.params.id
+  var id = req.params.id
   Inquiry.getInquiry(id)
     .then(inquiry => {
       if(inquiry){
         if('comments' in inquiry){
-          comments = inquiry.comments
+          var comments = inquiry.comments
           // processar posts da inquiricao
           Post.getOriginComments(id)
           .then(posts=>{
             posts = Post.processPosts(posts)
             comments = Post.processComments(posts,comments)
-            res.render('inquiry', {username:username,logged : logged,i: inquiry,posts:comments, d: data })
+            res.render('inquiry', {username:username,logged : logged,level:level,i: inquiry,posts:comments, d: data })
           })
           .catch(erro => {
             res.render('error', {error: erro, message: "Erro na obtenção dos posts"})
@@ -348,9 +352,10 @@ router.get('/inquiry/:id',verifyAuthentication, function(req, res, next) {
 /* GET create inquiry page. */
 router.get('/createInquiry',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = req.user.logged
-  username = req.user.username
-  res.render('createInquiry', {username:username,logged : logged, d: data} );
+  var logged = req.user.logged
+  var username = req.user.username
+  var level = req.user.level
+  res.render('createInquiry', {username:username,logged : logged,level:level, d: data} );
 });
 
 /* Post create inquiry */
@@ -393,13 +398,14 @@ router.post('/createInquiry',requireAuthentication,upload.single('inquiryPic'), 
 /* GET edited inquiry page. Apenas admins. */
 router.get('/editedInquiry/:id',requireAdmin, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = req.user.logged
-  username = req.user.username
-  id = req.params.id
+  var logged = req.user.logged
+  var username = req.user.username
+  var level = req.user.level
+  var id = req.params.id
   Inquiry.getEditedInquiry(id)
     .then(inquiry => {
       if(inquiry){
-        res.render('editedInquiry', {username:username,logged : logged,i: inquiry, d: data} );
+        res.render('editedInquiry', {username:username,logged : logged,level:level,i: inquiry, d: data} );
       }else{
         res.json({message: 'Task already dealt with.'})
       }
@@ -428,12 +434,13 @@ router.post('/editedInquiry/reject/:id',requireAdmin, function(req, res) {
 /* GET inquiry edit page. */
 router.get('/inquiry/:id/edit',requireAuthentication, function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  logged = req.user.logged
-  username = req.user.username
-  id = req.params.id
+  var logged = req.user.logged
+  var username = req.user.username
+  var level = req.user.level
+  var id = req.params.id
   Inquiry.getInquiry(req.params.id)
     .then(inquiry => {
-      res.render('editInquiry', {username:username,logged : logged, id:id,i: inquiry, d: data });
+      res.render('editInquiry', {username:username,logged : logged,level:level, id:id,i: inquiry, d: data });
     })
     .catch(erro => {
       res.render('error', {error: erro, message: "Erro na obtenção do registo de Inquirição"})
@@ -535,5 +542,86 @@ router.post('/inquiry/response/:id',requireAuthentication, function(req, res, ne
 });
 
 
+/** Get da pagina de estatisticas (apenas para admin) */
+router.get('/stats',requireAdmin,function(req, res) {
+  var data = new Date().toISOString().substring(0, 16)
+  var username = req.user.username
+  var email = req.user.email
+  var logged = req.user.logged
+  var level = req.user.level
+  res.render('stats', {data: data,username:username,logged : logged,level:level})
+})
+
+
+/** Get de stats do conjunto de inquiricoes mais visitadas num intervalo de tempo */
+router.get('/stats/top',requireAdmin,function(req, res) {
+  //parametros de query
+  var type = req.query.type
+  var topN = Number(req.query.top)
+  var upperDate = req.query.upperDate
+  var lowerDate = req.query.lowerDate
+  var searchQuery = []
+  // tipo de atividade a procurar
+  if(type){
+    switch(type) {
+      case 'both': type = {'$in' : ['post','response']}
+      break
+      case 'all' : type = {'$in' : ['post','response','visit']}
+      break
+    }
+    searchQuery.push({'$match':{'type':type}})
+  }
+  // data limite superior
+  if(upperDate){
+    searchQuery.push({'$match':{'date':{'$lte':new Date(upperDate)}}})
+  }
+  // data limite inferior
+  if(lowerDate){
+    searchQuery.push({'$match':{'date':{'$gte':new Date(lowerDate)}}})
+  }
+  // numero maximo de inquiricoes a devolver
+  if(!topN || topN <= 0){
+    topN = 10
+  } 
+    
+  Activity.listTop(searchQuery,topN)
+  .then(result =>{
+    res.json({activities:result})
+  })
+})
+
+
+/** Get de stats de uma inquiricao num intervalo de tempo */
+router.get('/stats/inquiry/:id',requireAdmin,function(req, res) {
+  //parametros de query
+  var inquiryId = req.params.id
+  var type = req.query.type
+  var upperDate = req.query.upperDate
+  var lowerDate = req.query.lowerDate
+  var searchQuery = []
+  // tipo de atividade a procurar
+  if(type){
+    switch(type) {
+      case 'both': type = {'$in' : ['post','response']}
+      break
+      case 'all' : type = {'$in' : ['post','response','visit']}
+      break
+    }
+    searchQuery.push({'$match':{'type':type}})
+  }
+  // data limite superior
+  if(upperDate){
+    searchQuery.push({'$match':{'date':{'$lte':new Date(upperDate)}}})
+  }
+  // data limite inferior
+  if(lowerDate){
+    searchQuery.push({'$match':{'date':{'$gte':new Date(lowerDate)}}})
+  }
+    
+  Activity.listInquiry(inquiryId,searchQuery)
+  .then(result =>{
+    res.json({activities:result})
+  })
+})
 
 module.exports = router;

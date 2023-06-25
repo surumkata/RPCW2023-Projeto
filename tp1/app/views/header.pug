@@ -31,6 +31,11 @@ block head
             
             a.w3-bar-item.w3-mobile.main-button.collapsible(id="searchBar")
                 i.fa.fa-search
+    
+            if level == 1
+                a.w3-bar-item.w3-mobile.main-button
+                    a(href='/stats') Stats
+
         .w3-container.main-color.content(id='searchBarC', style="width=50%")
             h3 Procurar Inquirições
             input.w3-input.search-inputs(type="search" name="searchName" placeholder="Procura por nome de titular")

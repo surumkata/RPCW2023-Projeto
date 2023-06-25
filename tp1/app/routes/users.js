@@ -23,13 +23,14 @@ var clearJwtToken = consts.clearJwtToken
 router.get('/profile', requireAuthentication,function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
 
-  logged = req.user.logged
-  username = req.user.username
-  email = req.user.email
+  var logged = req.user.logged
+  var username = req.user.username
+  var email = req.user.email
+  var level = req.user.level
 
   userController.getUserByEmail(email)
   .then(user => {
-    res.render('userProfile',{username:username,logged : logged,d:data,user:user})
+    res.render('userProfile',{username:username,logged : logged,level:level,d:data,user:user})
   })
   .catch(err => {
     console.log(err)
@@ -42,14 +43,15 @@ router.get('/editProfile', requireAuthentication,function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
 
 
-  logged = req.user.logged
-  username = req.user.username
-  email = req.user.email
+  var logged = req.user.logged
+  var username = req.user.username
+  var email = req.user.email
+  var level = req.user.level
 
 
   userController.getUserByEmail(email)
   .then(user => {
-    res.render('editUserProfile',{username:username,logged : logged,d:data,user:user})
+    res.render('editUserProfile',{username:username,logged : logged,level:level,d:data,user:user})
   })
   .catch(err => {
     console.log(err)
