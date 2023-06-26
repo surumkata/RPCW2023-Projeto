@@ -55,7 +55,7 @@ A nossa solução final é composta, como pedido, por dois tipos de utilizadores
 O utilizador **normal**, ou **consumidor**, que é capaz de:
 
 * Autenticação por email + palavra passe, google ou facebook (sendo esta apenas uma aplicação de teste, os emails disponíveis para autenticação nestes métodos externos é limitada).
-* Consultar inquirções, quer seja através da página principal (paginada e não filtrada, ordenada por UnitID), ou através de uma pesquisa por: nome de titular, local de nascimento, concelho ou distrito de residência e intervalo de tempo do processo.
+* Consultar inquirições, quer seja através da página principal (paginada e não filtrada, ordenada por UnitID), ou através de uma pesquisa por: nome de titular, local de nascimento, concelho ou distrito de residência e intervalo de tempo do processo.
 * Realizar um post sobre uma inquirição, ou fazer um comentário sobre um post previamente realizado.
 * Fazer sugestões de edição de inquirição, quer seja apenas alterações numa pré existente, onde os campos de modificação são mais limitados, ou sugerir a criação de uma nova inquirição, onde tem a possibilidade de alterar todos os campos menos o ID.
 * Consultar e alterar o seu perfil, podendo alterar a sua foto de perfil, ou alterar as suas filiações por exemplo (possível criar ligação direta).
@@ -79,7 +79,7 @@ O utilizador **administrador**, que é capaz de:
 * **'/inquiry/:id/edit'** (POST) : Requer autenticação. Envio da sugestão de criação de inquirição para o servidor. Os campos do body da request são lidos de forma específica e processados, de modo que campos extra fornecidos são ignorados. A sugestão é guardada na coleção editedInquiricoes, e os administradores são notificados, no caso de user ser normal. Se o user for administrador, a sugestão é imediatamente aplicada. 
 * **'/createInquiry'** (GET e POST) : Funcionamento semelhante à de edição de inquirição, mas para a criação de uma nova inquirição. 
 * **'/editedInquiry/accept/:id'** (POST) : Requer nível administrador. Rota para aceitar uma sugestão de edição de inquirição, com id nos parâmetros da request. Editor é notificado do resultado.
-* **'/editedInquiry/accept/:id'** (POST) : Semelhante, mas para rejeição.
+* **'/editedInquiry/reject/:id'** (POST) : Semelhante, mas para rejeição.
 * **'/editedInquiry/:id'** : Requer nível administrador. Página para vizualizar uma sugestão de edição. A view extende **header**.
 * **'/inquiry/post/:id'** (POST) : Requer autenticação. Servidor recebe um post realizado numa inquirição, atualizando a coleçaõ de posts, a inquirição (que guarda a ordem dos posts) e as páginas em que o utlizador realizou posts.
 * **'/inquiry/response/:id'** (POST) : Semelhante ao anterior, no entanto é realizada a ligação do comentário com um pai (post original), e é notificado o autor desse pai.
