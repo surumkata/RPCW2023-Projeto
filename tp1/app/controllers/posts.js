@@ -14,13 +14,13 @@ module.exports.addPost = (originId,user,post,parent) =>{
         dateCreated : data,
         originId : originId
     }
-    var type = parent?'response':'post'
-    // adicioanr atividade de post ou response
-    activityController.register(type,originId)
     return Post.postsModel
     .create(newPost)
     .then(result => {
         console.log('Post:',result)
+        var type = parent?'response':'post'
+        // adicionar atividade de post ou response
+        activityController.register(type,originId)
         if(parent){
             exports.getPost(parent)
             .then(post => {
