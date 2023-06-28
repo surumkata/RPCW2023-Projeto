@@ -9,44 +9,48 @@ block content
       .w3-container
         br
         .w3-container.w3-center
-          h1 Stats
-
-          h2 Inquirições mais visitadas
+          h1 #[b Stats]
           
-          canvas(id="topInquiriesChartToday" style="width:100%;max-width:700px")
-          select.w3-input(id='selectNumberInquiriesChart1' onchange='fillTopInquiriesChartToday()')
-            option( value='5') 5
-            option( value='10' selected="selected") 10
-            option( value='20') 20
-            option( value='50') 50
-            option( value='100') 100
-          select.w3-input(id='selectTypeActivityChart1' onchange='fillTopInquiriesChartToday()')
-            option( value='visit' selected="selected") Visitado
-            option( value='post') Posts
-            option( value='response') Respostas
-            option( value='both') Ambos
-            option( value='all') Todos
-          - var tomorrow = new Date(today).setDate(new Date(today).getDate() + 1)
-          - tomorrow = new Date(tomorrow).toISOString().split("T")[0]
-          Label Data do processo (Limite Inferior):
-          input.w3-input.search-inputs(type="date" id='selectLowerDateChart1' onchange='fillTopInquiriesChartToday()' name="visit" max=tomorrow  placeholder="Procura por periodo")
-          Label Data do processo (Limite Superior):
-          input.w3-input.search-inputs(type="date" id='selectUpperDateChart1' onchange='fillTopInquiriesChartToday()' name="searchTimeEnd" max=tomorrow  value=tomorrow placeholder="Procura por periodo")
-
-          h2 Estatísticas de inquirição
+          .w3-card-4(style="width:75%;margin:auto")
+            .w3-container
+              h2 #[b Inquirições mais visitadas]
+              canvas(id="topInquiriesChartToday" style="width:100%;max-width:700px;margin:auto")
+              select.w3-input.w3-border.w3-hover-border-black.w3-margin-bottom(id='selectNumberInquiriesChart1' onchange='fillTopInquiriesChartToday()')
+                option( value='5') 5
+                option( value='10' selected="selected") 10
+                option( value='20') 20
+                option( value='50') 50
+                option( value='100') 100
+              select.w3-input.w3-border.w3-hover-border-black.w3-margin-bottom(id='selectTypeActivityChart1' onchange='fillTopInquiriesChartToday()')
+                option( value='visit' selected="selected") Visitado
+                option( value='post') Posts
+                option( value='response') Respostas
+                option( value='both') Ambos
+                option( value='all') Todos
+              - var tomorrow = new Date(today).setDate(new Date(today).getDate() + 1)
+              - tomorrow = new Date(tomorrow).toISOString().split("T")[0]
+              Label Data do processo (Limite Inferior):
+              input.w3-input.w3-border.w3-hover-border-black.w3-margin-bottom.search-inputs(type="date" id='selectLowerDateChart1' onchange='fillTopInquiriesChartToday()' name="visit" max=tomorrow  placeholder="Procura por periodo")
+              Label Data do processo (Limite Superior):
+              input.w3-input.w3-border.w3-hover-border-black.w3-margin-bottom.search-inputs(type="date" id='selectUpperDateChart1' onchange='fillTopInquiriesChartToday()' name="searchTimeEnd" max=tomorrow  value=tomorrow placeholder="Procura por periodo")
+          br
+          br
+          .w3-card-4(style="width:75%;margin:auto")
+            .w3-container
+              h2 #[b Estatísticas de inquirição]
           
-          canvas(id="inquiryChart" style="width:100%;max-width:700px")
-          input.w3-input.search-inputs(type="text" id='inquiryIdChart2' onchange='fillInquiryChart()' placeholder="Procura inquirição")
-          select.w3-input(id='selectTypeActivityChart2' onchange='fillInquiryChart()')
-            option( value='visit' selected="selected") Visitado
-            option( value='post') Posts
-            option( value='response') Respostas
-            option( value='both') Ambos
-            option( value='all') Todos
-          Label Data do processo (Limite Inferior):
-          input.w3-input.search-inputs(type="date" id='selectLowerDateChart2' onchange='fillInquiryChart()' name="visit" max=tomorrow  placeholder="Procura por periodo")
-          Label Data do processo (Limite Superior):
-          input.w3-input.search-inputs(type="date" id='selectUpperDateChart2' onchange='fillInquiryChart()' name="searchTimeEnd" max=tomorrow  value=tomorrow placeholder="Procura por periodo")
+              canvas(id="inquiryChart" style="width:100%;max-width:700px;margin:auto")
+              input.w3-input.w3-border.w3-hover-border-black.w3-margin-bottom.search-inputs(type="text" id='inquiryIdChart2' onchange='fillInquiryChart()' placeholder="Procura inquirição")
+              select.w3-input.w3-border.w3-hover-border-black.w3-margin-bottom(id='selectTypeActivityChart2' onchange='fillInquiryChart()')
+                option( value='visit' selected="selected") Visitado
+                option( value='post') Posts
+                option( value='response') Respostas
+                option( value='both') Ambos
+                option( value='all') Todos
+              Label Data do processo (Limite Inferior):
+              input.w3-input.w3-border.w3-hover-border-black.w3-margin-bottom.search-inputs(type="date" id='selectLowerDateChart2' onchange='fillInquiryChart()' name="visit" max=tomorrow  placeholder="Procura por periodo")
+              Label Data do processo (Limite Superior):
+              input.w3-input.w3-border.w3-hover-border-black.w3-margin-bottom.search-inputs(type="date" id='selectUpperDateChart2' onchange='fillInquiryChart()' name="searchTimeEnd" max=tomorrow  value=tomorrow placeholder="Procura por periodo")
 
           
   script(src='/javascripts/stats.js')

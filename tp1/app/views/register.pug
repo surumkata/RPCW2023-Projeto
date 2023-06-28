@@ -20,7 +20,7 @@ block content
                     label #[b Confirme Password]
                     input.w3-input.w3-border.w3-hover-border-black.w3-margin-bottom(id='confirmPassword' type="password" name="confirmPassword" oninput="validatePassword()" required)
                     
-                input.w3-button.main-color.w3-section(id='submit' type="submit" value="Register" style="width:100%")
+                input.main-button.colored.main-color.w3-section(id='submit' type="submit" value="Register" style="width:100%")
             .w3-container.w3-border-top.w3-padding-16.w3-light-grey
                 span.w3-left.w3-padding.w3-hide-small(id='passwordWarning',style="display: none; color:red" ) #[b Passwords não correspondem]
                 if error
