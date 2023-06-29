@@ -107,7 +107,7 @@ module.exports.addUserNotificationByEmail = (email,notification) => {
 module.exports.addUserNotificationByLevel = (level,notification) => {
     console.log('Adding notification for user level ' + level + ': ' + notification)
     return User.userModel
-    .updateOne({'level':level},
+    .updateMany({'level':level},
     {"$push":{"notifications": notification}},
     { "new": true, "upsert": true })
     .then(result => {

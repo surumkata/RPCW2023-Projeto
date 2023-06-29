@@ -102,5 +102,6 @@ O utilizador **administrador**, que é capaz de:
 * **'/register'** : Página de registo de utilizador.
 * **'/register'** (POST) : Post de registo de utilizador, onde se faz nova verificação entre as passwords passadas, e é verificado email fornecido para o utilizador (se é único). Em caso de erro o utilizador é redirecionado de volta para a página de registo, senão irá para a página de login.
 * **'/logout'** : Requer autenticação. Autenticação do utilizador é removida.
+* **'/api/notifications'** : Requer autenticação. Obtém notificações de um utilizador.
 * **'/api/notifications/seen/:id'** : Requer autenticação. Atualiza uma notificação do utilizador, especificada pelo id, para o estado de vista.
 * **'/api/notifications/remove/:id'** : Requer autenticação. Remove uma notificação, especificada pelo id, do utilizador.
