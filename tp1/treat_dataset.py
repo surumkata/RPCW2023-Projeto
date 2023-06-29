@@ -88,6 +88,11 @@ df['ID'] = df['ID'].astype(str)
 
 # Make new field to directly link relations if possible
 relations_id = []
+
+# Populate array
+for i in df.index:
+    relations_id.append([])
+
 count = 0
 for i in df.index:
     e = df.iloc[i]
@@ -104,9 +109,11 @@ for i in df.index:
                     rel_id = int(groups[j][1])
                     person = df.iloc[rel_id]
                     rel.append({'type':groups[j][0],'id':person['ID'],'name':person['UnitTitle'][0]})
+                    # ligacao de volta no processo ligado
+                    relations_id[person.name].append({'id':id,'name':people[0]})
                     j += 1
                 count+=1
-        relations_id.append(rel)
+        relations_id[i] += rel
     except Exception:
         print(e)
         print(traceback.format_exc())
@@ -140,6 +147,8 @@ for i in df.index:
                     rel_id = int(rel[j][1])
                     person = df.iloc[rel_id]
                     relations_id[i].append({rel_id:rel[j][0],'id':person['ID']})
+                    # ligacao de volta no processo ligado
+                    relations_id[person.name].append({'id':id,'name':people[0]})
                     j += 1
                 count+=1
         if note != 'null':
@@ -150,6 +159,8 @@ for i in df.index:
                     rel_id = int(rel[j][1])
                     person = df.iloc[rel_id]
                     relations_id[i].append({rel_id:rel[j][0],'id':person['ID']})
+                    # ligacao de volta no processo ligado
+                    relations_id[person.name].append({'id':id,'name':people[0]})
                     j += 1
                 count+=1
         
