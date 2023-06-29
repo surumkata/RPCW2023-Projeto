@@ -44,6 +44,12 @@ dataset_file = open(f'{path}/data/PT-UM-ADB-DIO-MAB-006.CSV','r')
 # Load dataset
 df = pd.read_csv(dataset_file, delimiter=';',quoting=1)
 
+out = open(f'{path}/data/original.json','w',encoding='utf-8')
+
+df.to_json(out,orient= 'records',indent=4,force_ascii=False)
+
+out.close()
+
 # Info about number of entries, columns and values in each
 # print(df.info())
 

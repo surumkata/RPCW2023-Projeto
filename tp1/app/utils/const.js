@@ -115,7 +115,7 @@ module.exports.clearJwtToken = function(res){
 /** Atualiza token jwt */
 module.exports.updateJwtToken = async function(res,email,username,level){
     exports.clearJwtToken(res)
-    await exports.createJwtToken(email,username,level,
+    exports.createJwtToken(email,username,level,
         function(e,token){
             if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
             else{
@@ -123,7 +123,6 @@ module.exports.updateJwtToken = async function(res,email,username,level){
             console.log('Token created')
             }
         })
-
 }
 
 

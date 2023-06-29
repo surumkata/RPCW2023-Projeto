@@ -465,6 +465,7 @@ router.post('/inquiry/:id/edit',requireAuthentication,upload.single('inquiryPic'
   if(userLevel == 1){
     Inquiry.updateInquiry(id,editedInquiry)
   }else{
+    editedInquiry['originalId'] = id
     Inquiry.addEditedInquiry(id,editedInquiry,email)
   }
   res.redirect(`/inquiry/${id}`);
