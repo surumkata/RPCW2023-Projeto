@@ -19,7 +19,7 @@
     height: 25px;
     font-size: 12px;
     padding: 5px;
-    background: red;
+    background: rgb(48, 48, 48);
     border-radius: 50%;
     color: white;
     z-index: 2;
@@ -28,7 +28,7 @@
   .notification {
     position: relative;
     display: inline-block;
-    overflow: visible;
+    overflow: visible!important;
   }
 
   .overflow{
@@ -73,8 +73,8 @@
   }
 
   .main-color{
-    background-color: #7F1610;
-    color: white;
+    background-color: #7F1610!important;
+    color: white!important;
   }
 
   .main-color-hover:hover{color:#fff!important;background-color:#7F1610!important}
