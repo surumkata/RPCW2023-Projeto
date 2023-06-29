@@ -115,7 +115,7 @@ block content
 
                 form.w3-container(action="/inquiry/response/"+i._id+"?post="+post.id method="POST")
                   h6 #[b Nova resposta:]
-                  textarea.w3-texarea(name="response", cols="30", rows="10" oninput="filledText(this) required) 
+                  textarea.w3-texarea(name="response", cols="30", rows="10" oninput="filledText(this)" required) 
                   br
                   input.w3-button.w3-white(type="submit" id='' value="Publicar" disabled=true)
                   br

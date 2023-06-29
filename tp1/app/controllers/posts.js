@@ -99,5 +99,6 @@ module.exports.processComments = (posts,comments) => {
         if(Object.keys(new_comment).length > 0)
             processedComments.push(new_comment)
     }
-    return processedComments
+    // retornar posts, ordenados por data
+    return processedComments.sort(function(a, b) {return b.dateCreated - a.dateCreated})
 }
