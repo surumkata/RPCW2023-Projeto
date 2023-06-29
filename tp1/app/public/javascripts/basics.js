@@ -403,3 +403,28 @@ function showMore() {
     moreText.style.display = "block";
   }
 }
+
+
+/** Verifica se o elemento tem valor diferente de null ou white spaces
+ * Desabilita botao de submit caso nao seja valido
+ */
+function filledText(elem){
+    var submit = elem.nextElementSibling
+    let foundSubmit = false
+    // encontrar botao de submit
+    while(!foundSubmit && submit != null && submit != ' '){
+        if(submit.tagName == 'INPUT'){
+            if(submit.type == 'submit'){
+                foundSubmit = true
+                break
+            }
+        }
+        submit = submit.nextElementSibling
+    }
+    if(elem.value == null || elem.value == '' || elem.value.trim() == ''){
+        submit.disabled = true
+    }
+    else{
+        submit.disabled = false
+    }
+}

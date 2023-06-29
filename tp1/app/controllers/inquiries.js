@@ -20,6 +20,7 @@ module.exports.list = (page,searchQuery,sortQuery,docPerPage) => {
     return Inquiry.inquiriesModel
     .find(searchQuery)
     .sort(sortQuery)
+    .collation({ locale: "pt", caseLevel: true })
     .skip(page*docPerPage)
     .limit(docPerPage)
         .then(docs => {

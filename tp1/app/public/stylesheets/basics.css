@@ -73,8 +73,8 @@
   }
 
   .main-color{
-    background-color: #7F1610;
-    color: white;
+    background-color: #7F1610 !important;
+    color: white !important;
   }
 
   .main-color-hover:hover{color:#fff!important;background-color:#7F1610!important}
@@ -95,6 +95,12 @@
   }
 
   .colored.main-button:hover{color:#fff!important;background-color:#74150f!important}
+
+  .inquiry-picture{
+    vertical-align: middle;
+    width: 250px;
+    height: 250px;
+  }
 
   .profile-picture{
     vertical-align: middle;

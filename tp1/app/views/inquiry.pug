@@ -11,7 +11,7 @@ block content
           br
           if i.inquiryPicDir
             .w3-container.w3-center
-              img(src=i.inquiryPicDir alt='Inquiry Picture')
+              img.inquiry-picture(src=i.inquiryPicDir alt='Inquiry Picture')
             br
           .w3-container
             h4 #[b Informações de inquirição]
@@ -87,26 +87,27 @@ block content
 
           form.w3-container(action="/inquiry/post/"+i._id method="POST")
             legend Novo post:
-            textarea.w3-texarea(name="post", cols="30", rows="10" required) 
+            textarea.w3-textarea(name="post", cols="30", rows="10" oninput="filledText(this)" required)
             br
-            input.w3-button.w3-white(type="submit" value="Publicar")
+            input.w3-button.w3-white(type="submit" value="Publicar" disabled=true)
 
           each post in posts
             hr
             .w3-container
-              - let date = new Date(post.dateCreated).toISOString().substring(0,10)
+              - let date = new Date(post.dateCreated).toISOString().substring(0,16)
               h6 Date: #{date}
               p #{post.author}: #{post.text}
 
               .w3-container
                 each response in post.postResponses
-                  h6 Date: #{response.dateCreated}
+                  - date = new Date(response.dateCreated).toISOString().substring(0,16)
+                  h6 Date: #{date}
                   p #{response.author}: #{response.text} 
 
                 form.w3-container(action="/inquiry/response/"+i._id+"?post="+post.id method="POST")
                   legend Nova resposta:
-                  textarea.w3-texarea(name="response", cols="30", rows="10" required) 
+                  textarea.w3-textarea(name="response", cols="30", rows="10" oninput="filledText(this)")
                   br
-                  input.w3-button.w3-white(type="submit" value="Publicar")
+                  input.w3-button.w3-white(type="submit" id='' value="Publicar" disabled=true)
                   br
                   br
