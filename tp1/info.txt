@@ -1,7 +1,0 @@
-atualizar tipo de datas de string para Date: 
-* db.inquiricoes.updateMany({},[{ $set: {UnitDateInitial:{$dateFromString:{dateString:"$UnitDateInitial",format:"%Y-%m-%d"}}}}])
-
-
-Refs
-
-* https://www.makeuseof.com/nodejs-google-authentication/
