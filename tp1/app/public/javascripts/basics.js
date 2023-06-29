@@ -11,7 +11,10 @@ function seenNotification(notificationId){
         .then(response => {
             // atualizar elemento da notificacao
             n_notifications.textContent = parseInt(n_notifications.textContent) - 1
+            if(n_notifications.textContent == 0)
+                n_notifications.style.display='none'
             notification.getElementsByClassName('seen')[0].remove()
+            notification.className = "notif w3-container"
         })
     }
 }
@@ -60,16 +63,19 @@ async function getNotifications(){
                         for(i in notifications){
                             let notification = notifications[i]
                             let node = document.createElement('div')
-                            let innerHtml = `<p>${notification.message}</p>`
-                            innerHtml += `<p>Data : ${new Date(Number(notification.dateCreated)).toISOString().substring(0,19)}</p>`
+                            node.className = "notif w3-container"
+                            let data = new Date(Number(notification.dateCreated)).toISOString().substring(0,19)
+                            data = data.split('T').join(" ")
+                            let innerHtml = `<div class="w3-container"><p class="w3-right">${data}</p></div>`
+                            innerHtml += `<p>${notification.message}</p>`
                             innerHtml = `<div onclick="nofiticationClick('${notification._id}','${notification.url}')">${innerHtml} </div>`
                             // notificação ainda nao foi vista
                             if(notification.seen == false){
                                 n_notifications_count += 1
-                                node.style.backgroundColor = "grey"
-                                innerHtml = `${innerHtml} <button type='button' class='seen' onclick='seenNotification("${notification._id}")'>V</button>`
+                                node.className += " not_seen"
+                                innerHtml = `${innerHtml} <div class="w3-container"><button type='button' class="main-button colored w3-right" onclick='removeNotification("${notification._id}")'>X</button><button type='button' class="main-button colored w3-left seen" onclick='seenNotification("${notification._id}")'>&#x2713;</button></div><br>`
                             }
-                            innerHtml = `${innerHtml} <button type='button' onclick='removeNotification("${notification._id}")'>X</button>`
+                            else innerHtml = `${innerHtml} <div class="w3-container"><button type='button' class="main-button colored w3-right" onclick='removeNotification("${notification._id}")'>X</button></div><br>`
                             node.innerHTML = innerHtml
                             node.id = notification._id
                             notification_content.appendChild(node)
@@ -96,7 +102,7 @@ function addRelationForm() {
     var relations = relationsContainer.getElementsByTagName('relation')
     var addRelationBtn = document.getElementById('addRelationBtn')
     var baseRelation =`
-            <relation id="relation$replace">
+            <div class="w3-container">
                 <label>
                     <b>Nome</b> : <input class="w3-input w3-border w3-hover-border-black" type="text" name="relationName" value="" required>
                 </label>
@@ -112,13 +118,13 @@ function addRelationForm() {
                 <div class="w3-center w3-container" id="removeRelationBtn">
                     <button class="main-button colored" type="button" onclick="removeElement('relation$replace')">- Remover relação</button>
                 </div>
-            </relation>
+            </div>
             <br>
         `
     // primeira relacao, adiciona no inicio
     if(relations.length == 0){
-        var node = document.createElement('div')
-        node.classList.add('w3-container')
+        var node = document.createElement('relation')
+        node.id = "relation" + relations.length.toString()
         node.innerHTML = baseRelation.replace(new RegExp('\\$replace','g'),relations.length.toString())
         relationsContainer.appendChild(node)
         relationsContainer.append(addRelationBtn)
@@ -147,8 +153,8 @@ function addRelationForm() {
                     maxId = rId+ 1
                 i++
             } 
-            var node = document.createElement('div')
-            node.classList.add('w3-container')
+            var node = document.createElement('relation')
+            node.id = "relation" + maxId.toString()
             node.innerHTML = baseRelation.replace(new RegExp('\\$replace','g'),maxId.toString())
             relationsContainer.appendChild(node)
             relationsContainer.append(addRelationBtn)
@@ -162,7 +168,7 @@ function addAffiliationForm() {
     var affiliations = affiliationsContainer.getElementsByTagName('affiliation')
     var addAffiliationBtn = document.getElementById('addAffiliationBtn')
     var baseAffiliation =`
-            <affiliation id="affiliation$replace">
+            <div class="w3-container">
                 <label>
                     <b>Nome</b> : <input class="w3-input w3-border w3-hover-border-black" type="text" name="affiliationName" value="" required>
                 </label>
@@ -170,13 +176,13 @@ function addAffiliationForm() {
                 <div class="w3-container w3-center" id="removeAffiliationBtn">
                     <button class="main-button colored" type="button" onclick="removeElement('affiliation$replace')">- Remover afiliação</button>
                 </div>
-            </affiliation>
+            </div>
             <br>
         `
     // primeira afiliacao, adiciona no inicio
     if(affiliations.length == 0){
-        var node = document.createElement('div')
-        node.classList.add('w3-container')
+        var node = document.createElement('affiliation')
+        node.id = 'affiliation' + affiliations.length.toString()
         node.innerHTML = baseAffiliation.replace(new RegExp('\\$replace','g'),affiliations.length.toString())
         affiliationsContainer.appendChild(node)
         affiliationsContainer.append(addAffiliationBtn)
@@ -205,8 +211,8 @@ function addAffiliationForm() {
                     maxId = aId+ 1
                 i++
             } 
-            var node = document.createElement('div')
-            node.classList.add('w3-container')
+            var node = document.createElement('affiliation')
+            node.id = 'affiliation' + maxId.toString()
             node.innerHTML = baseAffiliation.replace(new RegExp('\\$replace','g'),maxId.toString())
             affiliationsContainer.appendChild(node)
             affiliationsContainer.append(addAffiliationBtn)
@@ -221,7 +227,7 @@ function addUserAffiliationForm() {
     var addAffiliationBtn = document.getElementById('addAffiliationBtn')
     var baseAffiliation =`
             <br>
-            <affiliation id="affiliation$replace">
+            <div class="w3-container">
                 <label>
                     <b>Nome</b> : <input class="w3-input w3-border w3-hover-border-black" type="text" name="affiliationName" value="" required>
                 </label>
@@ -236,12 +242,12 @@ function addUserAffiliationForm() {
                     <button class="colored main-button" type="button" id="removeAffiliationBtn" onclick="removeElement('affiliation$replace')">- Remover afiliação</button>
                 </div>
                 <br>
-            </affiliation>
+            </div>
         `
     // primeira afiliacao, adiciona no inicio
     if(affiliations.length == 0){
-        var node = document.createElement('div')
-        node.classList.add('w3-container')
+        var node = document.createElement('affiliation')
+        node.id = "affiliation" + affiliations.length.toString()
         node.innerHTML = baseAffiliation.replace(new RegExp('\\$replace','g'),affiliations.length.toString())
         affiliationsContainer.appendChild(node)
         affiliationsContainer.append(addAffiliationBtn)
@@ -270,8 +276,8 @@ function addUserAffiliationForm() {
                     maxId = aId+ 1
                 i++
             } 
-            var node = document.createElement('div')
-            node.classList.add('w3-container')
+            var node = document.createElement('affiliation')
+            node.id = "affiliation" + maxId.toString()
             node.innerHTML = baseAffiliation.replace(new RegExp('\\$replace','g'),maxId.toString())
             affiliationsContainer.appendChild(node)
             affiliationsContainer.append(addAffiliationBtn)
@@ -352,12 +358,27 @@ function verifyPeriod(){
     }
 }
 
+/** Mudar o display de conteúdo colapsável (ao colocar um visível (block), coloca o resto invisivel (none) )
+ */
 function createClickListener(id) {
     return function() {
       this.classList.toggle("active");
-      var content = document.getElementById(id + "C");
+      var content = document.getElementById(id + "C"); //vai buscar o content a ser alterado.
   
-      if (content.style.display === "block") {
+      var collapsibles = document.getElementsByClassName("collapsible"); //vai buscar todos os elementos colapsáveis
+
+      for (var i = 0; i < collapsibles.length; i++){ //itera por todos os colapsáveis
+        var collapsible = collapsibles[i];
+        var idc = collapsible.id;
+        if (idc != id){ // se o colapsavel não for o principal, coloca-o invisivel
+            var content2 = document.getElementById(idc + "C");
+            content2.style.display = "none"
+
+        }
+      }
+
+      //agora no colapsavel principal, verifica se ele já esta visivel, se estiver coloca invisivel, se nao coloca visivel
+      if (content.style.display === "block") { 
         content.style.display = "none";
       } else {
         content.style.display = "block";
@@ -365,6 +386,8 @@ function createClickListener(id) {
     };
   }
 
+/** Função que expande e diminui o "mostrar mais"
+ */  
 function showMore() {
   var dots = document.getElementById("dots");
   var moreText = document.getElementById("more");
