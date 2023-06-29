@@ -82,32 +82,44 @@ block content
         br
         .w3-card.main-color
           .w3-container
-            h1 Posts
-          hr
-
-          form.w3-container(action="/inquiry/post/"+i._id method="POST")
-            legend Novo post:
-            textarea.w3-textarea(name="post", cols="30", rows="10" oninput="filledText(this)" required)
+            h1 #[b Posts]
+          div(style="background-color:#74150f;color:white;")
             br
-            input.w3-button.w3-white(type="submit" value="Publicar" disabled=true)
-
+            form.w3-container(action="/inquiry/post/"+i._id method="POST")
+              h6 #[b Novo post:]
+              textarea.w3-texarea(name="post", cols="30", rows="10" oninput="filledText(this)" required) 
+              br
+              input.w3-button.w3-white(type="submit" value="Publicar" disabled=true)
+            br
           each post in posts
-            hr
             .w3-container
               - let date = new Date(post.dateCreated).toISOString().substring(0,16)
-              h6 Date: #{date}
-              p #{post.author}: #{post.text}
+              - date = date.split('T').join(" ")
+              .w3-container
+                h5.w3-left #[b #{post.author}]
+                h5.w3-right #[b #{date}]
+              .w3-container
+                p=post.text
+                hr
 
               .w3-container
                 each response in post.postResponses
-                  - date = new Date(response.dateCreated).toISOString().substring(0,16)
-                  h6 Date: #{date}
-                  p #{response.author}: #{response.text} 
+                  - let date = new Date(response.dateCreated).toISOString().substring(0,16)
+                  - date = date.split('T').join(" ")
+                  .w3-container
+                    h5.w3-left #[b #{response.author}]
+                    h5.w3-right #[b #{date}]
+                  .w3-container
+                    p=response.text
+                    hr
 
                 form.w3-container(action="/inquiry/response/"+i._id+"?post="+post.id method="POST")
-                  legend Nova resposta:
-                  textarea.w3-textarea(name="response", cols="30", rows="10" oninput="filledText(this)")
+                  h6 #[b Nova resposta:]
+                  textarea.w3-texarea(name="response", cols="30", rows="10" oninput="filledText(this) required) 
                   br
                   input.w3-button.w3-white(type="submit" id='' value="Publicar" disabled=true)
                   br
                   br
+            br
+            div(style="height:20px;background-color:#74150f;")
+              
