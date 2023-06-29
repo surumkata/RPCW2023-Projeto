@@ -1,75 +1,81 @@
 extends header
 
 block content
-  .w3-card-4 
-    header.w3-container.w3-teal
-      h1 Inquirição modificada por #{i.editor}
-    .w3-container
-        fieldset
-            legend Metadata
-            if i.inquiryPicDir
-              img(src=i.inquiryPicDir alt='Inquiry Picture')
+  #page-container
+    #content-wrap
+      .w3-container
+        br 
+        .w3-card-4(style="width:60%; margin:auto; overflow:hidden")
+          .w3-container.w3-center.main-color
+            h1 Inquirição modificada por #{i.editor}
+          .w3-container
               br
-            label #[b Id de documento: ] #{i._id}
-            br
-            label #[b Titular(es): ] #{i.UnitTitle}
-            br
-            label #[b Filiações: ]
-            ul 
-              each affiliation in i.affiliations
-                li
-                  a(href='/?searchName=^'+affiliation) #{affiliation}
-            br
-            label #[b Local de nascimento: ] #{i.birthplace}
-            br
-            label #[b Concelho de residência: ] #{i.current_concelho}
-            br
-            label #[b Distrito de residência: ] #{i.current_district}
-            br
-            label #[b País: ] #{i.country}
-            br
-            label #[b Laços pessoais: ]
-            .w3-container
-              each relation in i.relations_id
-                a(href="/inquiry/"+relation.id) #[b #{relation.name}]
+              if i.inquiryPicDir
+                img(src=i.inquiryPicDir alt='Inquiry Picture')
                 br
-                label #[b Relação] : #{relation.type}
-                br
-              else
-                b Não tem
-            - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
-            - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
-            label #[b Data de produção inicial: ] #{initDate}
-            br
-            label #[b Data de produção final: ] #{finalDate}
-            br
-            label #[b Repositório original: ] #{i.Repository}
-            br
-            label #[b Localização física: ] #{i.PhysLoc}
-            br
-            label #[b Localização anterior: ] #{i.PreviousLoc}
-            br
-            label #[b Material relacionado: ] #{i.RelatedMaterial}
-            br
-            label #[b Escopo do conteúdo: ] #{i.ScopeContent}
-            br
-            label #[b Nota: ] #{i.Note}
-            br
-            label #[b Criado por: ] #{i.Creator}
-            br
-            label #[b Data de criação: ] #{i.Created}
-            br
-            label #[b Editado por: ] #{i.editor}
-            br
-            label #[b Data de informação do processo: ] #{i.ProcessInfoDate}
-            br
-            label #[b Informação do processo: ] #{i.ProcessInfo}
-            br
-            br
-    form.w3-container(action="/editedInquiry/reject/"+i._id method="POST")
-      input.w3-btn.w3-blue(type="submit" value="Rejeitar")
-    form.w3-container(action="/editedInquiry/accept/"+i._id method="POST")
-      input.w3-btn.w3-blue(type="submit" value="Aceitar")
+              label #[b Id de documento: ] #{i._id}
+              br
+              label #[b Titular(es): ] #{i.UnitTitle}
+              br
+              label #[b Filiações: ]
+              ul 
+                each affiliation in i.affiliations
+                  li
+                    a(href='/?searchName=^'+affiliation) #{affiliation}
+              br
+              label #[b Local de nascimento: ] #{i.birthplace}
+              br
+              label #[b Concelho de residência: ] #{i.current_concelho}
+              br
+              label #[b Distrito de residência: ] #{i.current_district}
+              br
+              label #[b País: ] #{i.country}
+              br
+              label #[b Laços pessoais: ]
+              .w3-container
+                each relation in i.relations_id
+                  a(href="/inquiry/"+relation.id) #[b #{relation.name}]
+                  br
+                  label #[b Relação] : #{relation.type}
+                  br
+                else
+                  b Não tem
+              - let initDate = new Date(i.UnitDateInitial).toISOString().substring(0,10)
+              - let finalDate = new Date(i.UnitDateFinal).toISOString().substring(0,10)
+              label #[b Data de produção inicial: ] #{initDate}
+              br
+              label #[b Data de produção final: ] #{finalDate}
+              br
+              label #[b Repositório original: ] #{i.Repository}
+              br
+              label #[b Localização física: ] #{i.PhysLoc}
+              br
+              label #[b Localização anterior: ] #{i.PreviousLoc}
+              br
+              label #[b Material relacionado: ] #{i.RelatedMaterial}
+              br
+              label #[b Escopo do conteúdo: ] #{i.ScopeContent}
+              br
+              label #[b Nota: ] #{i.Note}
+              br
+              label #[b Criado por: ] #{i.Creator}
+              br
+              label #[b Data de criação: ] #{i.Created}
+              br
+              label #[b Editado por: ] #{i.editor}
+              br
+              label #[b Data de informação do processo: ] #{i.ProcessInfoDate}
+              br
+              label #[b Informação do processo: ] #{i.ProcessInfo}
+              br
+              br
+              form.w3-container.w3-left(action="/editedInquiry/reject/"+i._id method="POST")
+                input.colored.main-button(type="submit" value="Rejeitar")
+              form.w3-container.w3-right(action="/editedInquiry/accept/"+i._id method="POST")
+                input.colored.main-button(type="submit" value="Aceitar")
+              br
+              br
+              br
 
-    footer.w3-indigo 
+    footer.main-color
       address Generated by auth:RPCW2023 #{d} | #[a(href="/") Voltar]
